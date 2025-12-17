@@ -26,7 +26,7 @@
         }
         a { color: var(--accent); text-decoration: none; }
         a:hover { text-decoration: underline; }
-        .container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
         h1 { font-size: 22px; font-weight: 600; margin-bottom: 2px; }
         .meta { color: var(--muted); font-size: 10px; margin-bottom: 16px; }
         .budget { display: inline-block; background: #e6f4ea; color: var(--green); padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 500; margin-bottom: 12px; }
@@ -55,6 +55,15 @@
         tr:hover { background: var(--subtle); cursor: pointer; }
         .accident { color: var(--red); font-weight: 500; }
         .clean { color: var(--green); }
+        .score { font-size: 12px; font-weight: 600; }
+        .score-high { color: var(--green); }
+        .score-mid { color: var(--orange); }
+        .score-low { color: var(--red); }
+        .rating-bar { display: flex; gap: 2px; margin-top: 2px; }
+        .rating-bar span { width: 8px; height: 8px; border-radius: 2px; background: var(--subtle); }
+        .rating-bar span.filled { background: var(--green); }
+        .rating-bar span.filled.mid { background: var(--orange); }
+        .rating-bar span.filled.low { background: var(--red); }
     </style>
 </head>
 <body>
@@ -65,14 +74,15 @@
 
         <div id="map"></div>
 
-        <!-- SUMMARY TABLE -->
+        <!-- SUMMARY TABLE - Sorted by Rating -->
         <section>
-            <div class="section-title">All Listings <span class="tag tag-ok">Soul: 2017-19, 2022-24</span> <span class="tag tag-ok">Venue: 2021-22</span> <span class="tag tag-warn">Avoid Soul 2020-21</span></div>
-            <p class="note">Sorted by all-in price. Key features in <strong>bold green</strong>: heated seats, camera, blind spot (BSM), lane assist. EX/Preferred = heated steering.</p>
+            <div class="section-title">All Listings (Sorted by Rating) <span class="tag tag-ok">Soul: 2017-19, 2022-24</span> <span class="tag tag-ok">Venue: 2021-22</span> <span class="tag tag-warn">Avoid Soul 2020-21</span></div>
+            <p class="note">Rating = Features (5) + Low KM (5) + Clean CARFAX (5) + Price (5) + Distance (5) = max 25. Key features in <strong>bold</strong>: htd seats, camera, blind spot, lane.</p>
             <div style="overflow-x: auto;">
             <table>
                 <thead>
                     <tr>
+                        <th>Rating</th>
                         <th>Vehicle</th>
                         <th>KM</th>
                         <th>Features</th>
@@ -81,108 +91,23 @@
                         <th>Dist</th>
                         <th>List</th>
                         <th>All-in</th>
-                        <th>Notes</th>
                         <th>Links</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- 2019 Soul EX - London - $15,695 -->
-                    <tr data-dealer="london">
-                        <td><strong>2019 Soul EX</strong><br><span style="color:var(--muted)">Polar White</span></td>
-                        <td>65K</td>
-                        <td>
-                            <span class="feat key">Htd seats</span>
-                            <span class="feat yes">Htd wheel</span>
-                            <span class="feat key">Camera</span>
-                            <span class="feat">Alloys</span>
-                        </td>
-                        <td><span style="color:var(--muted)">CARFAX $ (dealer charges)</span></td>
-                        <td>London Kia</td>
-                        <td>190 km</td>
-                        <td>$15,695</td>
-                        <td class="price-ok"><strong>~$17.7K</strong></td>
-                        <td><span class="tag tag-ok">Lowest</span></td>
-                        <td class="links"><a href="https://www.autotrader.ca/a/kia/soul/london/ontario/5_68462902_20250122151036241/" target="_blank">Listing</a></td>
-                    </tr>
-
-                    <!-- 2022 Soul EX - Burlington - $15,999 -->
-                    <tr data-dealer="burlington">
-                        <td><strong>2022 Soul EX</strong><br><span style="color:var(--muted)">Inferno Red</span></td>
-                        <td>58K</td>
-                        <td>
-                            <span class="feat key">Htd seats</span>
-                            <span class="feat key">Camera</span>
-                            <span class="feat key">Blind spot</span>
-                            <span class="feat key">Lane</span>
-                            <span class="feat">Wireless chg</span>
-                        </td>
-                        <td><span style="color:var(--muted)">CARFAX $ (dealer charges)</span></td>
-                        <td>United Stars Auto</td>
-                        <td>50 km</td>
-                        <td>$15,999</td>
-                        <td class="price-ok"><strong>~$18.1K</strong></td>
-                        <td></td>
-                        <td class="links"><a href="https://www.autotrader.ca/a/kia/soul/burlington/ontario/5_68573077_20240621175756918/" target="_blank">Listing</a></td>
-                    </tr>
-
-                    <!-- 2022 Venue Essential - Richmond Hill - $16,400 -->
-                    <tr data-dealer="richmondhill">
-                        <td><strong>2022 Venue Essential</strong><br><span style="color:var(--muted)">Fiery Red</span></td>
-                        <td>57K</td>
-                        <td>
-                            <span class="feat key">Htd seats</span>
-                            <span class="feat key">Camera</span>
-                            <span class="feat yes">CarPlay</span>
-                        </td>
-                        <td><a href="https://vhr.carfax.ca/?id=IKWqPEOcwApJJAlao/VmNquDP2t54I3U" target="_blank">CARFAX</a><br><span class="accident">⚠️ $3,674 claim (Oct 2022)</span><br><span style="color:var(--muted)">1 owner · 6 service records</span></td>
-                        <td>Richmond Hill Hyundai</td>
-                        <td>5 km</td>
-                        <td>$16,400</td>
-                        <td class="price-ok"><strong>~$18.5K</strong></td>
-                        <td><span class="tag tag-warn">Accident</span></td>
-                        <td class="links"><a href="https://www.richmondhillhyundai.com/inventory/used/5941/2022/Hyundai/Venue" target="_blank">Listing</a> <a href="https://www.richmondhillhyundai.com" target="_blank">Dealer</a></td>
-                    </tr>
-
-                    <!-- 2022 Soul EX - North York - $16,880 -->
-                    <tr data-dealer="northyork">
-                        <td><strong>2022 Soul EX</strong><br><span style="color:var(--muted)">North York</span></td>
-                        <td>71K</td>
-                        <td>
-                            <span class="feat key">Htd seats</span>
-                            <span class="feat yes">Htd wheel</span>
-                            <span class="feat key">Camera</span>
-                        </td>
-                        <td><span style="color:var(--muted)">CARFAX $ (dealer charges)</span></td>
-                        <td>Low Price Auto Sales</td>
-                        <td>12 km</td>
-                        <td>$16,880</td>
-                        <td class="price-ok"><strong>~$19.1K</strong></td>
-                        <td><span class="tag tag-ok">Kia warranty</span></td>
-                        <td class="links"><a href="https://www.autotrader.ca/a/kia/soul/north%20york/ontario/5_68567722_20210208140459017/" target="_blank">Listing</a></td>
-                    </tr>
-
-                    <!-- 2022 Soul EX - Oakville - $16,999 -->
-                    <tr data-dealer="oakville">
-                        <td><strong>2022 Soul EX</strong><br><span style="color:var(--muted)">Oakville</span></td>
-                        <td>71K</td>
-                        <td>
-                            <span class="feat key">Htd seats</span>
-                            <span class="feat yes">Htd wheel</span>
-                            <span class="feat key">Camera</span>
-                            <span class="feat key">Blind spot</span>
-                            <span class="feat">Sunroof</span>
-                        </td>
-                        <td><span style="color:var(--muted)">CARFAX $ (dealer charges)</span></td>
-                        <td>Samz Auto</td>
-                        <td>45 km</td>
-                        <td>$16,999</td>
-                        <td class="price-ok"><strong>~$19.2K</strong></td>
-                        <td></td>
-                        <td class="links"><a href="https://www.autotrader.ca/a/kia/soul/oakville/ontario/5_68568948_20241008142541150/" target="_blank">Listing</a></td>
-                    </tr>
-
-                    <!-- 2022 Venue Preferred - Thornhill - $17,398 -->
+                    <!-- #1: Thornhill Venue 74K - Score 21/25 -->
+                    <!-- Features: 5/5 | KM: 2/5 (74K) | CARFAX: 5/5 (clean) | Price: 4/5 | Distance: 5/5 -->
                     <tr data-dealer="thornhill">
+                        <td>
+                            <span class="score score-high">21</span>/25
+                            <div class="rating-bar">
+                                <span class="filled" title="Features: 5"></span>
+                                <span class="filled mid" title="KM: 2"></span>
+                                <span class="filled" title="CARFAX: 5"></span>
+                                <span class="filled" title="Price: 4"></span>
+                                <span class="filled" title="Distance: 5"></span>
+                            </div>
+                        </td>
                         <td><strong>2022 Venue Preferred</strong><br><span style="color:var(--muted)">White / Black roof</span></td>
                         <td>74K</td>
                         <td>
@@ -197,69 +122,22 @@
                         <td>2 km</td>
                         <td>$17,398</td>
                         <td class="price-ok"><strong>~$19.7K</strong></td>
-                        <td><span class="tag tag-blue">Closest</span> <span class="tag tag-ok">Clean</span></td>
                         <td class="links"><a href="https://www.thornhillhyundai.com/inventory/used/6187/2022/Hyundai/Venue" target="_blank">Listing</a> <a href="https://www.thornhillhyundai.com" target="_blank">Dealer</a></td>
                     </tr>
 
-                    <!-- 2022 Soul EX - Woodbridge - $17,499 -->
-                    <tr data-dealer="woodbridge">
-                        <td><strong>2022 Soul EX</strong><br><span style="color:var(--muted)">White / Black</span></td>
-                        <td>75K</td>
-                        <td>
-                            <span class="feat key">Htd seats</span>
-                            <span class="feat yes">Htd wheel</span>
-                            <span class="feat key">Camera</span>
-                            <span class="feat">Sunroof</span>
-                            <span class="feat">Wireless chg</span>
-                        </td>
-                        <td><span style="color:var(--muted)">CARFAX $ (dealer charges)</span></td>
-                        <td>Fairmont Premier Auto</td>
-                        <td>15 km</td>
-                        <td>$17,499</td>
-                        <td class="price-ok"><strong>~$19.8K</strong></td>
-                        <td><span class="tag tag-ok">Cert + warranty</span></td>
-                        <td class="links"><a href="https://www.autotrader.ca/a/kia/soul/woodbridge/ontario/5_68139858_20250925180838466/" target="_blank">Listing</a></td>
-                    </tr>
-
-                    <!-- 2022 Venue Preferred - Milton - $17,655 -->
-                    <tr data-dealer="milton">
-                        <td><strong>2022 Venue Preferred</strong><br><span style="color:var(--muted)">Intense Blue</span></td>
-                        <td>72K</td>
-                        <td>
-                            <span class="feat key">Htd seats</span>
-                            <span class="feat yes">Htd wheel</span>
-                            <span class="feat key">Camera</span>
-                            <span class="feat key">Blind spot</span>
-                        </td>
-                        <td><a href="https://vhr.carfax.ca/?id=qseaJfcFyvD78+K87B4mf9QpuSJMt5Pv" target="_blank">CARFAX</a><br><span class="clean">No accidents</span><br><span style="color:var(--muted)">1 owner · Personal use</span></td>
-                        <td>Achilles Mazda</td>
-                        <td>55 km</td>
-                        <td>$17,655</td>
-                        <td class="price-ok"><strong>~$20K</strong></td>
-                        <td><span class="tag tag-ok">Below market</span></td>
-                        <td class="links"><a href="https://www.autotrader.ca/a/hyundai/venue/milton/ontario/5_67639128_20240710151910541/" target="_blank">Listing</a></td>
-                    </tr>
-
-                    <!-- 2019 Soul EX - Woodstock - $17,888 -->
-                    <tr data-dealer="woodstock">
-                        <td><strong>2019 Soul EX</strong><br><span style="color:var(--muted)">Caribbean Blue</span></td>
-                        <td style="color:var(--green)"><strong>50K</strong></td>
-                        <td>
-                            <span class="feat key">Htd seats</span>
-                            <span class="feat yes">Htd wheel</span>
-                            <span class="feat key">Camera</span>
-                        </td>
-                        <td><span class="clean">Accident free</span><br><span style="color:var(--muted)">CARFAX $ (dealer charges)</span></td>
-                        <td>Woodstock Kia</td>
-                        <td>130 km</td>
-                        <td>$17,888</td>
-                        <td class="price-ok"><strong>~$20.2K</strong></td>
-                        <td><span class="tag tag-ok">Low km</span> <span class="tag tag-ok">Factory warranty</span></td>
-                        <td class="links"><a href="https://www.autotrader.ca/a/kia/soul/woodstock/ontario/5_68648294_20251120180836620/" target="_blank">Listing</a></td>
-                    </tr>
-
-                    <!-- 2022 Soul EX - Clutch Toronto - $17,990 -->
+                    <!-- #2: Clutch Soul - Score 20/25 -->
+                    <!-- Features: 5/5 | KM: 3/5 (63K) | CARFAX: 5/5 (clean) | Price: 3/5 | Distance: 4/5 -->
                     <tr data-dealer="clutch">
+                        <td>
+                            <span class="score score-high">20</span>/25
+                            <div class="rating-bar">
+                                <span class="filled" title="Features: 5"></span>
+                                <span class="filled" title="KM: 3"></span>
+                                <span class="filled" title="CARFAX: 5"></span>
+                                <span class="filled mid" title="Price: 3"></span>
+                                <span class="filled" title="Distance: 4"></span>
+                            </div>
+                        </td>
                         <td><strong>2022 Soul EX</strong><br><span style="color:var(--muted)">Black</span></td>
                         <td>63K</td>
                         <td>
@@ -274,12 +152,226 @@
                         <td>18 km</td>
                         <td>$17,990</td>
                         <td class="price-ok"><strong>~$20.3K</strong></td>
-                        <td><span class="tag tag-ok">Full features</span></td>
                         <td class="links"><a href="https://www.carpages.ca/used-cars/ontario/toronto/2022-kia-soul-13093922/" target="_blank">Listing</a> <a href="https://www.clutch.ca" target="_blank">Dealer</a></td>
                     </tr>
 
-                    <!-- 2019 Soul EX+ - Cambridge - $17,995 -->
+                    <!-- #3: Milton Venue - Score 19/25 -->
+                    <!-- Features: 4/5 | KM: 2/5 (72K) | CARFAX: 5/5 (clean) | Price: 4/5 | Distance: 3/5 -->
+                    <tr data-dealer="milton">
+                        <td>
+                            <span class="score score-high">19</span>/25
+                            <div class="rating-bar">
+                                <span class="filled" title="Features: 4"></span>
+                                <span class="filled mid" title="KM: 2"></span>
+                                <span class="filled" title="CARFAX: 5"></span>
+                                <span class="filled" title="Price: 4"></span>
+                                <span class="filled mid" title="Distance: 3"></span>
+                            </div>
+                        </td>
+                        <td><strong>2022 Venue Preferred</strong><br><span style="color:var(--muted)">Intense Blue</span></td>
+                        <td>72K</td>
+                        <td>
+                            <span class="feat key">Htd seats</span>
+                            <span class="feat yes">Htd wheel</span>
+                            <span class="feat key">Camera</span>
+                            <span class="feat key">Blind spot</span>
+                        </td>
+                        <td><a href="https://vhr.carfax.ca/?id=qseaJfcFyvD78+K87B4mf9QpuSJMt5Pv" target="_blank">CARFAX</a><br><span class="clean">No accidents</span><br><span style="color:var(--muted)">1 owner · Personal use</span></td>
+                        <td>Achilles Mazda</td>
+                        <td>55 km</td>
+                        <td>$17,655</td>
+                        <td class="price-ok"><strong>~$20K</strong></td>
+                        <td class="links"><a href="https://www.autotrader.ca/a/hyundai/venue/milton/ontario/5_67639128_20240710151910541/" target="_blank">Listing</a></td>
+                    </tr>
+
+                    <!-- #4: Woodstock Soul - Score 19/25 -->
+                    <!-- Features: 3/5 | KM: 5/5 (50K!) | CARFAX: 4/5 (accident free claim) | Price: 4/5 | Distance: 2/5 -->
+                    <tr data-dealer="woodstock">
+                        <td>
+                            <span class="score score-high">19</span>/25
+                            <div class="rating-bar">
+                                <span class="filled mid" title="Features: 3"></span>
+                                <span class="filled" title="KM: 5"></span>
+                                <span class="filled" title="CARFAX: 4"></span>
+                                <span class="filled" title="Price: 4"></span>
+                                <span class="filled mid" title="Distance: 2"></span>
+                            </div>
+                        </td>
+                        <td><strong>2019 Soul EX</strong><br><span style="color:var(--muted)">Caribbean Blue</span></td>
+                        <td style="color:var(--green)"><strong>50K</strong></td>
+                        <td>
+                            <span class="feat key">Htd seats</span>
+                            <span class="feat yes">Htd wheel</span>
+                            <span class="feat key">Camera</span>
+                        </td>
+                        <td><span class="clean">Accident free</span><br><span style="color:var(--muted)">CARFAX $ · Factory warranty</span></td>
+                        <td>Woodstock Kia</td>
+                        <td>130 km</td>
+                        <td>$17,888</td>
+                        <td class="price-ok"><strong>~$20.2K</strong></td>
+                        <td class="links"><a href="https://www.autotrader.ca/a/kia/soul/woodstock/ontario/5_68648294_20251120180836620/" target="_blank">Listing</a></td>
+                    </tr>
+
+                    <!-- #5: Burlington Soul - Score 18/25 -->
+                    <!-- Features: 5/5 | KM: 3/5 (58K) | CARFAX: 3/5 (unknown) | Price: 5/5 | Distance: 3/5 -->
+                    <tr data-dealer="burlington">
+                        <td>
+                            <span class="score score-mid">18</span>/25
+                            <div class="rating-bar">
+                                <span class="filled" title="Features: 5"></span>
+                                <span class="filled" title="KM: 3"></span>
+                                <span class="filled mid" title="CARFAX: 3"></span>
+                                <span class="filled" title="Price: 5"></span>
+                                <span class="filled mid" title="Distance: 3"></span>
+                            </div>
+                        </td>
+                        <td><strong>2022 Soul EX</strong><br><span style="color:var(--muted)">Inferno Red</span></td>
+                        <td>58K</td>
+                        <td>
+                            <span class="feat key">Htd seats</span>
+                            <span class="feat key">Camera</span>
+                            <span class="feat key">Blind spot</span>
+                            <span class="feat key">Lane</span>
+                            <span class="feat">Wireless chg</span>
+                        </td>
+                        <td><span style="color:var(--muted)">CARFAX $ (unknown)</span></td>
+                        <td>United Stars Auto</td>
+                        <td>50 km</td>
+                        <td>$15,999</td>
+                        <td class="price-ok"><strong>~$18.1K</strong></td>
+                        <td class="links"><a href="https://www.autotrader.ca/a/kia/soul/burlington/ontario/5_68573077_20240621175756918/" target="_blank">Listing</a></td>
+                    </tr>
+
+                    <!-- #6: Oakville Soul - Score 17/25 -->
+                    <!-- Features: 4/5 | KM: 2/5 (71K) | CARFAX: 3/5 (unknown) | Price: 5/5 | Distance: 3/5 -->
+                    <tr data-dealer="oakville">
+                        <td>
+                            <span class="score score-mid">17</span>/25
+                            <div class="rating-bar">
+                                <span class="filled" title="Features: 4"></span>
+                                <span class="filled mid" title="KM: 2"></span>
+                                <span class="filled mid" title="CARFAX: 3"></span>
+                                <span class="filled" title="Price: 5"></span>
+                                <span class="filled mid" title="Distance: 3"></span>
+                            </div>
+                        </td>
+                        <td><strong>2022 Soul EX</strong><br><span style="color:var(--muted)">Oakville</span></td>
+                        <td>71K</td>
+                        <td>
+                            <span class="feat key">Htd seats</span>
+                            <span class="feat yes">Htd wheel</span>
+                            <span class="feat key">Camera</span>
+                            <span class="feat key">Blind spot</span>
+                            <span class="feat">Sunroof</span>
+                        </td>
+                        <td><span style="color:var(--muted)">CARFAX $ (unknown)</span></td>
+                        <td>Samz Auto</td>
+                        <td>45 km</td>
+                        <td>$16,999</td>
+                        <td class="price-ok"><strong>~$19.2K</strong></td>
+                        <td class="links"><a href="https://www.autotrader.ca/a/kia/soul/oakville/ontario/5_68568948_20241008142541150/" target="_blank">Listing</a></td>
+                    </tr>
+
+                    <!-- #7: North York Soul - Score 17/25 -->
+                    <!-- Features: 3/5 | KM: 2/5 (71K) | CARFAX: 3/5 (unknown) | Price: 5/5 | Distance: 4/5 -->
+                    <tr data-dealer="northyork">
+                        <td>
+                            <span class="score score-mid">17</span>/25
+                            <div class="rating-bar">
+                                <span class="filled mid" title="Features: 3"></span>
+                                <span class="filled mid" title="KM: 2"></span>
+                                <span class="filled mid" title="CARFAX: 3"></span>
+                                <span class="filled" title="Price: 5"></span>
+                                <span class="filled" title="Distance: 4"></span>
+                            </div>
+                        </td>
+                        <td><strong>2022 Soul EX</strong><br><span style="color:var(--muted)">North York</span></td>
+                        <td>71K</td>
+                        <td>
+                            <span class="feat key">Htd seats</span>
+                            <span class="feat yes">Htd wheel</span>
+                            <span class="feat key">Camera</span>
+                        </td>
+                        <td><span style="color:var(--muted)">CARFAX $ · Kia warranty</span></td>
+                        <td>Low Price Auto Sales</td>
+                        <td>12 km</td>
+                        <td>$16,880</td>
+                        <td class="price-ok"><strong>~$19.1K</strong></td>
+                        <td class="links"><a href="https://www.autotrader.ca/a/kia/soul/north%20york/ontario/5_68567722_20210208140459017/" target="_blank">Listing</a></td>
+                    </tr>
+
+                    <!-- #8: Woodbridge Soul - Score 17/25 -->
+                    <!-- Features: 3/5 | KM: 2/5 (75K) | CARFAX: 3/5 (unknown) | Price: 4/5 | Distance: 4/5 -->
+                    <tr data-dealer="woodbridge">
+                        <td>
+                            <span class="score score-mid">17</span>/25
+                            <div class="rating-bar">
+                                <span class="filled mid" title="Features: 3"></span>
+                                <span class="filled mid" title="KM: 2"></span>
+                                <span class="filled mid" title="CARFAX: 3"></span>
+                                <span class="filled" title="Price: 4"></span>
+                                <span class="filled" title="Distance: 4"></span>
+                            </div>
+                        </td>
+                        <td><strong>2022 Soul EX</strong><br><span style="color:var(--muted)">White / Black</span></td>
+                        <td>75K</td>
+                        <td>
+                            <span class="feat key">Htd seats</span>
+                            <span class="feat yes">Htd wheel</span>
+                            <span class="feat key">Camera</span>
+                            <span class="feat">Sunroof</span>
+                            <span class="feat">Wireless chg</span>
+                        </td>
+                        <td><span style="color:var(--muted)">CARFAX $ · Cert + warranty</span></td>
+                        <td>Fairmont Premier Auto</td>
+                        <td>15 km</td>
+                        <td>$17,499</td>
+                        <td class="price-ok"><strong>~$19.8K</strong></td>
+                        <td class="links"><a href="https://www.autotrader.ca/a/kia/soul/woodbridge/ontario/5_68139858_20250925180838466/" target="_blank">Listing</a></td>
+                    </tr>
+
+                    <!-- #9: London Soul - Score 16/25 -->
+                    <!-- Features: 3/5 | KM: 3/5 (65K) | CARFAX: 3/5 (unknown) | Price: 5/5 | Distance: 1/5 -->
+                    <tr data-dealer="london">
+                        <td>
+                            <span class="score score-mid">16</span>/25
+                            <div class="rating-bar">
+                                <span class="filled mid" title="Features: 3"></span>
+                                <span class="filled" title="KM: 3"></span>
+                                <span class="filled mid" title="CARFAX: 3"></span>
+                                <span class="filled" title="Price: 5"></span>
+                                <span class="filled low" title="Distance: 1"></span>
+                            </div>
+                        </td>
+                        <td><strong>2019 Soul EX</strong><br><span style="color:var(--muted)">Polar White</span></td>
+                        <td>65K</td>
+                        <td>
+                            <span class="feat key">Htd seats</span>
+                            <span class="feat yes">Htd wheel</span>
+                            <span class="feat key">Camera</span>
+                            <span class="feat">Alloys</span>
+                        </td>
+                        <td><span style="color:var(--muted)">CARFAX $ (unknown)</span></td>
+                        <td>London Kia</td>
+                        <td>190 km</td>
+                        <td>$15,695</td>
+                        <td class="price-ok"><strong>~$17.7K</strong></td>
+                        <td class="links"><a href="https://www.autotrader.ca/a/kia/soul/london/ontario/5_68462902_20250122151036241/" target="_blank">Listing</a></td>
+                    </tr>
+
+                    <!-- #10: Cambridge Soul - Score 15/25 -->
+                    <!-- Features: 3/5 | KM: 4/5 (54K) | CARFAX: 3/5 (free at dealer) | Price: 3/5 | Distance: 2/5 -->
                     <tr data-dealer="cambridge">
+                        <td>
+                            <span class="score score-mid">15</span>/25
+                            <div class="rating-bar">
+                                <span class="filled mid" title="Features: 3"></span>
+                                <span class="filled" title="KM: 4"></span>
+                                <span class="filled mid" title="CARFAX: 3"></span>
+                                <span class="filled mid" title="Price: 3"></span>
+                                <span class="filled mid" title="Distance: 2"></span>
+                            </div>
+                        </td>
                         <td><strong>2019 Soul EX+</strong><br><span style="color:var(--muted)">Cambridge</span></td>
                         <td>54K</td>
                         <td>
@@ -293,12 +385,50 @@
                         <td>95 km</td>
                         <td>$17,995</td>
                         <td class="price-ok"><strong>~$20.3K</strong></td>
-                        <td></td>
                         <td class="links"><a href="https://www.autotrader.ca/a/kia/soul/cambridge/ontario/5_61365733_20100517123929314/" target="_blank">Listing</a></td>
                     </tr>
 
-                    <!-- 2022 Venue Preferred - Thornhill 9K - $18,947 - HAS ACCIDENT -->
-                    <tr data-dealer="thornhill2" style="background: #fff8e8;">
+                    <!-- #11: Richmond Hill Venue - Score 14/25 (ACCIDENT) -->
+                    <!-- Features: 3/5 | KM: 3/5 (57K) | CARFAX: 2/5 (accident) | Price: 5/5 | Distance: 5/5 -->
+                    <tr data-dealer="richmondhill" style="background: #fff8e8;">
+                        <td>
+                            <span class="score score-mid">14</span>/25
+                            <div class="rating-bar">
+                                <span class="filled mid" title="Features: 3"></span>
+                                <span class="filled" title="KM: 3"></span>
+                                <span class="filled low" title="CARFAX: 2 (accident)"></span>
+                                <span class="filled" title="Price: 5"></span>
+                                <span class="filled" title="Distance: 5"></span>
+                            </div>
+                        </td>
+                        <td><strong>2022 Venue Essential</strong><br><span style="color:var(--muted)">Fiery Red</span></td>
+                        <td>57K</td>
+                        <td>
+                            <span class="feat key">Htd seats</span>
+                            <span class="feat key">Camera</span>
+                            <span class="feat yes">CarPlay</span>
+                        </td>
+                        <td><a href="https://vhr.carfax.ca/?id=IKWqPEOcwApJJAlao/VmNquDP2t54I3U" target="_blank">CARFAX</a><br><span class="accident">⚠️ $3,674 claim (Oct 2022)</span><br><span style="color:var(--muted)">1 owner · 6 service records</span></td>
+                        <td>Richmond Hill Hyundai</td>
+                        <td>5 km</td>
+                        <td>$16,400</td>
+                        <td class="price-ok"><strong>~$18.5K</strong></td>
+                        <td class="links"><a href="https://www.richmondhillhyundai.com/inventory/used/5941/2022/Hyundai/Venue" target="_blank">Listing</a> <a href="https://www.richmondhillhyundai.com" target="_blank">Dealer</a></td>
+                    </tr>
+
+                    <!-- #12: Thornhill Venue 9K - Score 12/25 (ACCIDENT) -->
+                    <!-- Features: 5/5 | KM: 5/5 (9K!) | CARFAX: 0/5 (police accident) | Price: 2/5 | Distance: 5/5 -->
+                    <tr data-dealer="thornhill2" style="background: #fef0f0;">
+                        <td>
+                            <span class="score score-low">12</span>/25
+                            <div class="rating-bar">
+                                <span class="filled" title="Features: 5"></span>
+                                <span class="filled" title="KM: 5"></span>
+                                <span class="filled low" title="CARFAX: 0 (police accident!)"></span>
+                                <span class="filled mid" title="Price: 2"></span>
+                                <span class="filled" title="Distance: 5"></span>
+                            </div>
+                        </td>
                         <td><strong>2022 Venue Preferred</strong><br><span style="color:var(--muted)">Silver</span></td>
                         <td style="color:var(--green)"><strong>9K</strong></td>
                         <td>
@@ -313,12 +443,22 @@
                         <td>2 km</td>
                         <td>$18,947</td>
                         <td class="price-over"><strong>~$21.4K</strong></td>
-                        <td><span class="tag tag-warn">Accident!</span></td>
                         <td class="links"><a href="https://www.thornhillhyundai.com/inventory/used/10609/2022/Hyundai/Venue" target="_blank">Listing</a> <a href="https://www.thornhillhyundai.com" target="_blank">Dealer</a></td>
                     </tr>
                 </tbody>
             </table>
             </div>
+        </section>
+
+        <section>
+            <div class="section-title">Rating Breakdown</div>
+            <p class="note">
+                <strong>Features (5 pts):</strong> +1 each for htd seats, camera, blind spot, lane assist, htd wheel<br>
+                <strong>KM (5 pts):</strong> 5=under 30K, 4=30-50K, 3=50-65K, 2=65-80K, 1=over 80K<br>
+                <strong>CARFAX (5 pts):</strong> 5=verified clean, 3=unknown/$, 2=minor accident, 0=police accident<br>
+                <strong>Price (5 pts):</strong> 5=under $18K, 4=18-20K, 3=20-21K, 2=over 21K<br>
+                <strong>Distance (5 pts):</strong> 5=under 20km, 4=20-50km, 3=50-100km, 2=100-150km, 1=over 150km
+            </p>
         </section>
 
         <section>
@@ -378,7 +518,6 @@
             markers[d.id] = marker;
         });
 
-        // Row hover/click -> highlight marker
         document.querySelectorAll('tr[data-dealer]').forEach(row => {
             const dealerId = row.dataset.dealer;
             row.addEventListener('mouseenter', () => {
