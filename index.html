@@ -14,6 +14,7 @@
             --accent: #2383e2;
             --green: #0f7b6c;
             --orange: #d9730d;
+            --red: #d93025;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -31,7 +32,7 @@
         .budget { display: inline-block; background: #e6f4ea; color: var(--green); padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 500; margin-bottom: 12px; }
         #map { height: 140px; border-radius: 6px; margin-bottom: 20px; background: var(--subtle); }
         section { margin-bottom: 24px; }
-        .section-title { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+        .section-title { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
         .tag { font-size: 8px; font-weight: 500; padding: 2px 5px; border-radius: 3px; text-transform: uppercase; }
         .tag-ok { background: #e6f4ea; color: #1e5a1e; }
         .tag-warn { background: #fce8e6; color: #a50e0e; }
@@ -45,13 +46,15 @@
         .price-over { color: var(--orange); }
         .feat { font-size: 8px; padding: 1px 4px; border-radius: 2px; background: var(--subtle); color: var(--muted); display: inline-block; margin: 1px 0; }
         .feat.yes { background: #e6f4ea; color: #1e5a1e; }
+        .feat.key { background: #e6f4ea; color: #1e5a1e; font-weight: 600; }
         .links { font-size: 9px; }
         .links a { margin-right: 8px; }
         footer { font-size: 9px; color: var(--muted); padding-top: 12px; border-top: 1px solid var(--subtle); }
         .note { font-size: 9px; color: var(--muted); margin-bottom: 8px; }
         tr.highlight { background: #fffde7; }
         tr:hover { background: var(--subtle); cursor: pointer; }
-        .marker-highlight { filter: hue-rotate(200deg) brightness(1.5); }
+        .accident { color: var(--red); font-weight: 500; }
+        .clean { color: var(--green); }
     </style>
 </head>
 <body>
@@ -64,8 +67,8 @@
 
         <!-- SUMMARY TABLE -->
         <section>
-            <div class="section-title">All Listings <span class="tag tag-ok">Soul: 2017-19, 2022-24</span> <span class="tag tag-ok">Venue: All years</span> <span class="tag tag-warn">Avoid Soul 2020-21</span></div>
-            <p class="note">Sorted by all-in price. All have heated seats + camera. EX/Preferred = heated steering.</p>
+            <div class="section-title">All Listings <span class="tag tag-ok">Soul: 2017-19, 2022-24</span> <span class="tag tag-ok">Venue: 2021-22</span> <span class="tag tag-warn">Avoid Soul 2020-21</span></div>
+            <p class="note">Sorted by all-in price. Key features in <strong>bold green</strong>: heated seats, camera, blind spot (BSM), lane assist. EX/Preferred = heated steering.</p>
             <div style="overflow-x: auto;">
             <table>
                 <thead>
@@ -73,7 +76,7 @@
                         <th>Vehicle</th>
                         <th>KM</th>
                         <th>Features</th>
-                        <th>Accident/CARFAX</th>
+                        <th>CARFAX / History</th>
                         <th>Dealer</th>
                         <th>Dist</th>
                         <th>List</th>
@@ -88,12 +91,12 @@
                         <td><strong>2019 Soul EX</strong><br><span style="color:var(--muted)">Polar White</span></td>
                         <td>65K</td>
                         <td>
-                            <span class="feat yes">Htd seats</span>
+                            <span class="feat key">Htd seats</span>
                             <span class="feat yes">Htd wheel</span>
-                            <span class="feat yes">Camera</span>
+                            <span class="feat key">Camera</span>
                             <span class="feat">Alloys</span>
                         </td>
-                        <td><span style="color:var(--muted)">CARFAX $</span></td>
+                        <td><span style="color:var(--muted)">CARFAX $ (dealer charges)</span></td>
                         <td>London Kia</td>
                         <td>190 km</td>
                         <td>$15,695</td>
@@ -107,13 +110,13 @@
                         <td><strong>2022 Soul EX</strong><br><span style="color:var(--muted)">Inferno Red</span></td>
                         <td>58K</td>
                         <td>
-                            <span class="feat yes">Htd seats</span>
-                            <span class="feat yes">Camera</span>
-                            <span class="feat yes">BSM</span>
-                            <span class="feat yes">Lane</span>
+                            <span class="feat key">Htd seats</span>
+                            <span class="feat key">Camera</span>
+                            <span class="feat key">Blind spot</span>
+                            <span class="feat key">Lane</span>
                             <span class="feat">Wireless chg</span>
                         </td>
-                        <td><span style="color:var(--muted)">CARFAX $</span></td>
+                        <td><span style="color:var(--muted)">CARFAX $ (dealer charges)</span></td>
                         <td>United Stars Auto</td>
                         <td>50 km</td>
                         <td>$15,999</td>
@@ -127,11 +130,11 @@
                         <td><strong>2022 Venue Essential</strong><br><span style="color:var(--muted)">Fiery Red</span></td>
                         <td>57K</td>
                         <td>
-                            <span class="feat yes">Htd seats</span>
-                            <span class="feat yes">Camera</span>
+                            <span class="feat key">Htd seats</span>
+                            <span class="feat key">Camera</span>
                             <span class="feat yes">CarPlay</span>
                         </td>
-                        <td><a href="https://vhr.carfax.ca/?id=IKWqPEOcwApJJAlao/VmNquDP2t54I3U" target="_blank">CARFAX</a><br><span style="color:var(--muted)">1 owner</span></td>
+                        <td><a href="https://vhr.carfax.ca/?id=IKWqPEOcwApJJAlao/VmNquDP2t54I3U" target="_blank">CARFAX</a><br><span class="clean">1 owner</span></td>
                         <td>Richmond Hill Hyundai</td>
                         <td>5 km</td>
                         <td>$16,400</td>
@@ -145,11 +148,11 @@
                         <td><strong>2022 Soul EX</strong><br><span style="color:var(--muted)">North York</span></td>
                         <td>71K</td>
                         <td>
-                            <span class="feat yes">Htd seats</span>
+                            <span class="feat key">Htd seats</span>
                             <span class="feat yes">Htd wheel</span>
-                            <span class="feat yes">Camera</span>
+                            <span class="feat key">Camera</span>
                         </td>
-                        <td><span style="color:var(--muted)">CARFAX $</span></td>
+                        <td><span style="color:var(--muted)">CARFAX $ (dealer charges)</span></td>
                         <td>Low Price Auto Sales</td>
                         <td>12 km</td>
                         <td>$16,880</td>
@@ -163,13 +166,13 @@
                         <td><strong>2022 Soul EX</strong><br><span style="color:var(--muted)">Oakville</span></td>
                         <td>71K</td>
                         <td>
-                            <span class="feat yes">Htd seats</span>
+                            <span class="feat key">Htd seats</span>
                             <span class="feat yes">Htd wheel</span>
-                            <span class="feat yes">Camera</span>
-                            <span class="feat yes">BSM</span>
+                            <span class="feat key">Camera</span>
+                            <span class="feat key">Blind spot</span>
                             <span class="feat">Sunroof</span>
                         </td>
-                        <td><span style="color:var(--muted)">CARFAX $</span></td>
+                        <td><span style="color:var(--muted)">CARFAX $ (dealer charges)</span></td>
                         <td>Samz Auto</td>
                         <td>45 km</td>
                         <td>$16,999</td>
@@ -183,18 +186,18 @@
                         <td><strong>2022 Venue Preferred</strong><br><span style="color:var(--muted)">White / Black roof</span></td>
                         <td>74K</td>
                         <td>
-                            <span class="feat yes">Htd seats</span>
+                            <span class="feat key">Htd seats</span>
                             <span class="feat yes">Htd wheel</span>
-                            <span class="feat yes">Camera</span>
-                            <span class="feat yes">BSM</span>
-                            <span class="feat yes">Lane</span>
+                            <span class="feat key">Camera</span>
+                            <span class="feat key">Blind spot</span>
+                            <span class="feat key">Lane</span>
                         </td>
-                        <td><a href="https://vhr.carfax.ca/?id=Q3Ur0DZaOrDChZ/Clwo3yS5R+JnVitAT" target="_blank">CARFAX</a></td>
+                        <td><a href="https://vhr.carfax.ca/?id=Q3Ur0DZaOrDChZ/Clwo3yS5R+JnVitAT" target="_blank">CARFAX</a><br><span class="clean">No accidents</span><br><span style="color:var(--muted)">1 owner · 5 service records</span></td>
                         <td>Thornhill Hyundai</td>
                         <td>2 km</td>
                         <td>$17,398</td>
                         <td class="price-ok"><strong>~$19.7K</strong></td>
-                        <td><span class="tag tag-blue">Closest</span></td>
+                        <td><span class="tag tag-blue">Closest</span> <span class="tag tag-ok">Clean</span></td>
                         <td class="links"><a href="https://www.thornhillhyundai.com/inventory/used/6187/2022/Hyundai/Venue" target="_blank">Listing</a> <a href="https://www.thornhillhyundai.com" target="_blank">Dealer</a></td>
                     </tr>
 
@@ -203,13 +206,13 @@
                         <td><strong>2022 Soul EX</strong><br><span style="color:var(--muted)">White / Black</span></td>
                         <td>75K</td>
                         <td>
-                            <span class="feat yes">Htd seats</span>
+                            <span class="feat key">Htd seats</span>
                             <span class="feat yes">Htd wheel</span>
-                            <span class="feat yes">Camera</span>
+                            <span class="feat key">Camera</span>
                             <span class="feat">Sunroof</span>
                             <span class="feat">Wireless chg</span>
                         </td>
-                        <td><span style="color:var(--muted)">CARFAX $</span></td>
+                        <td><span style="color:var(--muted)">CARFAX $ (dealer charges)</span></td>
                         <td>Fairmont Premier Auto</td>
                         <td>15 km</td>
                         <td>$17,499</td>
@@ -223,12 +226,12 @@
                         <td><strong>2022 Venue Preferred</strong><br><span style="color:var(--muted)">Intense Blue</span></td>
                         <td>72K</td>
                         <td>
-                            <span class="feat yes">Htd seats</span>
+                            <span class="feat key">Htd seats</span>
                             <span class="feat yes">Htd wheel</span>
-                            <span class="feat yes">Camera</span>
-                            <span class="feat yes">BSM</span>
+                            <span class="feat key">Camera</span>
+                            <span class="feat key">Blind spot</span>
                         </td>
-                        <td><a href="https://vhr.carfax.ca/?id=qseaJfcFyvD78+K87B4mf9QpuSJMt5Pv" target="_blank">CARFAX</a></td>
+                        <td><a href="https://vhr.carfax.ca/?id=qseaJfcFyvD78+K87B4mf9QpuSJMt5Pv" target="_blank">CARFAX</a><br><span class="clean">No accidents</span><br><span style="color:var(--muted)">1 owner · Personal use</span></td>
                         <td>Achilles Mazda</td>
                         <td>55 km</td>
                         <td>$17,655</td>
@@ -242,11 +245,11 @@
                         <td><strong>2019 Soul EX</strong><br><span style="color:var(--muted)">Caribbean Blue</span></td>
                         <td style="color:var(--green)"><strong>50K</strong></td>
                         <td>
-                            <span class="feat yes">Htd seats</span>
+                            <span class="feat key">Htd seats</span>
                             <span class="feat yes">Htd wheel</span>
-                            <span class="feat yes">Camera</span>
+                            <span class="feat key">Camera</span>
                         </td>
-                        <td><span style="color:var(--green)">Accident free</span><br><span style="color:var(--muted)">CARFAX $</span></td>
+                        <td><span class="clean">Accident free</span><br><span style="color:var(--muted)">CARFAX $ (dealer charges)</span></td>
                         <td>Woodstock Kia</td>
                         <td>130 km</td>
                         <td>$17,888</td>
@@ -260,13 +263,13 @@
                         <td><strong>2022 Soul EX</strong><br><span style="color:var(--muted)">Black</span></td>
                         <td>63K</td>
                         <td>
-                            <span class="feat yes">Htd seats</span>
+                            <span class="feat key">Htd seats</span>
                             <span class="feat yes">Htd wheel</span>
-                            <span class="feat yes">Camera</span>
-                            <span class="feat yes">BSM</span>
-                            <span class="feat yes">Lane</span>
+                            <span class="feat key">Camera</span>
+                            <span class="feat key">Blind spot</span>
+                            <span class="feat key">Lane</span>
                         </td>
-                        <td><span style="color:var(--green)">No accidents</span><br><span style="color:var(--muted)">1 owner</span></td>
+                        <td><span class="clean">No accidents</span><br><span style="color:var(--muted)">1 owner</span></td>
                         <td>Clutch</td>
                         <td>18 km</td>
                         <td>$17,990</td>
@@ -280,12 +283,12 @@
                         <td><strong>2019 Soul EX+</strong><br><span style="color:var(--muted)">Cambridge</span></td>
                         <td>54K</td>
                         <td>
-                            <span class="feat yes">Htd seats</span>
+                            <span class="feat key">Htd seats</span>
                             <span class="feat yes">Htd wheel</span>
-                            <span class="feat yes">Camera</span>
+                            <span class="feat key">Camera</span>
                             <span class="feat yes">CarPlay</span>
                         </td>
-                        <td><span style="color:var(--muted)">Free CARFAX</span></td>
+                        <td><span style="color:var(--muted)">Free CARFAX at dealer</span></td>
                         <td>Daniel's Auto Sales</td>
                         <td>95 km</td>
                         <td>$17,995</td>
@@ -294,23 +297,23 @@
                         <td class="links"><a href="https://www.autotrader.ca/a/kia/soul/cambridge/ontario/5_61365733_20100517123929314/" target="_blank">Listing</a></td>
                     </tr>
 
-                    <!-- 2022 Venue Preferred - Thornhill 9K - $18,947 -->
-                    <tr data-dealer="thornhill2">
+                    <!-- 2022 Venue Preferred - Thornhill 9K - $18,947 - HAS ACCIDENT -->
+                    <tr data-dealer="thornhill2" style="background: #fff8e8;">
                         <td><strong>2022 Venue Preferred</strong><br><span style="color:var(--muted)">Silver</span></td>
                         <td style="color:var(--green)"><strong>9K</strong></td>
                         <td>
-                            <span class="feat yes">Htd seats</span>
+                            <span class="feat key">Htd seats</span>
                             <span class="feat yes">Htd wheel</span>
-                            <span class="feat yes">Camera</span>
-                            <span class="feat yes">BSM</span>
-                            <span class="feat yes">Lane</span>
+                            <span class="feat key">Camera</span>
+                            <span class="feat key">Blind spot</span>
+                            <span class="feat key">Lane</span>
                         </td>
-                        <td><a href="https://vhr.carfax.ca/?id=WQU0u0mf6xiE/IEP/oH3qWtcVspnYhrp" target="_blank">CARFAX</a><br><span style="color:var(--muted)">Like new</span></td>
+                        <td><a href="https://vhr.carfax.ca/?id=WQU0u0mf6xiE/IEP/oH3qWtcVspnYhrp" target="_blank">CARFAX</a><br><span class="accident">⚠️ POLICE REPORTED ACCIDENT</span><br><span style="color:var(--muted)">Jun 2025 · 1 owner</span></td>
                         <td>Thornhill Hyundai</td>
                         <td>2 km</td>
                         <td>$18,947</td>
                         <td class="price-over"><strong>~$21.4K</strong></td>
-                        <td><span class="tag tag-blue">9K km!</span></td>
+                        <td><span class="tag tag-warn">Accident!</span></td>
                         <td class="links"><a href="https://www.thornhillhyundai.com/inventory/used/10609/2022/Hyundai/Venue" target="_blank">Listing</a> <a href="https://www.thornhillhyundai.com" target="_blank">Dealer</a></td>
                     </tr>
                 </tbody>
@@ -323,12 +326,12 @@
             <p class="links" style="font-size: 10px;">
                 <a href="https://www.autotrader.ca/cars/kia/soul/on/?rcp=15&rcs=0&srt=3&yRng=2022%2C2024&pRng=%2C18000&prx=-2&loc=L4J%203W3" target="_blank">AutoTrader · Soul 2022-24</a>
                 <a href="https://www.autotrader.ca/cars/kia/soul/on/?rcp=15&rcs=0&srt=3&yRng=2017%2C2019&pRng=%2C18000&prx=-2&loc=L4J%203W3" target="_blank">AutoTrader · Soul 2017-19</a>
-                <a href="https://www.autotrader.ca/cars/hyundai/venue/on/?rcp=15&rcs=0&srt=3&yRng=2020%2C2024&pRng=%2C18000&prx=-2&loc=L4J%203W3" target="_blank">AutoTrader · Venue</a>
+                <a href="https://www.autotrader.ca/cars/hyundai/venue/on/?rcp=15&rcs=0&srt=3&yRng=2021%2C2022&pRng=%2C18000&prx=-2&loc=L4J%203W3" target="_blank">AutoTrader · Venue 2021-22</a>
             </p>
         </section>
 
         <footer>
-            Verified Dec 2024. CARFAX links verified where dealers provide them. "CARFAX $" = dealer charges for report. Confirm availability before visiting.
+            Verified Dec 2024. CARFAX reports scraped where available. "CARFAX $" = dealer charges for report. BSM = Blind Spot Monitoring. Confirm availability before visiting.
         </footer>
     </div>
 
@@ -389,7 +392,7 @@
                 }
             });
             row.addEventListener('click', (e) => {
-                if (e.target.tagName === 'A') return; // Don't interfere with links
+                if (e.target.tagName === 'A') return;
                 if (markers[dealerId]) {
                     map.setView(markers[dealerId].getLatLng(), 11);
                     markers[dealerId].openPopup();
