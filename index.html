@@ -3,876 +3,821 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Car Search</title>
+    <title>Car Search - Mom's Car Finder</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         :root {
-            --bg: #fff;
+            --bg: #fafafa;
+            --card: #ffffff;
             --fg: #1a1a1a;
-            --muted: #737373;
-            --subtle: #f5f5f5;
-            --accent: #2383e2;
-            --green: #0f7b6c;
-            --orange: #d9730d;
-            --red: #d93025;
+            --muted: #666;
+            --border: #e0e0e0;
+            --accent: #1a73e8;
+            --green: #0d7a0d;
+            --orange: #e65100;
+            --red: #c62828;
+            --yellow: #ffc107;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            font-size: 11px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 18px;
             color: var(--fg);
             background: var(--bg);
-            line-height: 1.4;
+            line-height: 1.5;
         }
         a { color: var(--accent); text-decoration: none; }
         a:hover { text-decoration: underline; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
-        h1 { font-size: 22px; font-weight: 600; margin-bottom: 2px; }
-        .meta { color: var(--muted); font-size: 10px; margin-bottom: 16px; }
-        .budget { display: inline-block; background: #e6f4ea; color: var(--green); padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 500; margin-bottom: 12px; }
-        #map { height: 140px; border-radius: 6px; margin-bottom: 20px; background: var(--subtle); }
-        section { margin-bottom: 24px; }
-        .section-title { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-        .tag { font-size: 8px; font-weight: 500; padding: 2px 5px; border-radius: 3px; text-transform: uppercase; }
-        .tag-ok { background: #e6f4ea; color: #1e5a1e; }
-        .tag-warn { background: #fce8e6; color: #a50e0e; }
-        .tag-blue { background: #e8f0fe; color: #1967d2; }
-        table { width: 100%; font-size: 10px; border-collapse: collapse; }
-        th { text-align: left; font-weight: 500; color: var(--muted); font-size: 9px; text-transform: uppercase; padding: 4px 6px 4px 0; border-bottom: 1px solid var(--subtle); position: sticky; top: 0; background: #fff; }
-        td { padding: 6px 6px 6px 0; vertical-align: top; }
-        tr + tr td { border-top: 1px solid var(--subtle); }
-        td:last-child, th:last-child { padding-right: 0; }
-        .price-ok { color: var(--green); }
-        .price-over { color: var(--orange); }
-        .feat { font-size: 8px; padding: 1px 4px; border-radius: 2px; background: var(--subtle); color: var(--muted); display: inline-block; margin: 1px 0; }
-        .feat.yes { background: #e6f4ea; color: #1e5a1e; }
-        .feat.key { background: #e6f4ea; color: #1e5a1e; font-weight: 600; }
-        .links { font-size: 9px; }
-        .links a { margin-right: 8px; }
-        footer { font-size: 9px; color: var(--muted); padding-top: 12px; border-top: 1px solid var(--subtle); }
-        .note { font-size: 9px; color: var(--muted); margin-bottom: 8px; }
-        tr.highlight { background: #fffde7; }
-        tr:hover { background: var(--subtle); cursor: pointer; }
-        .accident { color: var(--red); font-weight: 500; }
-        .clean { color: var(--green); }
-        .score { font-size: 12px; font-weight: 600; }
-        .score-high { color: var(--green); }
-        .score-mid { color: var(--orange); }
-        .score-low { color: var(--red); }
-        .rating-bar { display: flex; gap: 2px; margin-top: 2px; }
-        .rating-bar span { width: 8px; height: 8px; border-radius: 2px; background: var(--subtle); }
-        .rating-bar span.filled { background: var(--green); }
-        .rating-bar span.filled.mid { background: var(--orange); }
-        .rating-bar span.filled.low { background: var(--red); }
+
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+
+        /* Header */
+        header {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        h1 { font-size: 28px; font-weight: 600; margin-bottom: 8px; }
+        .subtitle { color: var(--muted); font-size: 16px; }
+        .budget-badge {
+            display: inline-block;
+            background: #e8f5e9;
+            color: var(--green);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+
+        /* Toolbar */
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-primary:hover { background: #1557b0; }
+        .btn-secondary { background: var(--card); color: var(--fg); border: 2px solid var(--border); }
+        .btn-secondary:hover { background: #f5f5f5; }
+        .btn-secondary.active { background: #e3f2fd; border-color: var(--accent); }
+
+        select, input[type="text"], input[type="url"] {
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            background: var(--card);
+        }
+        select:focus, input:focus { outline: none; border-color: var(--accent); }
+
+        /* Stats */
+        .stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .stat {
+            background: var(--card);
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .stat-value { font-size: 28px; font-weight: 700; color: var(--accent); }
+        .stat-label { font-size: 14px; color: var(--muted); }
+
+        /* Map */
+        #map {
+            height: 200px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        /* Car Cards */
+        .car-grid {
+            display: grid;
+            gap: 16px;
+        }
+        .car-card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-left: 6px solid var(--green);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .car-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
+        .car-card.accident { border-left-color: var(--orange); }
+        .car-card.police-accident { border-left-color: var(--red); }
+        .car-card.over-budget { border-left-color: var(--muted); }
+        .car-card.favorite { background: #fffde7; }
+        .car-card.hidden { display: none; }
+
+        .car-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        .car-title { font-size: 22px; font-weight: 600; }
+        .car-subtitle { font-size: 14px; color: var(--muted); }
+
+        .car-score {
+            font-size: 32px;
+            font-weight: 700;
+            text-align: center;
+            min-width: 80px;
+        }
+        .car-score.high { color: var(--green); }
+        .car-score.mid { color: var(--orange); }
+        .car-score.low { color: var(--red); }
+        .car-score small { display: block; font-size: 12px; font-weight: 400; color: var(--muted); }
+
+        .car-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .detail-item {
+            padding: 12px;
+            background: var(--bg);
+            border-radius: 8px;
+        }
+        .detail-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .detail-value { font-size: 20px; font-weight: 600; }
+        .detail-value.green { color: var(--green); }
+        .detail-value.red { color: var(--red); }
+        .detail-value.orange { color: var(--orange); }
+
+        .features {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .feature {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .feature.key { background: #e8f5e9; color: var(--green); }
+        .feature.yes { background: #e3f2fd; color: var(--accent); }
+        .feature.neutral { background: #f5f5f5; color: var(--muted); }
+
+        .car-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .car-links a {
+            margin-right: 16px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .car-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .icon-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            background: var(--card);
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .icon-btn:hover { background: #f5f5f5; }
+        .icon-btn.starred { background: #fff8e1; border-color: var(--yellow); color: var(--yellow); }
+
+        /* Notes */
+        .car-notes {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed var(--border);
+        }
+        .notes-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 60px;
+        }
+        .notes-input:focus { outline: none; border-color: var(--accent); }
+
+        /* Add Car Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal h2 { font-size: 24px; margin-bottom: 20px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: var(--muted); }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+        /* CARFAX Status */
+        .carfax-status { padding: 12px; border-radius: 8px; margin-bottom: 12px; }
+        .carfax-status.clean { background: #e8f5e9; }
+        .carfax-status.accident { background: #fff3e0; }
+        .carfax-status.police { background: #ffebee; }
+        .carfax-status.unknown { background: #f5f5f5; }
+
+        /* Comparison Table */
+        .comparison {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .comparison h3 { font-size: 20px; margin-bottom: 16px; }
+        .comparison table { width: 100%; font-size: 16px; border-collapse: collapse; }
+        .comparison th, .comparison td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); }
+        .comparison th { color: var(--muted); font-weight: 500; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body { font-size: 16px; }
+            .car-title { font-size: 20px; }
+            .car-score { font-size: 28px; }
+            .detail-value { font-size: 18px; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+
+        /* Print */
+        @media print {
+            .toolbar, .modal-overlay, .icon-btn, .btn { display: none; }
+            .car-card { break-inside: avoid; }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Car Search</h1>
-        <p class="meta">Kia Soul & Hyundai Venue · GTA · Dealer only · Updated Dec 2024</p>
-        <div class="budget">Budget: $21,000 all-in → max ~$17,500 sticker</div>
+        <header>
+            <h1>🚗 Mom's Car Finder</h1>
+            <p class="subtitle">Kia Soul & Hyundai Venue in the GTA • Dealer Only • Updated Dec 2024</p>
+            <div class="budget-badge">💰 Budget: $21,000 all-in (max ~$17,500 sticker)</div>
+        </header>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value" id="total-cars">0</div>
+                <div class="stat-label">Total Cars</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="in-budget">0</div>
+                <div class="stat-label">In Budget</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="clean-carfax">0</div>
+                <div class="stat-label">Clean CARFAX</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="favorites-count">0</div>
+                <div class="stat-label">⭐ Favorites</div>
+            </div>
+        </div>
+
+        <div class="toolbar">
+            <button class="btn btn-primary" onclick="showAddModal()">➕ Add New Car</button>
+            <select id="sort-select" onchange="sortCars()">
+                <option value="score">Sort by: Best Rating</option>
+                <option value="price">Sort by: Lowest Price</option>
+                <option value="km">Sort by: Lowest KM</option>
+                <option value="distance">Sort by: Closest</option>
+                <option value="year">Sort by: Newest Year</option>
+            </select>
+            <button class="btn btn-secondary" id="filter-favorites" onclick="toggleFavorites()">⭐ Show Favorites Only</button>
+            <button class="btn btn-secondary" id="filter-budget" onclick="toggleBudget()">💰 In Budget Only</button>
+            <button class="btn btn-secondary" onclick="showComparison()">📊 Compare Soul vs Venue</button>
+        </div>
 
         <div id="map"></div>
 
-        <!-- SUMMARY TABLE - Sorted by Rating -->
-        <section>
-            <div class="section-title">All Listings (Sorted by Rating) <span class="tag tag-ok">Soul: 2017-19, 2022-24</span> <span class="tag tag-ok">Venue: 2021-22</span> <span class="tag tag-warn">Avoid Soul 2020-21</span></div>
-            <p class="note">Rating = Features (5) + Low KM (5) + Clean CARFAX (5) + Price (5) + Distance (5) = max 25. Key features in <strong>bold</strong>: htd seats, camera, blind spot, lane.</p>
-            <div style="overflow-x: auto;">
+        <div class="car-grid" id="car-grid">
+            <!-- Cars will be rendered here by JavaScript -->
+        </div>
+
+        <!-- Comparison Section -->
+        <div class="comparison" id="comparison" style="display: none;">
+            <h3>Soul vs Venue Comparison</h3>
             <table>
-                <thead>
-                    <tr>
-                        <th>Rating</th>
-                        <th>Vehicle</th>
-                        <th>KM</th>
-                        <th>Features</th>
-                        <th>CARFAX / History</th>
-                        <th>Dealer</th>
-                        <th>Dist</th>
-                        <th>List</th>
-                        <th>All-in</th>
-                        <th>Links</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- #1: Thornhill Venue 74K - Score 21/25 -->
-                    <!-- Features: 5/5 | KM: 2/5 (74K) | CARFAX: 5/5 (clean) | Price: 4/5 | Distance: 5/5 -->
-                    <tr data-dealer="thornhill">
-                        <td>
-                            <span class="score score-high">21</span>/25
-                            <div class="rating-bar">
-                                <span class="filled" title="Features: 5"></span>
-                                <span class="filled mid" title="KM: 2"></span>
-                                <span class="filled" title="CARFAX: 5"></span>
-                                <span class="filled" title="Price: 4"></span>
-                                <span class="filled" title="Distance: 5"></span>
-                            </div>
-                        </td>
-                        <td><strong>2022 Venue Preferred</strong><br><span style="color:var(--muted)">White / Black roof</span></td>
-                        <td>74K</td>
-                        <td>
-                            <span class="feat key">Htd seats</span>
-                            <span class="feat yes">Htd wheel</span>
-                            <span class="feat key">Camera</span>
-                            <span class="feat key">Blind spot</span>
-                            <span class="feat key">Lane</span>
-                            <span class="feat key">Auto-brake</span>
-                        </td>
-                        <td><a href="https://vhr.carfax.ca/?id=Q3Ur0DZaOrDChZ/Clwo3yS5R+JnVitAT" target="_blank">CARFAX</a><br><span class="clean">No accidents</span><br><span style="color:var(--muted)">1 owner · 5 service records</span></td>
-                        <td>Thornhill Hyundai</td>
-                        <td>2 km</td>
-                        <td>$17,398</td>
-                        <td class="price-ok"><strong>~$19.7K</strong></td>
-                        <td class="links"><a href="https://www.thornhillhyundai.com/inventory/used/6187/2022/Hyundai/Venue" target="_blank">Listing</a> <a href="https://www.thornhillhyundai.com" target="_blank">Dealer</a></td>
-                    </tr>
-
-                    <!-- #2: Clutch Soul - Score 20/25 -->
-                    <!-- Features: 5/5 | KM: 3/5 (63K) | CARFAX: 5/5 (clean) | Price: 3/5 | Distance: 4/5 -->
-                    <tr data-dealer="clutch">
-                        <td>
-                            <span class="score score-high">20</span>/25
-                            <div class="rating-bar">
-                                <span class="filled" title="Features: 5"></span>
-                                <span class="filled" title="KM: 3"></span>
-                                <span class="filled" title="CARFAX: 5"></span>
-                                <span class="filled mid" title="Price: 3"></span>
-                                <span class="filled" title="Distance: 4"></span>
-                            </div>
-                        </td>
-                        <td><strong>2022 Soul EX</strong><br><span style="color:var(--muted)">Black</span></td>
-                        <td>63K</td>
-                        <td>
-                            <span class="feat key">Htd seats</span>
-                            <span class="feat yes">Htd wheel</span>
-                            <span class="feat key">Camera</span>
-                            <span class="feat key">Blind spot</span>
-                            <span class="feat key">Lane</span>
-                            <span class="feat key">Auto-brake</span>
-                        </td>
-                        <td><span class="clean">No accidents</span><br><span style="color:var(--muted)">1 owner</span></td>
-                        <td>Clutch</td>
-                        <td>18 km</td>
-                        <td>$17,990</td>
-                        <td class="price-ok"><strong>~$20.3K</strong></td>
-                        <td class="links"><a href="https://www.carpages.ca/used-cars/ontario/toronto/2022-kia-soul-13093922/" target="_blank">Listing</a> <a href="https://www.clutch.ca" target="_blank">Dealer</a></td>
-                    </tr>
-
-                    <!-- Brampton Nissan Soul - Score 20/25 -->
-                    <!-- Features: 4/5 | KM: 5/5 (24K!) | CARFAX: 5/5 | Price: 2/5 | Distance: 4/5 -->
-                    <tr data-dealer="brampton-nissan">
-                        <td>
-                            <span class="score score-high">20</span>/25
-                            <div class="rating-bar">
-                                <span class="filled" title="Features: 4"></span>
-                                <span class="filled" title="KM: 5"></span>
-                                <span class="filled" title="CARFAX: 5"></span>
-                                <span class="filled mid" title="Price: 2"></span>
-                                <span class="filled" title="Distance: 4"></span>
-                            </div>
-                        </td>
-                        <td><strong>2023 Soul EX</strong><br><span style="color:var(--muted)">Brampton</span></td>
-                        <td style="color:var(--green)"><strong>24K</strong></td>
-                        <td>
-                            <span class="feat key">Htd seats</span>
-                            <span class="feat key">Camera</span>
-                            <span class="feat key">Blind spot</span>
-                            <span class="feat key">Auto-brake</span>
-                            <span class="feat yes">CarPlay</span>
-                        </td>
-                        <td><a href="https://vhr.carfax.ca/?id=PqhbAilweFnO4ydrtMQd9wVK5ghA315i" target="_blank">CARFAX</a><br><span class="clean">No accidents</span><br><span style="color:var(--muted)">1 owner · 2 service records<br>No recalls</span></td>
-                        <td><strong>Brampton North Nissan</strong><br><span style="color:var(--muted)">Official Nissan dealer</span></td>
-                        <td>30 km</td>
-                        <td>$19,798</td>
-                        <td class="price-over"><strong>~$22.4K</strong></td>
-                        <td class="links"><a href="https://www.autotrader.ca/a/kia/soul/brampton/ontario/5_67844936_on20070924102414963/" target="_blank">Listing</a></td>
-                    </tr>
-
-                    <!-- #3: Milton Venue - Score 19/25 -->
-                    <!-- Features: 4/5 | KM: 2/5 (72K) | CARFAX: 5/5 (clean) | Price: 4/5 | Distance: 3/5 -->
-                    <tr data-dealer="milton">
-                        <td>
-                            <span class="score score-high">19</span>/25
-                            <div class="rating-bar">
-                                <span class="filled" title="Features: 4"></span>
-                                <span class="filled mid" title="KM: 2"></span>
-                                <span class="filled" title="CARFAX: 5"></span>
-                                <span class="filled" title="Price: 4"></span>
-                                <span class="filled mid" title="Distance: 3"></span>
-                            </div>
-                        </td>
-                        <td><strong>2022 Venue Preferred</strong><br><span style="color:var(--muted)">Intense Blue</span></td>
-                        <td>72K</td>
-                        <td>
-                            <span class="feat key">Htd seats</span>
-                            <span class="feat yes">Htd wheel</span>
-                            <span class="feat key">Camera</span>
-                            <span class="feat key">Blind spot</span>
-                            <span class="feat key">Auto-brake</span>
-                        </td>
-                        <td><a href="https://vhr.carfax.ca/?id=qseaJfcFyvD78+K87B4mf9QpuSJMt5Pv" target="_blank">CARFAX</a><br><span class="clean">No accidents</span><br><span style="color:var(--muted)">1 owner · Personal use</span></td>
-                        <td>Achilles Mazda</td>
-                        <td>55 km</td>
-                        <td>$17,655</td>
-                        <td class="price-ok"><strong>~$20K</strong></td>
-                        <td class="links"><a href="https://www.autotrader.ca/a/hyundai/venue/milton/ontario/5_67639128_20240710151910541/" target="_blank">Listing</a></td>
-                    </tr>
-
-                    <!-- Bolton Nissan Venue - Score 19/25 -->
-                    <!-- Features: 3/5 | KM: 3/5 (54K) | CARFAX: 5/5 | Price: 4/5 | Distance: 4/5 -->
-                    <tr data-dealer="bolton-nissan">
-                        <td>
-                            <span class="score score-high">19</span>/25
-                            <div class="rating-bar">
-                                <span class="filled mid" title="Features: 3"></span>
-                                <span class="filled" title="KM: 3"></span>
-                                <span class="filled" title="CARFAX: 5"></span>
-                                <span class="filled" title="Price: 4"></span>
-                                <span class="filled" title="Distance: 4"></span>
-                            </div>
-                        </td>
-                        <td><strong>2021 Venue Essential</strong><br><span style="color:var(--muted)">2-Tone</span></td>
-                        <td>54K</td>
-                        <td>
-                            <span class="feat key">Htd seats</span>
-                            <span class="feat key">Camera</span>
-                            <span class="feat key">Auto-brake</span>
-                            <span class="feat yes">CarPlay</span>
-                        </td>
-                        <td><a href="https://vhr.carfax.ca/?id=YzXO6p0R+MafomMPzPYpp+cRPa1weBcl" target="_blank">CARFAX</a><br><span class="clean">No accidents</span><br><span style="color:var(--muted)">2 owners · 7 service records<br>Well maintained</span></td>
-                        <td><strong>Bolton Nissan</strong><br><span style="color:var(--muted)">Official Nissan dealer</span></td>
-                        <td>21 km</td>
-                        <td>$17,655</td>
-                        <td class="price-ok"><strong>~$19.9K</strong></td>
-                        <td class="links"><a href="https://www.autotrader.ca/a/hyundai/venue/bolton/ontario/5_67892660_20110201142314359/" target="_blank">Listing</a></td>
-                    </tr>
-
-                    <!-- Newmarket Hyundai Venue - Score 19/25 -->
-                    <!-- Features: 3/5 | KM: 3/5 (51K) | CARFAX: 5/5 | Price: 4/5 | Distance: 4/5 -->
-                    <tr data-dealer="newmarket-hyundai">
-                        <td>
-                            <span class="score score-high">19</span>/25
-                            <div class="rating-bar">
-                                <span class="filled mid" title="Features: 3"></span>
-                                <span class="filled" title="KM: 3"></span>
-                                <span class="filled" title="CARFAX: 5"></span>
-                                <span class="filled" title="Price: 4"></span>
-                                <span class="filled" title="Distance: 4"></span>
-                            </div>
-                        </td>
-                        <td><strong>2021 Venue Essential</strong><br><span style="color:var(--muted)">Black</span></td>
-                        <td>51K</td>
-                        <td>
-                            <span class="feat key">Htd seats</span>
-                            <span class="feat key">Camera</span>
-                            <span class="feat key">Auto-brake</span>
-                        </td>
-                        <td><a href="https://vhr.carfax.ca/?id=Chm1oIJZ+IVuGvGZANTHKLURaiG/X485" target="_blank">CARFAX</a><br><span class="clean">No accidents</span><br><span style="color:var(--muted)">3 owners · 1 service record</span></td>
-                        <td><strong>Newmarket Hyundai</strong><br><span style="color:var(--muted)">Official Hyundai dealer</span></td>
-                        <td>31 km</td>
-                        <td>$17,413</td>
-                        <td class="price-ok"><strong>~$19.7K</strong></td>
-                        <td class="links"><a href="https://www.autotrader.ca/a/hyundai/venue/newmarket/ontario/5_68245529_20150529105935682/" target="_blank">Listing</a></td>
-                    </tr>
-
-                    <!-- #4: Woodstock Soul - Score 20/25 -->
-                    <!-- Features: 3/5 | KM: 5/5 (46K!) | CARFAX: 5/5 (verified clean) | Price: 4/5 | Distance: 2/5 -->
-                    <tr data-dealer="woodstock">
-                        <td>
-                            <span class="score score-high">20</span>/25
-                            <div class="rating-bar">
-                                <span class="filled mid" title="Features: 3"></span>
-                                <span class="filled" title="KM: 5"></span>
-                                <span class="filled" title="CARFAX: 5"></span>
-                                <span class="filled" title="Price: 4"></span>
-                                <span class="filled mid" title="Distance: 2"></span>
-                            </div>
-                        </td>
-                        <td><strong>2019 Soul +</strong><br><span style="color:var(--muted)">Blue</span></td>
-                        <td style="color:var(--green)"><strong>46K</strong></td>
-                        <td>
-                            <span class="feat key">Htd seats</span>
-                            <span class="feat yes">Htd wheel</span>
-                            <span class="feat key">Camera</span>
-                        </td>
-                        <td><a href="https://vhr.carfax.ca/?id=8WXaZN9c7uB5w+0gO+Ync6Ps+54HVmmm" target="_blank">CARFAX</a><br><span class="clean">No accidents</span><br><span style="color:var(--muted)">2 owners · 16 service records<br>Krown rustproofed yearly</span><br><span class="accident">⚠️ 2 open recalls</span></td>
-                        <td>Woodstock Ford</td>
-                        <td>130 km</td>
-                        <td>$17,888</td>
-                        <td class="price-ok"><strong>~$20.2K</strong></td>
-                        <td class="links"><a href="https://woodstockford.ca/inventory/list/used?stockID=25694A" target="_blank">Listing</a></td>
-                    </tr>
-
-                    <!-- #5: Burlington Soul - Score 18/25 -->
-                    <!-- Features: 5/5 | KM: 3/5 (58K) | CARFAX: 3/5 (unknown) | Price: 5/5 | Distance: 3/5 -->
-                    <tr data-dealer="burlington">
-                        <td>
-                            <span class="score score-mid">18</span>/25
-                            <div class="rating-bar">
-                                <span class="filled" title="Features: 5"></span>
-                                <span class="filled" title="KM: 3"></span>
-                                <span class="filled mid" title="CARFAX: 3"></span>
-                                <span class="filled" title="Price: 5"></span>
-                                <span class="filled mid" title="Distance: 3"></span>
-                            </div>
-                        </td>
-                        <td><strong>2022 Soul EX</strong><br><span style="color:var(--muted)">Inferno Red</span></td>
-                        <td>58K</td>
-                        <td>
-                            <span class="feat key">Htd seats</span>
-                            <span class="feat key">Camera</span>
-                            <span class="feat key">Blind spot</span>
-                            <span class="feat key">Lane</span>
-                            <span class="feat key">Auto-brake</span>
-                            <span class="feat">Wireless chg</span>
-                        </td>
-                        <td><span style="color:var(--muted)">CARFAX $ (unknown)</span></td>
-                        <td>United Stars Auto</td>
-                        <td>50 km</td>
-                        <td>$15,999</td>
-                        <td class="price-ok"><strong>~$18.1K</strong></td>
-                        <td class="links"><a href="https://www.autotrader.ca/a/kia/soul/burlington/ontario/5_68573077_20240621175756918/" target="_blank">Listing</a></td>
-                    </tr>
-
-                    <!-- Morningside Nissan Soul - Score 18/25 -->
-                    <!-- Features: 4/5 | KM: 1/5 (88K) | CARFAX: 5/5 | Price: 4/5 | Distance: 4/5 -->
-                    <tr data-dealer="morningside-nissan">
-                        <td>
-                            <span class="score score-mid">18</span>/25
-                            <div class="rating-bar">
-                                <span class="filled" title="Features: 4"></span>
-                                <span class="filled low" title="KM: 1"></span>
-                                <span class="filled" title="CARFAX: 5"></span>
-                                <span class="filled" title="Price: 4"></span>
-                                <span class="filled" title="Distance: 4"></span>
-                            </div>
-                        </td>
-                        <td><strong>2022 Soul EX</strong><br><span style="color:var(--muted)">Scarborough</span></td>
-                        <td>88K</td>
-                        <td>
-                            <span class="feat key">Htd seats</span>
-                            <span class="feat key">Camera</span>
-                            <span class="feat key">Blind spot</span>
-                            <span class="feat key">Auto-brake</span>
-                        </td>
-                        <td><a href="https://vhr.carfax.ca/?id=RvM7pZoKrvnvdV20qzp2M5wolnQ8tTI3" target="_blank">CARFAX</a><br><span class="clean">No accidents</span><br><span style="color:var(--muted)">2+ owners · 4 service records<br>Certified</span></td>
-                        <td><strong>Morningside Nissan</strong><br><span style="color:var(--muted)">Official Nissan dealer</span></td>
-                        <td>21 km</td>
-                        <td>$16,990</td>
-                        <td class="price-ok"><strong>~$19.2K</strong></td>
-                        <td class="links"><a href="https://www.autotrader.ca/a/kia/soul/toronto/ontario/5_68649253_on20080430102916422/" target="_blank">Listing</a></td>
-                    </tr>
-
-                    <!-- #6: Oakville Soul - Score 17/25 -->
-                    <!-- Features: 4/5 | KM: 2/5 (71K) | CARFAX: 3/5 (unknown) | Price: 5/5 | Distance: 3/5 -->
-                    <tr data-dealer="oakville">
-                        <td>
-                            <span class="score score-mid">17</span>/25
-                            <div class="rating-bar">
-                                <span class="filled" title="Features: 4"></span>
-                                <span class="filled mid" title="KM: 2"></span>
-                                <span class="filled mid" title="CARFAX: 3"></span>
-                                <span class="filled" title="Price: 5"></span>
-                                <span class="filled mid" title="Distance: 3"></span>
-                            </div>
-                        </td>
-                        <td><strong>2022 Soul EX</strong><br><span style="color:var(--muted)">Oakville</span></td>
-                        <td>71K</td>
-                        <td>
-                            <span class="feat key">Htd seats</span>
-                            <span class="feat yes">Htd wheel</span>
-                            <span class="feat key">Camera</span>
-                            <span class="feat key">Blind spot</span>
-                            <span class="feat key">Auto-brake</span>
-                            <span class="feat">Sunroof</span>
-                        </td>
-                        <td><span style="color:var(--muted)">CARFAX $ (unknown)</span></td>
-                        <td>Samz Auto</td>
-                        <td>45 km</td>
-                        <td>$16,999</td>
-                        <td class="price-ok"><strong>~$19.2K</strong></td>
-                        <td class="links"><a href="https://www.autotrader.ca/a/kia/soul/oakville/ontario/5_68568948_20241008142541150/" target="_blank">Listing</a></td>
-                    </tr>
-
-                    <!-- #7: North York Soul - Score 17/25 -->
-                    <!-- Features: 3/5 | KM: 2/5 (71K) | CARFAX: 3/5 (unknown) | Price: 5/5 | Distance: 4/5 -->
-                    <tr data-dealer="northyork">
-                        <td>
-                            <span class="score score-mid">17</span>/25
-                            <div class="rating-bar">
-                                <span class="filled mid" title="Features: 3"></span>
-                                <span class="filled mid" title="KM: 2"></span>
-                                <span class="filled mid" title="CARFAX: 3"></span>
-                                <span class="filled" title="Price: 5"></span>
-                                <span class="filled" title="Distance: 4"></span>
-                            </div>
-                        </td>
-                        <td><strong>2022 Soul EX</strong><br><span style="color:var(--muted)">North York</span></td>
-                        <td>71K</td>
-                        <td>
-                            <span class="feat key">Htd seats</span>
-                            <span class="feat yes">Htd wheel</span>
-                            <span class="feat key">Camera</span>
-                            <span class="feat key">Auto-brake</span>
-                        </td>
-                        <td><span style="color:var(--muted)">CARFAX $ · Kia warranty</span></td>
-                        <td>Low Price Auto Sales</td>
-                        <td>12 km</td>
-                        <td>$16,880</td>
-                        <td class="price-ok"><strong>~$19.1K</strong></td>
-                        <td class="links"><a href="https://www.autotrader.ca/a/kia/soul/north%20york/ontario/5_68567722_20210208140459017/" target="_blank">Listing</a></td>
-                    </tr>
-
-                    <!-- #8: Woodbridge Soul - Score 17/25 -->
-                    <!-- Features: 3/5 | KM: 2/5 (75K) | CARFAX: 3/5 (unknown) | Price: 4/5 | Distance: 4/5 -->
-                    <tr data-dealer="woodbridge">
-                        <td>
-                            <span class="score score-mid">17</span>/25
-                            <div class="rating-bar">
-                                <span class="filled mid" title="Features: 3"></span>
-                                <span class="filled mid" title="KM: 2"></span>
-                                <span class="filled mid" title="CARFAX: 3"></span>
-                                <span class="filled" title="Price: 4"></span>
-                                <span class="filled" title="Distance: 4"></span>
-                            </div>
-                        </td>
-                        <td><strong>2022 Soul EX</strong><br><span style="color:var(--muted)">White / Black</span></td>
-                        <td>75K</td>
-                        <td>
-                            <span class="feat key">Htd seats</span>
-                            <span class="feat yes">Htd wheel</span>
-                            <span class="feat key">Camera</span>
-                            <span class="feat key">Auto-brake</span>
-                            <span class="feat">Sunroof</span>
-                            <span class="feat">Wireless chg</span>
-                        </td>
-                        <td><span style="color:var(--muted)">CARFAX $ · Cert + warranty</span></td>
-                        <td>Fairmont Premier Auto</td>
-                        <td>15 km</td>
-                        <td>$17,499</td>
-                        <td class="price-ok"><strong>~$19.8K</strong></td>
-                        <td class="links"><a href="https://www.autotrader.ca/a/kia/soul/woodbridge/ontario/5_68139858_20250925180838466/" target="_blank">Listing</a></td>
-                    </tr>
-
-                    <!-- #9: London Soul - Score 16/25 -->
-                    <!-- Features: 3/5 | KM: 3/5 (65K) | CARFAX: 3/5 (unknown) | Price: 5/5 | Distance: 1/5 -->
-                    <tr data-dealer="london">
-                        <td>
-                            <span class="score score-mid">16</span>/25
-                            <div class="rating-bar">
-                                <span class="filled mid" title="Features: 3"></span>
-                                <span class="filled" title="KM: 3"></span>
-                                <span class="filled mid" title="CARFAX: 3"></span>
-                                <span class="filled" title="Price: 5"></span>
-                                <span class="filled low" title="Distance: 1"></span>
-                            </div>
-                        </td>
-                        <td><strong>2019 Soul EX</strong><br><span style="color:var(--muted)">Polar White</span></td>
-                        <td>65K</td>
-                        <td>
-                            <span class="feat key">Htd seats</span>
-                            <span class="feat yes">Htd wheel</span>
-                            <span class="feat key">Camera</span>
-                            <span class="feat">Alloys</span>
-                        </td>
-                        <td><span style="color:var(--muted)">CARFAX $ (unknown)</span></td>
-                        <td>London Kia</td>
-                        <td>190 km</td>
-                        <td>$15,695</td>
-                        <td class="price-ok"><strong>~$17.7K</strong></td>
-                        <td class="links"><a href="https://www.autotrader.ca/a/kia/soul/london/ontario/5_68462902_20250122151036241/" target="_blank">Listing</a></td>
-                    </tr>
-
-                    <!-- #10: Cambridge Soul - Score 15/25 -->
-                    <!-- Features: 3/5 | KM: 4/5 (54K) | CARFAX: 3/5 (free at dealer) | Price: 3/5 | Distance: 2/5 -->
-                    <tr data-dealer="cambridge">
-                        <td>
-                            <span class="score score-mid">15</span>/25
-                            <div class="rating-bar">
-                                <span class="filled mid" title="Features: 3"></span>
-                                <span class="filled" title="KM: 4"></span>
-                                <span class="filled mid" title="CARFAX: 3"></span>
-                                <span class="filled mid" title="Price: 3"></span>
-                                <span class="filled mid" title="Distance: 2"></span>
-                            </div>
-                        </td>
-                        <td><strong>2019 Soul EX+</strong><br><span style="color:var(--muted)">Cambridge</span></td>
-                        <td>54K</td>
-                        <td>
-                            <span class="feat key">Htd seats</span>
-                            <span class="feat yes">Htd wheel</span>
-                            <span class="feat key">Camera</span>
-                            <span class="feat yes">CarPlay</span>
-                        </td>
-                        <td><span style="color:var(--muted)">Free CARFAX at dealer</span></td>
-                        <td>Daniel's Auto Sales</td>
-                        <td>95 km</td>
-                        <td>$17,995</td>
-                        <td class="price-ok"><strong>~$20.3K</strong></td>
-                        <td class="links"><a href="https://www.autotrader.ca/a/kia/soul/cambridge/ontario/5_61365733_20100517123929314/" target="_blank">Listing</a></td>
-                    </tr>
-
-                    <!-- #11: Richmond Hill Venue - Score 14/25 (ACCIDENT) -->
-                    <!-- Features: 3/5 | KM: 3/5 (57K) | CARFAX: 2/5 (accident) | Price: 5/5 | Distance: 5/5 -->
-                    <tr data-dealer="richmondhill" style="background: #fff8e8;">
-                        <td>
-                            <span class="score score-mid">14</span>/25
-                            <div class="rating-bar">
-                                <span class="filled mid" title="Features: 3"></span>
-                                <span class="filled" title="KM: 3"></span>
-                                <span class="filled low" title="CARFAX: 2 (accident)"></span>
-                                <span class="filled" title="Price: 5"></span>
-                                <span class="filled" title="Distance: 5"></span>
-                            </div>
-                        </td>
-                        <td><strong>2022 Venue Essential</strong><br><span style="color:var(--muted)">Fiery Red</span></td>
-                        <td>57K</td>
-                        <td>
-                            <span class="feat key">Htd seats</span>
-                            <span class="feat key">Camera</span>
-                            <span class="feat key">Auto-brake</span>
-                            <span class="feat yes">CarPlay</span>
-                        </td>
-                        <td><a href="https://vhr.carfax.ca/?id=IKWqPEOcwApJJAlao/VmNquDP2t54I3U" target="_blank">CARFAX</a><br><span class="accident">⚠️ $3,674 claim (Oct 2022)</span><br><span style="color:var(--muted)">1 owner · 6 service records</span></td>
-                        <td>Richmond Hill Hyundai</td>
-                        <td>5 km</td>
-                        <td>$16,400</td>
-                        <td class="price-ok"><strong>~$18.5K</strong></td>
-                        <td class="links"><a href="https://www.richmondhillhyundai.com/inventory/used/5941/2022/Hyundai/Venue" target="_blank">Listing</a> <a href="https://www.richmondhillhyundai.com" target="_blank">Dealer</a></td>
-                    </tr>
-
-                    <!-- #12: Thornhill Venue 9K - Score 12/25 (ACCIDENT) -->
-                    <!-- Features: 5/5 | KM: 5/5 (9K!) | CARFAX: 0/5 (police accident) | Price: 2/5 | Distance: 5/5 -->
-                    <tr data-dealer="thornhill2" style="background: #fef0f0;">
-                        <td>
-                            <span class="score score-low">12</span>/25
-                            <div class="rating-bar">
-                                <span class="filled" title="Features: 5"></span>
-                                <span class="filled" title="KM: 5"></span>
-                                <span class="filled low" title="CARFAX: 0 (police accident!)"></span>
-                                <span class="filled mid" title="Price: 2"></span>
-                                <span class="filled" title="Distance: 5"></span>
-                            </div>
-                        </td>
-                        <td><strong>2022 Venue Preferred</strong><br><span style="color:var(--muted)">Silver</span></td>
-                        <td style="color:var(--green)"><strong>9K</strong></td>
-                        <td>
-                            <span class="feat key">Htd seats</span>
-                            <span class="feat yes">Htd wheel</span>
-                            <span class="feat key">Camera</span>
-                            <span class="feat key">Blind spot</span>
-                            <span class="feat key">Lane</span>
-                            <span class="feat key">Auto-brake</span>
-                        </td>
-                        <td><a href="https://vhr.carfax.ca/?id=WQU0u0mf6xiE/IEP/oH3qWtcVspnYhrp" target="_blank">CARFAX</a><br><span class="accident">⚠️ POLICE REPORTED ACCIDENT</span><br><span style="color:var(--muted)">Jun 2025 · 1 owner</span></td>
-                        <td>Thornhill Hyundai</td>
-                        <td>2 km</td>
-                        <td>$18,947</td>
-                        <td class="price-over"><strong>~$21.4K</strong></td>
-                        <td class="links"><a href="https://www.thornhillhyundai.com/inventory/used/10609/2022/Hyundai/Venue" target="_blank">Listing</a> <a href="https://www.thornhillhyundai.com" target="_blank">Dealer</a></td>
-                    </tr>
-                </tbody>
+                <tr><th>Spec</th><th>Kia Soul</th><th>Hyundai Venue</th></tr>
+                <tr><td><strong>Cargo (seats up)</strong></td><td style="color:var(--green)"><strong>24.2 cu.ft.</strong></td><td>18.7 cu.ft.</td></tr>
+                <tr><td><strong>Cargo (folded)</strong></td><td style="color:var(--green)"><strong>61-62 cu.ft.</strong></td><td>31.9 cu.ft.</td></tr>
+                <tr><td><strong>Length</strong></td><td>165.2"</td><td style="color:var(--green)"><strong>159.1"</strong> (easier parking)</td></tr>
+                <tr><td><strong>Turning Radius</strong></td><td>17.4 ft</td><td style="color:var(--green)"><strong>16.7 ft</strong> (tighter)</td></tr>
+                <tr><td><strong>Brakes</strong></td><td>4-wheel disc</td><td>Front disc / rear drum</td></tr>
+                <tr><td><strong>Auto-Brake</strong></td><td>2022+ EX: Standard<br>2017-19: Rare</td><td style="color:var(--green)"><strong>All trims: Standard</strong></td></tr>
+                <tr><td><strong>Reliability</strong></td><td>JD Power 84-86</td><td>JD Power 80-85</td></tr>
             </table>
+            <p style="margin-top: 16px; color: var(--muted);">
+                <strong>Bottom line:</strong> Soul has 2x cargo space. Venue is easier to park with standard auto-brake on all trims. Avoid Soul 2020-21 (CVT issues).
+            </p>
+        </div>
+    </div>
+
+    <!-- Add Car Modal -->
+    <div class="modal-overlay" id="add-modal">
+        <div class="modal">
+            <h2>➕ Add New Car</h2>
+            <div class="form-group">
+                <label>🔗 Paste AutoTrader or Dealer URL (auto-fill)</label>
+                <input type="url" id="car-url" placeholder="https://www.autotrader.ca/a/..." onpaste="handleUrlPaste(event)">
+                <p style="font-size: 14px; color: var(--muted); margin-top: 8px;">Paste a URL and we'll try to auto-fill the details!</p>
             </div>
-        </section>
-
-        <!-- Official Kia Dealer Options -->
-        <section>
-            <div class="section-title">Official Kia Dealer Options <span class="tag tag-warn">Over Budget</span> <span class="tag tag-blue">CPO Warranty</span></div>
-            <p class="note">These are from actual Kia dealerships with Certified Pre-Owned warranties. All over $21K all-in budget but included for comparison. All have clean CARFAX.</p>
-            <div style="overflow-x: auto;">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Rating</th>
-                        <th>Vehicle</th>
-                        <th>KM</th>
-                        <th>Features</th>
-                        <th>CARFAX / History</th>
-                        <th>Dealer</th>
-                        <th>Dist</th>
-                        <th>List</th>
-                        <th>All-in</th>
-                        <th>Links</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Plaza Kia - Score 17/25 -->
-                    <!-- Features: 4/5 | KM: 4/5 (30K) | CARFAX: 5/5 | Price: 1/5 | Distance: 5/5 -->
-                    <tr data-dealer="plazakia">
-                        <td>
-                            <span class="score score-mid">17</span>/25
-                            <div class="rating-bar">
-                                <span class="filled" title="Features: 4"></span>
-                                <span class="filled" title="KM: 4"></span>
-                                <span class="filled" title="CARFAX: 5"></span>
-                                <span class="filled low" title="Price: 1"></span>
-                                <span class="filled" title="Distance: 5"></span>
-                            </div>
-                        </td>
-                        <td><strong>2023 Soul EX</strong><br><span style="color:var(--muted)">Inferno Red</span></td>
-                        <td style="color:var(--green)"><strong>30K</strong></td>
-                        <td>
-                            <span class="feat key">Htd seats</span>
-                            <span class="feat key">Camera</span>
-                            <span class="feat key">Auto-brake</span>
-                            <span class="feat yes">CarPlay</span>
-                        </td>
-                        <td><a href="https://vhr.carfax.ca/?id=UtGW3w8HRx8aIvQswvM/XkEGsHeORrdY" target="_blank">CARFAX</a><br><span class="clean">No accidents</span><br><span style="color:var(--muted)">1 owner · 2 service records<br>No recalls</span></td>
-                        <td><strong>Plaza Kia</strong><br><span style="color:var(--muted)">Official Kia dealer</span></td>
-                        <td>6 km</td>
-                        <td>$21,988</td>
-                        <td class="price-over"><strong>~$24.8K</strong></td>
-                        <td class="links"><a href="https://www.autotrader.ca/a/kia/soul/richmond%20hill/ontario/5_68539680_20140418141806717/" target="_blank">Listing</a> <a href="https://www.plazakia.com" target="_blank">Dealer</a></td>
-                    </tr>
-
-                    <!-- Airport Kia - Score 14/25 -->
-                    <!-- Features: 5/5 | KM: 2/5 (67K) | CARFAX: 5/5 | Price: 1/5 | Distance: 5/5 -->
-                    <tr data-dealer="airportkia">
-                        <td>
-                            <span class="score score-mid">14</span>/25
-                            <div class="rating-bar">
-                                <span class="filled" title="Features: 5"></span>
-                                <span class="filled mid" title="KM: 2"></span>
-                                <span class="filled" title="CARFAX: 5"></span>
-                                <span class="filled low" title="Price: 1"></span>
-                                <span class="filled" title="Distance: 5"></span>
-                            </div>
-                        </td>
-                        <td><strong>2022 Soul EX+</strong><br><span style="color:var(--muted)">Snow White Pearl</span></td>
-                        <td>67K</td>
-                        <td>
-                            <span class="feat key">Htd seats</span>
-                            <span class="feat yes">Htd wheel</span>
-                            <span class="feat key">Camera</span>
-                            <span class="feat key">Blind spot</span>
-                            <span class="feat key">Auto-brake</span>
-                            <span class="feat">Sunroof</span>
-                        </td>
-                        <td><a href="https://vhr.carfax.ca/?id=OQOG6gmVcykHxuFBZb5MCBQPc+kztd7k" target="_blank">CARFAX</a><br><span class="clean">No accidents</span><br><span style="color:var(--muted)">1 owner · Personal use</span><br><span class="accident">⚠️ 1 open recall</span></td>
-                        <td><strong>Airport Kia</strong><br><span style="color:var(--muted)">Official Kia dealer</span></td>
-                        <td>18 km</td>
-                        <td>$19,888</td>
-                        <td class="price-over"><strong>~$22.5K</strong></td>
-                        <td class="links"><a href="https://www.autotrader.ca/a/kia/soul/mississauga/ontario/5_67827191_on20080716100324602/" target="_blank">Listing</a> <a href="https://www.airportkia.ca" target="_blank">Dealer</a></td>
-                    </tr>
-
-                    <!-- Durham Kia - Score 15/25 -->
-                    <!-- Features: 4/5 | KM: 5/5 (23K!) | CARFAX: 5/5 | Price: 0/5 | Distance: 3/5 -->
-                    <tr data-dealer="durhamkia">
-                        <td>
-                            <span class="score score-mid">15</span>/25
-                            <div class="rating-bar">
-                                <span class="filled" title="Features: 4"></span>
-                                <span class="filled" title="KM: 5"></span>
-                                <span class="filled" title="CARFAX: 5"></span>
-                                <span class="filled low" title="Price: 0"></span>
-                                <span class="filled mid" title="Distance: 3"></span>
-                            </div>
-                        </td>
-                        <td><strong>2022 Soul EX</strong><br><span style="color:var(--muted)">Gravity Grey</span></td>
-                        <td style="color:var(--green)"><strong>23K</strong></td>
-                        <td>
-                            <span class="feat key">Htd seats</span>
-                            <span class="feat key">Camera</span>
-                            <span class="feat key">Blind spot</span>
-                            <span class="feat key">Auto-brake</span>
-                        </td>
-                        <td><a href="https://vhr.carfax.ca/?id=DfGo7NY3iR1bcex3dFH0dRSPpmskDW9A" target="_blank">CARFAX</a><br><span class="clean">No accidents</span><br><span style="color:var(--muted)">1 owner · 6 service records<br>Well maintained</span><br><span class="accident">⚠️ 1 open recall</span></td>
-                        <td><strong>Durham Kia</strong><br><span style="color:var(--muted)">Official Kia dealer</span></td>
-                        <td>47 km</td>
-                        <td>$23,888</td>
-                        <td class="price-over"><strong>~$27K</strong></td>
-                        <td class="links"><a href="https://www.autotrader.ca/a/kia/soul/oshawa/ontario/5_68020090_on20080324092133664/" target="_blank">Listing</a> <a href="https://www.durhamkia.com" target="_blank">Dealer</a></td>
-                    </tr>
-                </tbody>
-            </table>
+            <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--border);">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Year</label>
+                    <select id="car-year">
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022" selected>2022</option>
+                        <option value="2021">2021</option>
+                        <option value="2019">2019</option>
+                        <option value="2018">2018</option>
+                        <option value="2017">2017</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Make & Model</label>
+                    <select id="car-model">
+                        <option value="Soul EX">Kia Soul EX</option>
+                        <option value="Soul EX+">Kia Soul EX+</option>
+                        <option value="Soul +">Kia Soul +</option>
+                        <option value="Venue Essential">Hyundai Venue Essential</option>
+                        <option value="Venue Preferred">Hyundai Venue Preferred</option>
+                        <option value="Venue Ultimate">Hyundai Venue Ultimate</option>
+                    </select>
+                </div>
             </div>
-        </section>
-
-        <section>
-            <div class="section-title">Rating Breakdown</div>
-            <p class="note">
-                <strong>Features (5 pts):</strong> +1 each for htd seats, camera, blind spot, lane assist, htd wheel<br>
-                <strong>KM (5 pts):</strong> 5=under 30K, 4=30-50K, 3=50-65K, 2=65-80K, 1=over 80K<br>
-                <strong>CARFAX (5 pts):</strong> 5=verified clean, 3=unknown/$, 2=minor accident, 0=police accident<br>
-                <strong>Price (5 pts):</strong> 5=under $18K, 4=18-20K, 3=20-21K, 2=over 21K<br>
-                <strong>Distance (5 pts):</strong> 5=under 20km, 4=20-50km, 3=50-100km, 2=100-150km, 1=over 150km
-            </p>
-        </section>
-
-        <!-- Soul vs Venue Comparison -->
-        <section>
-            <div class="section-title">Soul vs Venue Comparison</div>
-            <table style="max-width: 600px;">
-                <thead>
-                    <tr>
-                        <th style="width: 140px;">Spec</th>
-                        <th>Kia Soul (2017-19, 2022-24)</th>
-                        <th>Hyundai Venue (2021-22)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Cargo (seats up)</strong></td>
-                        <td class="clean"><strong>24.2 cu.ft.</strong></td>
-                        <td>18.7 cu.ft.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Cargo (seats down)</strong></td>
-                        <td class="clean"><strong>61-62 cu.ft.</strong></td>
-                        <td>31.9 cu.ft.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Length</strong></td>
-                        <td>165.2" (4,196mm)</td>
-                        <td class="clean"><strong>159.1" (4,041mm)</strong> – easier parking</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Turning Radius</strong></td>
-                        <td>17.4 ft curb-to-curb</td>
-                        <td class="clean"><strong>16.7 ft</strong> – tighter turns</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Brakes</strong></td>
-                        <td><strong>4-wheel disc</strong><br><span style="color:var(--muted)">Stronger dry stopping<br>Can lock up on ice</span></td>
-                        <td><strong>Front disc / rear drum</strong><br><span style="color:var(--muted)">More progressive feel<br>Better modulation on ice</span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Auto-Brake (FCA)</strong></td>
-                        <td>
-                            <strong>2022-24 EX:</strong> <span class="clean">Standard</span><br>
-                            <strong>2022-24 LX:</strong> Tech Pkg req'd<br>
-                            <strong>2017-19:</strong> <span class="accident">Rare</span> – Plus w/ Primo Pkg only (~$6K extra)
-                        </td>
-                        <td class="clean">
-                            <strong>All trims: Standard</strong><br>
-                            <span style="color:var(--muted)">Includes pedestrian detection</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong>Weight</strong></td>
-                        <td>~2,900 lbs</td>
-                        <td class="clean"><strong>~2,600 lbs</strong> – nimbler</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Reliability</strong></td>
-                        <td>
-                            <span class="tag tag-ok">JD Power 84-86</span><br>
-                            <span style="color:var(--muted)">2017-19 excellent · 2022+ good<br>
-                            Some 2023 engine/transmission recalls</span>
-                        </td>
-                        <td>
-                            <span class="tag tag-ok">JD Power 80-85</span><br>
-                            <span style="color:var(--muted)">Average reliability<br>
-                            2020-22 seatbelt pretensioner recall</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong>Known Issues</strong></td>
-                        <td style="color:var(--muted)">
-                            2020-21: CVT issues (avoid)<br>
-                            Some headlight complaints<br>
-                            Brake wear ~45K
-                        </td>
-                        <td style="color:var(--muted)">
-                            Lower crash protection confidence<br>
-                            Interior feels "cheap"<br>
-                            Small back seat
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <p class="note" style="margin-top: 8px;">
-                <strong>Bottom line:</strong> Soul has <strong>2x the cargo space</strong>. Venue is <strong>smaller/easier to park</strong> with tighter turns and has <strong>standard auto-brake on all trims</strong>. Soul 2022+ EX has auto-brake; 2017-19 Souls likely don't. Soul 2020-21 CVT issues make those years a hard avoid.
-            </p>
-        </section>
-
-        <section>
-            <div class="section-title">Search Links</div>
-            <p class="links" style="font-size: 10px;">
-                <a href="https://www.autotrader.ca/cars/kia/soul/on/?rcp=15&rcs=0&srt=3&yRng=2022%2C2024&pRng=%2C18000&prx=-2&loc=L4J%203W3" target="_blank">AutoTrader · Soul 2022-24</a>
-                <a href="https://www.autotrader.ca/cars/kia/soul/on/?rcp=15&rcs=0&srt=3&yRng=2017%2C2019&pRng=%2C18000&prx=-2&loc=L4J%203W3" target="_blank">AutoTrader · Soul 2017-19</a>
-                <a href="https://www.autotrader.ca/cars/hyundai/venue/on/?rcp=15&rcs=0&srt=3&yRng=2021%2C2022&pRng=%2C18000&prx=-2&loc=L4J%203W3" target="_blank">AutoTrader · Venue 2021-22</a>
-            </p>
-        </section>
-
-        <footer>
-            Verified Dec 2024. CARFAX reports scraped where available. "CARFAX $" = dealer charges for report. BSM = Blind Spot Monitoring. Confirm availability before visiting.
-        </footer>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Kilometers</label>
+                    <input type="text" id="car-km" placeholder="e.g. 45000">
+                </div>
+                <div class="form-group">
+                    <label>List Price ($)</label>
+                    <input type="text" id="car-price" placeholder="e.g. 17500">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Dealer Name</label>
+                    <input type="text" id="car-dealer" placeholder="e.g. Thornhill Hyundai">
+                </div>
+                <div class="form-group">
+                    <label>Distance (km)</label>
+                    <input type="text" id="car-distance" placeholder="e.g. 15">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Color</label>
+                <input type="text" id="car-color" placeholder="e.g. White">
+            </div>
+            <div class="form-group">
+                <label>Features (check all that apply)</label>
+                <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                    <label><input type="checkbox" id="feat-htd-seats"> Heated Seats</label>
+                    <label><input type="checkbox" id="feat-htd-wheel"> Heated Wheel</label>
+                    <label><input type="checkbox" id="feat-camera"> Backup Camera</label>
+                    <label><input type="checkbox" id="feat-blind-spot"> Blind Spot</label>
+                    <label><input type="checkbox" id="feat-lane"> Lane Assist</label>
+                    <label><input type="checkbox" id="feat-auto-brake"> Auto-Brake</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>CARFAX Status</label>
+                <select id="car-carfax">
+                    <option value="clean">✅ Clean - No Accidents</option>
+                    <option value="unknown">❓ Unknown / Not Checked</option>
+                    <option value="accident">⚠️ Minor Accident</option>
+                    <option value="police">🚨 Police Reported Accident</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>CARFAX Link (optional)</label>
+                <input type="url" id="car-carfax-url" placeholder="https://vhr.carfax.ca/?id=...">
+            </div>
+            <div class="form-group">
+                <label>Listing URL</label>
+                <input type="url" id="car-listing-url" placeholder="https://www.autotrader.ca/...">
+            </div>
+            <div class="form-group">
+                <label>Notes</label>
+                <textarea id="car-notes" rows="3" placeholder="Any notes about this car..."></textarea>
+            </div>
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button class="btn btn-secondary" onclick="closeAddModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="addCar()">Add Car</button>
+            </div>
+        </div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        const map = L.map('map', { zoomControl: false }).setView([43.45, -80.00], 8);
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
-
-        L.circleMarker([43.8108, -79.4250], { radius: 6, color: '#2383e2', fillColor: '#2383e2', fillOpacity: 1, weight: 0 })
-            .addTo(map).bindPopup('<strong>Home</strong><br>L4J 3W3');
-
-        const dealers = [
-            { id: 'thornhill', c: [43.8108, -79.4200], n: 'Thornhill Hyundai', u: 'https://www.thornhillhyundai.com' },
-            { id: 'thornhill2', c: [43.8108, -79.4200], n: 'Thornhill Hyundai', u: 'https://www.thornhillhyundai.com' },
-            { id: 'richmondhill', c: [43.8725, -79.4383], n: 'Richmond Hill Hyundai', u: 'https://www.richmondhillhyundai.com' },
-            { id: 'milton', c: [43.5183, -79.8775], n: 'Achilles Mazda Milton', u: '' },
-            { id: 'clutch', c: [43.6366, -79.5050], n: 'Clutch Toronto', u: 'https://www.clutch.ca' },
-            { id: 'burlington', c: [43.3255, -79.7990], n: 'United Stars Auto', u: '' },
-            { id: 'northyork', c: [43.7615, -79.4111], n: 'Low Price Auto Sales', u: '' },
-            { id: 'oakville', c: [43.4675, -79.6877], n: 'Samz Auto', u: '' },
-            { id: 'woodbridge', c: [43.7958, -79.5428], n: 'Fairmont Premier Auto', u: '' },
-            { id: 'london', c: [42.9849, -81.2453], n: 'London Kia', u: '' },
-            { id: 'woodstock', c: [43.1306, -80.7467], n: 'Woodstock Ford', u: '' },
-            { id: 'cambridge', c: [43.3601, -80.3119], n: "Daniel's Auto Sales", u: '' },
-            // Official Nissan/Hyundai Dealers
-            { id: 'brampton-nissan', c: [43.7315, -79.7624], n: 'Brampton North Nissan (Official)', u: 'https://www.bramptonkianissan.ca' },
-            { id: 'bolton-nissan', c: [43.8761, -79.7350], n: 'Bolton Nissan (Official)', u: 'https://www.boltonnissan.com' },
-            { id: 'newmarket-hyundai', c: [44.0592, -79.4613], n: 'Newmarket Hyundai (Official)', u: 'https://www.newmarkethyundai.ca' },
-            { id: 'morningside-nissan', c: [43.7764, -79.1928], n: 'Morningside Nissan (Official)', u: 'https://www.morningsidenissan.com' },
-            // Official Kia Dealers
-            { id: 'plazakia', c: [43.8579, -79.4356], n: 'Plaza Kia (Official)', u: 'https://www.plazakia.com' },
-            { id: 'airportkia', c: [43.7229, -79.6324], n: 'Airport Kia (Official)', u: 'https://www.airportkia.ca' },
-            { id: 'durhamkia', c: [43.9026, -78.8658], n: 'Durham Kia (Official)', u: 'https://www.durhamkia.com' }
+        // Car data - all listings merged
+        const defaultCars = [
+            { id: 1, year: 2022, model: 'Venue Preferred', color: 'White / Black roof', km: 74000, price: 17398, dealer: 'Thornhill Hyundai', distance: 2, features: ['htd-seats', 'htd-wheel', 'camera', 'blind-spot', 'lane', 'auto-brake'], carfax: 'clean', carfaxUrl: 'https://vhr.carfax.ca/?id=Q3Ur0DZaOrDChZ/Clwo3yS5R+JnVitAT', listingUrl: 'https://www.thornhillhyundai.com/inventory/used/6187/2022/Hyundai/Venue', carfaxNote: '1 owner · 5 service records', coords: [43.8108, -79.4200] },
+            { id: 2, year: 2022, model: 'Soul EX', color: 'Black', km: 63000, price: 17990, dealer: 'Clutch', distance: 18, features: ['htd-seats', 'htd-wheel', 'camera', 'blind-spot', 'lane', 'auto-brake'], carfax: 'clean', carfaxUrl: '', listingUrl: 'https://www.carpages.ca/used-cars/ontario/toronto/2022-kia-soul-13093922/', carfaxNote: '1 owner', coords: [43.6366, -79.5050] },
+            { id: 3, year: 2023, model: 'Soul EX', color: 'Brampton', km: 24000, price: 19798, dealer: 'Brampton North Nissan', distance: 30, features: ['htd-seats', 'camera', 'blind-spot', 'auto-brake'], carfax: 'clean', carfaxUrl: 'https://vhr.carfax.ca/?id=PqhbAilweFnO4ydrtMQd9wVK5ghA315i', listingUrl: 'https://www.autotrader.ca/a/kia/soul/brampton/ontario/5_67844936_on20070924102414963/', carfaxNote: '1 owner · 2 service records · No recalls', coords: [43.7315, -79.7624], official: true },
+            { id: 4, year: 2022, model: 'Venue Preferred', color: 'Intense Blue', km: 72000, price: 17655, dealer: 'Achilles Mazda', distance: 55, features: ['htd-seats', 'htd-wheel', 'camera', 'blind-spot', 'auto-brake'], carfax: 'clean', carfaxUrl: 'https://vhr.carfax.ca/?id=qseaJfcFyvD78+K87B4mf9QpuSJMt5Pv', listingUrl: 'https://www.autotrader.ca/a/hyundai/venue/milton/ontario/5_67639128_20240710151910541/', carfaxNote: '1 owner · Personal use', coords: [43.5183, -79.8775] },
+            { id: 5, year: 2021, model: 'Venue Essential', color: '2-Tone', km: 54000, price: 17655, dealer: 'Bolton Nissan', distance: 21, features: ['htd-seats', 'camera', 'auto-brake'], carfax: 'clean', carfaxUrl: 'https://vhr.carfax.ca/?id=YzXO6p0R+MafomMPzPYpp+cRPa1weBcl', listingUrl: 'https://www.autotrader.ca/a/hyundai/venue/bolton/ontario/5_67892660_20110201142314359/', carfaxNote: '2 owners · 7 service records · Well maintained', coords: [43.8761, -79.7350], official: true },
+            { id: 6, year: 2021, model: 'Venue Essential', color: 'Black', km: 51000, price: 17413, dealer: 'Newmarket Hyundai', distance: 31, features: ['htd-seats', 'camera', 'auto-brake'], carfax: 'clean', carfaxUrl: 'https://vhr.carfax.ca/?id=Chm1oIJZ+IVuGvGZANTHKLURaiG/X485', listingUrl: 'https://www.autotrader.ca/a/hyundai/venue/newmarket/ontario/5_68245529_20150529105935682/', carfaxNote: '3 owners · 1 service record', coords: [44.0592, -79.4613], official: true },
+            { id: 7, year: 2019, model: 'Soul +', color: 'Blue', km: 46000, price: 17888, dealer: 'Woodstock Ford', distance: 130, features: ['htd-seats', 'htd-wheel', 'camera'], carfax: 'clean', carfaxUrl: 'https://vhr.carfax.ca/?id=8WXaZN9c7uB5w+0gO+Ync6Ps+54HVmmm', listingUrl: 'https://woodstockford.ca/inventory/list/used?stockID=25694A', carfaxNote: '2 owners · 16 service records · Krown rustproofed yearly · ⚠️ 2 open recalls', coords: [43.1306, -80.7467] },
+            { id: 8, year: 2022, model: 'Soul EX', color: 'Inferno Red', km: 58000, price: 15999, dealer: 'United Stars Auto', distance: 50, features: ['htd-seats', 'camera', 'blind-spot', 'lane', 'auto-brake'], carfax: 'unknown', carfaxUrl: '', listingUrl: 'https://www.autotrader.ca/a/kia/soul/burlington/ontario/5_68573077_20240621175756918/', carfaxNote: '', coords: [43.3255, -79.7990] },
+            { id: 9, year: 2022, model: 'Soul EX', color: 'Scarborough', km: 88000, price: 16990, dealer: 'Morningside Nissan', distance: 21, features: ['htd-seats', 'camera', 'blind-spot', 'auto-brake'], carfax: 'clean', carfaxUrl: 'https://vhr.carfax.ca/?id=RvM7pZoKrvnvdV20qzp2M5wolnQ8tTI3', listingUrl: 'https://www.autotrader.ca/a/kia/soul/toronto/ontario/5_68649253_on20080430102916422/', carfaxNote: '2+ owners · 4 service records · Certified', coords: [43.7764, -79.1928], official: true },
+            { id: 10, year: 2022, model: 'Soul EX', color: 'Oakville', km: 71000, price: 16999, dealer: 'Samz Auto', distance: 45, features: ['htd-seats', 'htd-wheel', 'camera', 'blind-spot', 'auto-brake'], carfax: 'unknown', carfaxUrl: '', listingUrl: 'https://www.autotrader.ca/a/kia/soul/oakville/ontario/5_68568948_20241008142541150/', carfaxNote: '', coords: [43.4675, -79.6877] },
+            { id: 11, year: 2022, model: 'Soul EX', color: 'North York', km: 71000, price: 16880, dealer: 'Low Price Auto Sales', distance: 12, features: ['htd-seats', 'htd-wheel', 'camera', 'auto-brake'], carfax: 'unknown', carfaxUrl: '', listingUrl: 'https://www.autotrader.ca/a/kia/soul/north%20york/ontario/5_68567722_20210208140459017/', carfaxNote: 'Kia warranty', coords: [43.7615, -79.4111] },
+            { id: 12, year: 2022, model: 'Soul EX', color: 'White / Black', km: 75000, price: 17499, dealer: 'Fairmont Premier Auto', distance: 15, features: ['htd-seats', 'htd-wheel', 'camera', 'auto-brake'], carfax: 'unknown', carfaxUrl: '', listingUrl: 'https://www.autotrader.ca/a/kia/soul/woodbridge/ontario/5_68139858_20250925180838466/', carfaxNote: 'Cert + warranty', coords: [43.7958, -79.5428] },
+            { id: 13, year: 2019, model: 'Soul EX', color: 'Polar White', km: 65000, price: 15695, dealer: 'London Kia', distance: 190, features: ['htd-seats', 'htd-wheel', 'camera'], carfax: 'unknown', carfaxUrl: '', listingUrl: 'https://www.autotrader.ca/a/kia/soul/london/ontario/5_68462902_20250122151036241/', carfaxNote: '', coords: [42.9849, -81.2453] },
+            { id: 14, year: 2019, model: 'Soul EX+', color: 'Cambridge', km: 54000, price: 17995, dealer: "Daniel's Auto Sales", distance: 95, features: ['htd-seats', 'htd-wheel', 'camera'], carfax: 'unknown', carfaxUrl: '', listingUrl: 'https://www.autotrader.ca/a/kia/soul/cambridge/ontario/5_61365733_20100517123929314/', carfaxNote: 'Free CARFAX at dealer', coords: [43.3601, -80.3119] },
+            { id: 15, year: 2022, model: 'Venue Essential', color: 'Fiery Red', km: 57000, price: 16400, dealer: 'Richmond Hill Hyundai', distance: 5, features: ['htd-seats', 'camera', 'auto-brake'], carfax: 'accident', carfaxUrl: 'https://vhr.carfax.ca/?id=IKWqPEOcwApJJAlao/VmNquDP2t54I3U', listingUrl: 'https://www.richmondhillhyundai.com/inventory/used/5941/2022/Hyundai/Venue', carfaxNote: '⚠️ $3,674 claim (Oct 2022) · 1 owner · 6 service records', coords: [43.8725, -79.4383] },
+            { id: 16, year: 2022, model: 'Venue Preferred', color: 'Silver', km: 9000, price: 18947, dealer: 'Thornhill Hyundai', distance: 2, features: ['htd-seats', 'htd-wheel', 'camera', 'blind-spot', 'lane', 'auto-brake'], carfax: 'police', carfaxUrl: 'https://vhr.carfax.ca/?id=WQU0u0mf6xiE/IEP/oH3qWtcVspnYhrp', listingUrl: 'https://www.thornhillhyundai.com/inventory/used/10609/2022/Hyundai/Venue', carfaxNote: '🚨 POLICE REPORTED ACCIDENT · Jun 2025 · 1 owner', coords: [43.8108, -79.4200] },
+            { id: 17, year: 2023, model: 'Soul EX', color: 'Inferno Red', km: 30000, price: 21988, dealer: 'Plaza Kia', distance: 6, features: ['htd-seats', 'camera', 'auto-brake'], carfax: 'clean', carfaxUrl: 'https://vhr.carfax.ca/?id=UtGW3w8HRx8aIvQswvM/XkEGsHeORrdY', listingUrl: 'https://www.autotrader.ca/a/kia/soul/richmond%20hill/ontario/5_68539680_20140418141806717/', carfaxNote: '1 owner · 2 service records · No recalls', coords: [43.8579, -79.4356], official: true },
+            { id: 18, year: 2022, model: 'Soul EX+', color: 'Snow White Pearl', km: 67000, price: 19888, dealer: 'Airport Kia', distance: 18, features: ['htd-seats', 'htd-wheel', 'camera', 'blind-spot', 'auto-brake'], carfax: 'clean', carfaxUrl: 'https://vhr.carfax.ca/?id=OQOG6gmVcykHxuFBZb5MCBQPc+kztd7k', listingUrl: 'https://www.autotrader.ca/a/kia/soul/mississauga/ontario/5_67827191_on20080716100324602/', carfaxNote: '1 owner · Personal use · ⚠️ 1 open recall', coords: [43.7229, -79.6324], official: true },
+            { id: 19, year: 2022, model: 'Soul EX', color: 'Gravity Grey', km: 23000, price: 23888, dealer: 'Durham Kia', distance: 47, features: ['htd-seats', 'camera', 'blind-spot', 'auto-brake'], carfax: 'clean', carfaxUrl: 'https://vhr.carfax.ca/?id=DfGo7NY3iR1bcex3dFH0dRSPpmskDW9A', listingUrl: 'https://www.autotrader.ca/a/kia/soul/oshawa/ontario/5_68020090_on20080324092133664/', carfaxNote: '1 owner · 6 service records · Well maintained · ⚠️ 1 open recall', coords: [43.9026, -78.8658], official: true },
         ];
 
-        const markers = {};
-        dealers.forEach(d => {
-            const popup = d.u
-                ? `<strong>${d.n}</strong><br><a href="${d.u}" target="_blank">Dealer site</a>`
-                : `<strong>${d.n}</strong>`;
-            const marker = L.circleMarker(d.c, {
-                radius: 5, color: '#1a1a1a', fillColor: '#1a1a1a', fillOpacity: 1, weight: 0
-            }).addTo(map).bindPopup(popup);
+        // State
+        let cars = [];
+        let favorites = new Set();
+        let notes = {};
+        let showFavoritesOnly = false;
+        let showBudgetOnly = false;
 
-            marker.on('click', () => {
-                document.querySelectorAll('tr.highlight').forEach(r => r.classList.remove('highlight'));
-                const row = document.querySelector(`tr[data-dealer="${d.id}"]`);
-                if (row) {
-                    row.classList.add('highlight');
-                    row.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-            });
-            markers[d.id] = marker;
-        });
+        // Load from localStorage
+        function loadState() {
+            const saved = localStorage.getItem('carFinderState');
+            if (saved) {
+                const state = JSON.parse(saved);
+                cars = state.cars || defaultCars;
+                favorites = new Set(state.favorites || []);
+                notes = state.notes || {};
+            } else {
+                cars = [...defaultCars];
+            }
+        }
 
-        document.querySelectorAll('tr[data-dealer]').forEach(row => {
-            const dealerId = row.dataset.dealer;
-            row.addEventListener('mouseenter', () => {
-                if (markers[dealerId]) {
-                    markers[dealerId].setStyle({ color: '#2383e2', fillColor: '#2383e2', radius: 8 });
+        // Save to localStorage
+        function saveState() {
+            localStorage.setItem('carFinderState', JSON.stringify({
+                cars,
+                favorites: [...favorites],
+                notes
+            }));
+        }
+
+        // Calculate score
+        function calculateScore(car) {
+            let score = 0;
+            // Features (5 pts)
+            const keyFeatures = ['htd-seats', 'camera', 'blind-spot', 'lane', 'htd-wheel'];
+            score += Math.min(5, car.features.filter(f => keyFeatures.includes(f)).length);
+            // KM (5 pts)
+            if (car.km < 30000) score += 5;
+            else if (car.km < 50000) score += 4;
+            else if (car.km < 65000) score += 3;
+            else if (car.km < 80000) score += 2;
+            else score += 1;
+            // CARFAX (5 pts)
+            if (car.carfax === 'clean') score += 5;
+            else if (car.carfax === 'unknown') score += 3;
+            else if (car.carfax === 'accident') score += 2;
+            // Price (5 pts)
+            const allIn = car.price * 1.13;
+            if (allIn < 18000) score += 5;
+            else if (allIn < 20000) score += 4;
+            else if (allIn < 21000) score += 3;
+            else if (allIn < 22500) score += 2;
+            else score += 1;
+            // Distance (5 pts)
+            if (car.distance < 20) score += 5;
+            else if (car.distance < 50) score += 4;
+            else if (car.distance < 100) score += 3;
+            else if (car.distance < 150) score += 2;
+            else score += 1;
+            return score;
+        }
+
+        // Get all-in price
+        function getAllIn(price) {
+            return Math.round(price * 1.13 / 100) / 10;
+        }
+
+        // Format KM
+        function formatKm(km) {
+            return (km / 1000).toFixed(0) + 'K';
+        }
+
+        // Get car type
+        function getCarType(model) {
+            return model.includes('Soul') ? 'Soul' : 'Venue';
+        }
+
+        // Render cars
+        function renderCars() {
+            const grid = document.getElementById('car-grid');
+            const sortBy = document.getElementById('sort-select').value;
+
+            // Sort
+            let sorted = [...cars];
+            if (sortBy === 'score') sorted.sort((a, b) => calculateScore(b) - calculateScore(a));
+            else if (sortBy === 'price') sorted.sort((a, b) => a.price - b.price);
+            else if (sortBy === 'km') sorted.sort((a, b) => a.km - b.km);
+            else if (sortBy === 'distance') sorted.sort((a, b) => a.distance - b.distance);
+            else if (sortBy === 'year') sorted.sort((a, b) => b.year - a.year);
+
+            grid.innerHTML = sorted.map(car => {
+                const score = calculateScore(car);
+                const allIn = getAllIn(car.price);
+                const isFavorite = favorites.has(car.id);
+                const note = notes[car.id] || '';
+                const isOverBudget = allIn > 21;
+                const isAccident = car.carfax === 'accident';
+                const isPolice = car.carfax === 'police';
+
+                // Filter
+                let hidden = false;
+                if (showFavoritesOnly && !isFavorite) hidden = true;
+                if (showBudgetOnly && isOverBudget) hidden = true;
+
+                const featureLabels = {
+                    'htd-seats': 'Heated Seats',
+                    'htd-wheel': 'Heated Wheel',
+                    'camera': 'Backup Camera',
+                    'blind-spot': 'Blind Spot',
+                    'lane': 'Lane Assist',
+                    'auto-brake': 'Auto-Brake'
+                };
+
+                return `
+                    <div class="car-card ${isAccident ? 'accident' : ''} ${isPolice ? 'police-accident' : ''} ${isOverBudget ? 'over-budget' : ''} ${isFavorite ? 'favorite' : ''} ${hidden ? 'hidden' : ''}" data-id="${car.id}">
+                        <div class="car-header">
+                            <div>
+                                <div class="car-title">${car.year} ${car.model}</div>
+                                <div class="car-subtitle">${car.color} • ${car.dealer}${car.official ? ' ⭐ Official Dealer' : ''}</div>
+                            </div>
+                            <div class="car-score ${score >= 18 ? 'high' : score >= 14 ? 'mid' : 'low'}">
+                                ${score}<small>/25</small>
+                            </div>
+                        </div>
+
+                        <div class="car-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Kilometers</div>
+                                <div class="detail-value ${car.km < 50000 ? 'green' : car.km > 80000 ? 'orange' : ''}">${formatKm(car.km)}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">List Price</div>
+                                <div class="detail-value">$${car.price.toLocaleString()}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">All-In (w/tax)</div>
+                                <div class="detail-value ${allIn <= 21 ? 'green' : 'orange'}">~$${allIn}K</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Distance</div>
+                                <div class="detail-value">${car.distance} km</div>
+                            </div>
+                        </div>
+
+                        <div class="carfax-status ${car.carfax}">
+                            ${car.carfax === 'clean' ? '✅ Clean CARFAX - No Accidents' : ''}
+                            ${car.carfax === 'unknown' ? '❓ CARFAX Not Verified' : ''}
+                            ${car.carfax === 'accident' ? '⚠️ Accident on Record' : ''}
+                            ${car.carfax === 'police' ? '🚨 Police Reported Accident' : ''}
+                            ${car.carfaxNote ? `<div style="font-size: 14px; margin-top: 4px;">${car.carfaxNote}</div>` : ''}
+                        </div>
+
+                        <div class="features">
+                            ${car.features.map(f => `<span class="feature ${['htd-seats', 'camera', 'blind-spot', 'lane'].includes(f) ? 'key' : 'yes'}">${featureLabels[f] || f}</span>`).join('')}
+                        </div>
+
+                        <div class="car-footer">
+                            <div class="car-links">
+                                ${car.listingUrl ? `<a href="${car.listingUrl}" target="_blank">📋 View Listing</a>` : ''}
+                                ${car.carfaxUrl ? `<a href="${car.carfaxUrl}" target="_blank">📄 CARFAX</a>` : ''}
+                            </div>
+                            <div class="car-actions">
+                                <button class="icon-btn ${isFavorite ? 'starred' : ''}" onclick="toggleFavorite(${car.id})" title="Favorite">⭐</button>
+                                <button class="icon-btn" onclick="deleteCar(${car.id})" title="Delete">🗑️</button>
+                            </div>
+                        </div>
+
+                        <div class="car-notes">
+                            <textarea class="notes-input" placeholder="Add your notes here..." onchange="saveNote(${car.id}, this.value)">${note}</textarea>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            updateStats();
+        }
+
+        // Update stats
+        function updateStats() {
+            document.getElementById('total-cars').textContent = cars.length;
+            document.getElementById('in-budget').textContent = cars.filter(c => getAllIn(c.price) <= 21).length;
+            document.getElementById('clean-carfax').textContent = cars.filter(c => c.carfax === 'clean').length;
+            document.getElementById('favorites-count').textContent = favorites.size;
+        }
+
+        // Toggle favorite
+        function toggleFavorite(id) {
+            if (favorites.has(id)) favorites.delete(id);
+            else favorites.add(id);
+            saveState();
+            renderCars();
+        }
+
+        // Save note
+        function saveNote(id, note) {
+            notes[id] = note;
+            saveState();
+        }
+
+        // Delete car
+        function deleteCar(id) {
+            if (confirm('Are you sure you want to remove this car?')) {
+                cars = cars.filter(c => c.id !== id);
+                saveState();
+                renderCars();
+            }
+        }
+
+        // Sort
+        function sortCars() {
+            renderCars();
+        }
+
+        // Toggle favorites filter
+        function toggleFavorites() {
+            showFavoritesOnly = !showFavoritesOnly;
+            document.getElementById('filter-favorites').classList.toggle('active', showFavoritesOnly);
+            renderCars();
+        }
+
+        // Toggle budget filter
+        function toggleBudget() {
+            showBudgetOnly = !showBudgetOnly;
+            document.getElementById('filter-budget').classList.toggle('active', showBudgetOnly);
+            renderCars();
+        }
+
+        // Show comparison
+        function showComparison() {
+            const comp = document.getElementById('comparison');
+            comp.style.display = comp.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Add car modal
+        function showAddModal() {
+            document.getElementById('add-modal').classList.add('show');
+        }
+
+        function closeAddModal() {
+            document.getElementById('add-modal').classList.remove('show');
+            // Clear form
+            document.getElementById('car-url').value = '';
+            document.getElementById('car-km').value = '';
+            document.getElementById('car-price').value = '';
+            document.getElementById('car-dealer').value = '';
+            document.getElementById('car-distance').value = '';
+            document.getElementById('car-color').value = '';
+            document.getElementById('car-carfax-url').value = '';
+            document.getElementById('car-listing-url').value = '';
+            document.getElementById('car-notes').value = '';
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+        }
+
+        // Handle URL paste for auto-fill
+        function handleUrlPaste(e) {
+            setTimeout(() => {
+                const url = e.target.value;
+                if (url.includes('autotrader.ca') || url.includes('carfax.ca')) {
+                    alert('🔍 URL detected! For now, please fill in the details manually. Auto-scraping requires a server.\n\nTip: Open the URL in another tab and copy the details.');
+                }
+            }, 100);
+        }
+
+        // Add car
+        function addCar() {
+            const newCar = {
+                id: Date.now(),
+                year: parseInt(document.getElementById('car-year').value),
+                model: document.getElementById('car-model').value,
+                color: document.getElementById('car-color').value || 'Unknown',
+                km: parseInt(document.getElementById('car-km').value) || 0,
+                price: parseInt(document.getElementById('car-price').value) || 0,
+                dealer: document.getElementById('car-dealer').value || 'Unknown',
+                distance: parseInt(document.getElementById('car-distance').value) || 0,
+                features: [],
+                carfax: document.getElementById('car-carfax').value,
+                carfaxUrl: document.getElementById('car-carfax-url').value,
+                listingUrl: document.getElementById('car-listing-url').value,
+                carfaxNote: '',
+                coords: [43.8, -79.4] // Default to GTA center
+            };
+
+            // Collect features
+            if (document.getElementById('feat-htd-seats').checked) newCar.features.push('htd-seats');
+            if (document.getElementById('feat-htd-wheel').checked) newCar.features.push('htd-wheel');
+            if (document.getElementById('feat-camera').checked) newCar.features.push('camera');
+            if (document.getElementById('feat-blind-spot').checked) newCar.features.push('blind-spot');
+            if (document.getElementById('feat-lane').checked) newCar.features.push('lane');
+            if (document.getElementById('feat-auto-brake').checked) newCar.features.push('auto-brake');
+
+            // Add initial note
+            const initialNote = document.getElementById('car-notes').value;
+            if (initialNote) notes[newCar.id] = initialNote;
+
+            cars.push(newCar);
+            saveState();
+            renderCars();
+            closeAddModal();
+        }
+
+        // Initialize map
+        function initMap() {
+            const map = L.map('map', { zoomControl: false }).setView([43.75, -79.5], 9);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
+
+            // Home marker
+            L.circleMarker([43.8108, -79.4250], { radius: 8, color: '#1a73e8', fillColor: '#1a73e8', fillOpacity: 1, weight: 0 })
+                .addTo(map).bindPopup('<strong>🏠 Home</strong><br>L4J 3W3');
+
+            // Car markers
+            cars.forEach(car => {
+                if (car.coords) {
+                    const color = car.carfax === 'clean' ? '#0d7a0d' : car.carfax === 'police' ? '#c62828' : car.carfax === 'accident' ? '#e65100' : '#666';
+                    L.circleMarker(car.coords, { radius: 6, color, fillColor: color, fillOpacity: 0.8, weight: 0 })
+                        .addTo(map).bindPopup(`<strong>${car.year} ${car.model}</strong><br>${car.dealer}<br>$${car.price.toLocaleString()}`);
                 }
             });
-            row.addEventListener('mouseleave', () => {
-                if (markers[dealerId]) {
-                    markers[dealerId].setStyle({ color: '#1a1a1a', fillColor: '#1a1a1a', radius: 5 });
-                }
-            });
-            row.addEventListener('click', (e) => {
-                if (e.target.tagName === 'A') return;
-                if (markers[dealerId]) {
-                    map.setView(markers[dealerId].getLatLng(), 11);
-                    markers[dealerId].openPopup();
-                }
-            });
-        });
+        }
+
+        // Initialize
+        loadState();
+        renderCars();
+        initMap();
     </script>
 </body>
 </html>
