@@ -3,6 +3,8 @@ services:
     name: car-research
     runtime: node
     plan: free
+    autoDeploy: true
+    repo: https://github.com/colindacity/car-research
     buildCommand: npm install
     startCommand: npm start
     healthCheckPath: /cars
