@@ -9,61 +9,35 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            font-size: 13px;
+            font-size: 12px;
             color: #333;
             background: #fff;
-            line-height: 1.4;
+            line-height: 1.3;
         }
         a { color: #0066cc; text-decoration: none; }
         a:hover { text-decoration: underline; }
 
-        /* Layout */
-        .layout {
-            display: flex;
-            height: 100vh;
-        }
-        .main {
-            flex: 1;
-            overflow: auto;
-            display: flex;
-            flex-direction: column;
-        }
-        .sidebar {
-            width: 320px;
-            border-left: 1px solid #eee;
-            display: flex;
-            flex-direction: column;
-        }
+        .layout { display: flex; height: 100vh; }
+        .main { flex: 1; overflow: auto; display: flex; flex-direction: column; }
+        .sidebar { width: 280px; border-left: 1px solid #eee; display: flex; flex-direction: column; }
 
-        /* Top bar - minimal */
         .topbar {
-            padding: 12px 16px;
+            padding: 8px 12px;
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 12px;
             border-bottom: 1px solid #eee;
             flex-shrink: 0;
+            font-size: 11px;
         }
-        .topbar h1 {
-            font-size: 15px;
-            font-weight: 600;
-        }
-        .topbar-stats {
-            display: flex;
-            gap: 12px;
-            font-size: 12px;
-            color: #666;
-        }
-        .topbar-actions {
-            margin-left: auto;
-            display: flex;
-            gap: 8px;
-        }
+        .topbar h1 { font-size: 13px; font-weight: 600; white-space: nowrap; }
+        .topbar-stats { display: flex; gap: 10px; color: #666; }
+        .topbar-actions { margin-left: auto; display: flex; gap: 4px; }
         select, .btn {
-            padding: 6px 10px;
+            padding: 4px 8px;
             border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 12px;
+            border-radius: 3px;
+            font-size: 11px;
             background: #fff;
             cursor: pointer;
         }
@@ -71,23 +45,18 @@
         .btn.active { background: #e7f3ff; border-color: #0066cc; }
         .btn-add { background: #0066cc; color: white; border-color: #0066cc; }
 
-        /* List */
-        .list {
-            flex: 1;
-            overflow: auto;
-        }
+        .list { flex: 1; overflow: auto; }
         .car-row {
             display: grid;
-            grid-template-columns: 70px 1fr 60px 80px 50px 45px 90px 100px 1fr 80px;
-            gap: 12px;
-            padding: 12px 16px;
+            grid-template-columns: 80px 1fr 36px 70px 40px 36px 70px 80px 120px 60px;
+            gap: 8px;
+            padding: 6px 10px;
             align-items: center;
             border-bottom: 1px solid #f0f0f0;
+            font-size: 11px;
         }
         .car-row:hover { background: #fafafa; }
         .car-row.fav { background: #fffdf5; }
-
-        /* Status indicator */
         .car-row.great { border-left: 3px solid #22c55e; }
         .car-row.good { border-left: 3px solid #3b82f6; }
         .car-row.ok { border-left: 3px solid #f59e0b; }
@@ -95,180 +64,102 @@
         .car-row.over { border-left: 3px solid #9ca3af; }
         .car-row.hidden { display: none; }
 
-        /* Photo */
         .photo {
-            width: 70px;
-            height: 52px;
+            width: 80px;
+            height: 50px;
             border-radius: 4px;
             object-fit: cover;
             background: #f5f5f5;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ccc;
-            font-size: 20px;
         }
 
-        /* Car info */
-        .car-info .name { font-weight: 600; margin-bottom: 2px; }
-        .car-info .meta { font-size: 11px; color: #888; }
+        .car-info .name { font-weight: 600; font-size: 12px; margin-bottom: 1px; }
+        .car-info .meta { font-size: 10px; color: #888; }
         .car-info .official { color: #0066cc; }
 
-        /* Score */
         .score {
-            width: 32px;
-            height: 32px;
+            width: 28px; height: 28px;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 13px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 11px;
         }
         .score.high { background: #dcfce7; color: #166534; }
         .score.mid { background: #fef3c7; color: #92400e; }
         .score.low { background: #fee2e2; color: #991b1b; }
 
-        /* Price */
-        .price .main { font-weight: 600; }
-        .price .allin { font-size: 11px; color: #888; }
+        .price .main { font-weight: 600; font-size: 12px; }
+        .price .allin { font-size: 10px; color: #888; }
         .price .allin.over { color: #ef4444; }
         .price .allin.ok { color: #22c55e; }
 
-        /* KM */
+        .km { font-size: 11px; }
         .km.low { color: #22c55e; }
         .km.high { color: #f59e0b; }
 
-        /* CARFAX */
-        .carfax { font-size: 11px; }
+        .carfax { font-size: 10px; }
         .carfax.clean { color: #22c55e; }
         .carfax.accident { color: #f59e0b; }
         .carfax.police { color: #ef4444; }
         .carfax.unknown { color: #9ca3af; }
-        .carfax-note { font-size: 10px; color: #888; margin-top: 2px; }
+        .carfax-note { font-size: 9px; color: #999; }
 
-        /* Features */
-        .features {
-            display: flex;
-            gap: 2px;
-        }
+        .features { display: flex; gap: 1px; }
         .feat {
-            width: 18px;
-            height: 18px;
-            border-radius: 3px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
+            width: 16px; height: 16px;
+            border-radius: 2px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 9px;
             background: #f0f0f0;
         }
         .feat.yes { background: #dcfce7; }
-        .feat.no { opacity: 0.3; }
+        .feat.no { opacity: 0.25; }
 
-        /* Links */
-        .links {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            font-size: 11px;
-        }
+        .links { display: flex; gap: 6px; font-size: 10px; }
+        .links a { white-space: nowrap; }
 
-        /* Notes */
-        .notes-input {
-            width: 100%;
-            padding: 4px 6px;
-            border: 1px solid #eee;
-            border-radius: 3px;
-            font-size: 11px;
-            resize: none;
-            height: 40px;
-        }
-        .notes-input:focus { outline: none; border-color: #0066cc; }
-
-        /* Actions */
-        .actions {
-            display: flex;
-            gap: 4px;
-        }
+        .actions { display: flex; gap: 2px; }
         .action-btn {
-            width: 28px;
-            height: 28px;
-            border: none;
-            background: none;
-            cursor: pointer;
-            border-radius: 4px;
-            font-size: 14px;
+            width: 24px; height: 24px;
+            border: none; background: none;
+            cursor: pointer; border-radius: 3px;
+            font-size: 12px;
+            display: flex; align-items: center; justify-content: center;
         }
         .action-btn:hover { background: #f0f0f0; }
         .action-btn.starred { background: #fef3c7; }
+        .note-btn { font-size: 10px; }
 
-        /* Map */
-        #map {
-            flex: 1;
-            min-height: 300px;
-        }
-        .map-info {
-            padding: 12px;
-            font-size: 12px;
-            color: #666;
-            border-top: 1px solid #eee;
-        }
+        #map { flex: 1; min-height: 200px; }
+        .map-info { padding: 8px 10px; font-size: 11px; color: #666; border-top: 1px solid #eee; }
 
-        /* Version */
-        .version {
-            position: fixed;
-            bottom: 4px;
-            left: 4px;
-            font-size: 10px;
-            color: #ccc;
-        }
+        .version { position: fixed; bottom: 2px; left: 4px; font-size: 9px; color: #ccc; }
 
-        /* Modal */
         .modal-bg {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.4);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.4); z-index: 1000;
+            align-items: center; justify-content: center;
         }
         .modal-bg.show { display: flex; }
-        .modal {
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            width: 400px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        .modal h2 { font-size: 16px; margin-bottom: 16px; }
-        .field { margin-bottom: 12px; }
-        .field label { display: block; font-size: 11px; color: #666; margin-bottom: 4px; }
-        .field input, .field select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 13px;
-        }
-        .field-row { display: flex; gap: 12px; }
+        .modal { background: white; border-radius: 6px; padding: 16px; width: 380px; max-height: 90vh; overflow-y: auto; }
+        .modal h2 { font-size: 14px; margin-bottom: 12px; }
+        .field { margin-bottom: 8px; }
+        .field label { display: block; font-size: 10px; color: #666; margin-bottom: 2px; }
+        .field input, .field select { width: 100%; padding: 6px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px; }
+        .field-row { display: flex; gap: 8px; }
         .field-row .field { flex: 1; }
-        .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+        .modal-actions { display: flex; gap: 6px; justify-content: flex-end; margin-top: 12px; }
 
-        /* Mobile */
-        @media (max-width: 1024px) {
+        .note-modal { width: 300px; }
+        .note-modal textarea { width: 100%; height: 80px; padding: 8px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px; resize: none; }
+
+        @media (max-width: 900px) {
             .sidebar { display: none; }
-            .car-row {
-                grid-template-columns: 60px 1fr 50px 70px 40px 40px;
-                font-size: 12px;
-            }
-            .car-row .features, .car-row .links, .car-row .notes-input { display: none; }
+            .car-row { grid-template-columns: 70px 1fr 32px 60px 36px 32px 60px auto; font-size: 10px; }
+            .car-row .features { display: none; }
         }
     </style>
 </head>
 <body>
-    <div class="version">v2.2 · Dec 29</div>
+    <div class="version">v2.3 · Dec 29</div>
 
     <div class="layout">
         <div class="main">
@@ -276,26 +167,24 @@
                 <h1>🚗 Car Finder</h1>
                 <div class="topbar-stats">
                     <span><strong id="s-total">0</strong> cars</span>
-                    <span><strong id="s-budget">0</strong> in budget</span>
+                    <span><strong id="s-budget">0</strong> budget</span>
                     <span><strong id="s-clean">0</strong> clean</span>
                 </div>
                 <div class="topbar-actions">
                     <select id="sort" onchange="render()">
                         <option value="score">Best</option>
-                        <option value="price">Price ↑</option>
-                        <option value="km">KM ↑</option>
-                        <option value="dist">Closest</option>
+                        <option value="price">Price</option>
+                        <option value="km">KM</option>
+                        <option value="dist">Near</option>
                     </select>
                     <button class="btn" id="f-fav" onclick="toggle('fav')">⭐</button>
                     <button class="btn" id="f-budget" onclick="toggle('budget')">💰</button>
                     <button class="btn" id="f-clean" onclick="toggle('clean')">✓</button>
-                    <button class="btn btn-add" onclick="showModal()">+ Add</button>
+                    <button class="btn btn-add" onclick="showModal()">+</button>
                 </div>
             </div>
-
             <div class="list" id="list"></div>
         </div>
-
         <div class="sidebar">
             <div id="map"></div>
             <div class="map-info">
@@ -305,13 +194,12 @@
         </div>
     </div>
 
-    <!-- Modal -->
     <div class="modal-bg" id="modal">
         <div class="modal">
             <h2>Add Car</h2>
             <div class="field-row">
                 <div class="field"><label>Year</label><select id="m-year"><option>2024</option><option>2023</option><option selected>2022</option><option>2021</option><option>2019</option></select></div>
-                <div class="field"><label>Model</label><select id="m-model"><option>Soul EX</option><option>Soul EX+</option><option>Venue Essential</option><option>Venue Preferred</option></select></div>
+                <div class="field"><label>Model</label><select id="m-model"><option>Soul EX</option><option>Soul EX+</option><option>Venue Essential</option><option>Venue Preferred</option><option>Venue Trend</option><option>Venue Ultimate</option></select></div>
             </div>
             <div class="field-row">
                 <div class="field"><label>KM</label><input type="number" id="m-km" placeholder="45000"></div>
@@ -319,14 +207,12 @@
             </div>
             <div class="field-row">
                 <div class="field"><label>Dealer</label><input id="m-dealer" placeholder="Thornhill Hyundai"></div>
-                <div class="field"><label>Distance</label><input type="number" id="m-dist" placeholder="15"></div>
+                <div class="field"><label>Dist (km)</label><input type="number" id="m-dist" placeholder="15"></div>
             </div>
             <div class="field"><label>Color</label><input id="m-color" placeholder="White"></div>
             <div class="field"><label>CARFAX</label><select id="m-carfax"><option value="clean">Clean</option><option value="unknown">Unknown</option><option value="accident">Accident</option><option value="police">Police</option></select></div>
             <div class="field"><label>AutoTrader URL</label><input id="m-listing" placeholder="https://autotrader.ca/..."></div>
-            <div class="field"><label>Dealer URL</label><input id="m-dealer-url" placeholder="https://dealer.com/..."></div>
             <div class="field"><label>CARFAX URL</label><input id="m-carfax-url" placeholder="https://vhr.carfax.ca/..."></div>
-            <div class="field"><label>Photo URL</label><input id="m-photo" placeholder="https://...jpg"></div>
             <div class="modal-actions">
                 <button class="btn" onclick="hideModal()">Cancel</button>
                 <button class="btn btn-add" onclick="addCar()">Add</button>
@@ -334,10 +220,55 @@
         </div>
     </div>
 
+    <div class="modal-bg" id="note-modal">
+        <div class="modal note-modal">
+            <h2>Notes</h2>
+            <textarea id="note-text" placeholder="Add notes..."></textarea>
+            <div class="modal-actions">
+                <button class="btn" onclick="hideNoteModal()">Cancel</button>
+                <button class="btn btn-add" onclick="saveNoteModal()">Save</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         const API = location.hostname === 'localhost' ? 'http://localhost:3001' : location.origin;
-        let cars = [], favs = new Set(), notes = {}, filters = {};
+        let cars = [], favs = new Set(), notes = {}, filters = {}, editingNoteId = null;
+
+        // Car photos by model and color
+        const carPhotos = {
+            'Soul': {
+                'Black': 'https://images.dealer.com/autodata/us/640/color/2022/USD20KIC021A0/K5.jpg',
+                'White': 'https://images.dealer.com/autodata/us/640/color/2022/USD20KIC021A0/SWP.jpg',
+                'Snow White Pearl': 'https://images.dealer.com/autodata/us/640/color/2022/USD20KIC021A0/SWP.jpg',
+                'Inferno Red': 'https://images.dealer.com/autodata/us/640/color/2022/USD20KIC021A0/INR.jpg',
+                'Red': 'https://images.dealer.com/autodata/us/640/color/2022/USD20KIC021A0/INR.jpg',
+                'Blue': 'https://images.dealer.com/autodata/us/640/color/2022/USD20KIC021A0/B3U.jpg',
+                'Dark Blue': 'https://images.dealer.com/autodata/us/640/color/2022/USD20KIC021A0/B3U.jpg',
+                'Gravity Grey': 'https://images.dealer.com/autodata/us/640/color/2022/USD20KIC021A0/G7U.jpg',
+                'Grey': 'https://images.dealer.com/autodata/us/640/color/2022/USD20KIC021A0/G7U.jpg',
+                'default': 'https://images.dealer.com/autodata/us/640/color/2022/USD20KIC021A0/SWP.jpg'
+            },
+            'Venue': {
+                'Black': 'https://images.dealer.com/autodata/us/640/color/2022/USD00HYS201A0/MZH.jpg',
+                'White': 'https://images.dealer.com/autodata/us/640/color/2022/USD00HYS201A0/W4Y.jpg',
+                'Intense Blue': 'https://images.dealer.com/autodata/us/640/color/2022/USD00HYS201A0/YP5.jpg',
+                'Blue': 'https://images.dealer.com/autodata/us/640/color/2022/USD00HYS201A0/YP5.jpg',
+                'Fiery Red': 'https://images.dealer.com/autodata/us/640/color/2022/USD00HYS201A0/PR2.jpg',
+                'Red': 'https://images.dealer.com/autodata/us/640/color/2022/USD00HYS201A0/PR2.jpg',
+                'Silver': 'https://images.dealer.com/autodata/us/640/color/2022/USD00HYS201A0/R4S.jpg',
+                '2-Tone': 'https://images.dealer.com/autodata/us/640/color/2022/USD00HYS201A0/YP5.jpg',
+                'White / Black roof': 'https://images.dealer.com/autodata/us/640/color/2022/USD00HYS201A0/W4Y.jpg',
+                'default': 'https://images.dealer.com/autodata/us/640/color/2022/USD00HYS201A0/W4Y.jpg'
+            }
+        };
+
+        const getPhoto = c => {
+            const model = c.model.includes('Soul') ? 'Soul' : 'Venue';
+            const photos = carPhotos[model];
+            return photos[c.color] || photos['default'];
+        };
 
         const getName = c => {
             const t = c.model.includes('Soul') ? 'Soul' : 'Venue';
@@ -379,9 +310,10 @@
                 const over = c.price * 1.13 > 21000;
                 const fav = favs.has(c.id);
                 const hide = (filters.fav && !fav) || (filters.budget && over) || (filters.clean && c.carfax !== 'clean');
+                const hasNote = notes[c.id];
 
                 return `<div class="car-row ${status(c, s)} ${fav ? 'fav' : ''} ${hide ? 'hidden' : ''}" data-id="${c.id}">
-                    ${c.photoUrl ? `<img class="photo" src="${c.photoUrl}">` : `<div class="photo">🚗</div>`}
+                    <img class="photo" src="${c.photoUrl || getPhoto(c)}" onerror="this.src='${getPhoto(c)}'">
                     <div class="car-info">
                         <div class="name">${getName(c)}</div>
                         <div class="meta">${c.color || ''} · ${c.dealer}${c.official ? ' <span class="official">★</span>' : ''}</div>
@@ -394,19 +326,18 @@
                     <div class="km ${c.km < 50000 ? 'low' : c.km > 80000 ? 'high' : ''}">${(c.km/1000).toFixed(0)}K</div>
                     <div>${c.distance}km</div>
                     <div>
-                        <div class="carfax ${c.carfax}">${c.carfax === 'clean' ? '✓ Clean' : c.carfax === 'accident' ? '⚠ Accident' : c.carfax === 'police' ? '✗ Police' : '? Unknown'}</div>
-                        ${c.carfaxNote ? `<div class="carfax-note">${c.carfaxNote}</div>` : ''}
+                        <div class="carfax ${c.carfax}">${c.carfax === 'clean' ? '✓ Clean' : c.carfax === 'accident' ? '⚠ Accid' : c.carfax === 'police' ? '✗ Police' : '?'}</div>
+                        ${c.carfaxNote ? `<div class="carfax-note">${c.carfaxNote.split('·')[0]}</div>` : ''}
                     </div>
                     <div class="features">${feats.map(f => `<div class="feat ${(c.features || []).includes(f) ? 'yes' : 'no'}" title="${f}">${icons[f]}</div>`).join('')}</div>
                     <div class="links">
-                        ${c.listingUrl ? `<a href="${c.listingUrl}" target="_blank">AutoTrader</a>` : ''}
-                        ${c.dealerUrl ? `<a href="${c.dealerUrl}" target="_blank">Dealer</a>` : ''}
-                        ${c.carfaxUrl ? `<a href="${c.carfaxUrl}" target="_blank">CARFAX</a>` : ''}
+                        ${c.listingUrl ? `<a href="${c.listingUrl}" target="_blank">AT</a>` : ''}
+                        ${c.carfaxUrl ? `<a href="${c.carfaxUrl}" target="_blank">CF</a>` : ''}
                     </div>
-                    <textarea class="notes-input" placeholder="Notes..." onchange="saveNote(${c.id},this.value)">${notes[c.id] || ''}</textarea>
                     <div class="actions">
-                        <button class="action-btn ${fav ? 'starred' : ''}" onclick="toggleFav(${c.id})">⭐</button>
-                        <button class="action-btn" onclick="del(${c.id})">🗑</button>
+                        <button class="action-btn ${fav ? 'starred' : ''}" onclick="toggleFav(${c.id})" title="Favorite">⭐</button>
+                        <button class="action-btn note-btn ${hasNote ? 'starred' : ''}" onclick="showNoteModal(${c.id})" title="Notes">📝</button>
+                        <button class="action-btn" onclick="del(${c.id})" title="Delete">🗑</button>
                     </div>
                 </div>`;
             }).join('');
@@ -428,9 +359,17 @@
             render();
         };
 
-        const saveNote = async (id, note) => {
-            notes[id] = note;
+        const showNoteModal = id => {
+            editingNoteId = id;
+            document.getElementById('note-text').value = notes[id] || '';
+            document.getElementById('note-modal').classList.add('show');
+        };
+        const hideNoteModal = () => document.getElementById('note-modal').classList.remove('show');
+        const saveNoteModal = async () => {
+            notes[editingNoteId] = document.getElementById('note-text').value;
             await fetch(`${API}/notes`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(notes) });
+            hideNoteModal();
+            render();
         };
 
         const del = async id => {
@@ -456,9 +395,7 @@
                 features: ['htd-seats', 'camera', 'auto-brake'],
                 carfax: document.getElementById('m-carfax').value,
                 listingUrl: document.getElementById('m-listing').value,
-                dealerUrl: document.getElementById('m-dealer-url').value,
                 carfaxUrl: document.getElementById('m-carfax-url').value,
-                photoUrl: document.getElementById('m-photo').value,
                 carfaxNote: '', coords: [43.8, -79.4], official: false
             };
             const res = await fetch(`${API}/cars`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(car) });
@@ -470,11 +407,11 @@
         const initMap = () => {
             const map = L.map('map', { zoomControl: false }).setView([43.8, -79.45], 10);
             L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
-            L.circleMarker([43.8108, -79.4250], { radius: 6, color: '#0066cc', fillColor: '#0066cc', fillOpacity: 1, weight: 0 }).addTo(map).bindPopup('🏠 Home');
+            L.circleMarker([43.8108, -79.4250], { radius: 5, color: '#0066cc', fillColor: '#0066cc', fillOpacity: 1, weight: 0 }).addTo(map).bindPopup('🏠 Home');
             cars.forEach(c => {
                 if (c.coords) {
                     const col = c.carfax === 'clean' ? '#22c55e' : c.carfax === 'police' ? '#ef4444' : c.carfax === 'accident' ? '#f59e0b' : '#9ca3af';
-                    L.circleMarker(c.coords, { radius: 5, color: col, fillColor: col, fillOpacity: 0.8, weight: 0 })
+                    L.circleMarker(c.coords, { radius: 4, color: col, fillColor: col, fillOpacity: 0.8, weight: 0 })
                         .addTo(map).bindPopup(`<strong>${getName(c)}</strong><br>$${c.price.toLocaleString()}`);
                 }
             });
