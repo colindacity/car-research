@@ -23,7 +23,7 @@ Opens at http://localhost:3001
 
 ## Features
 
-- 19 car listings (Kia Soul & Hyundai Venue)
+- 34 car listings (Kia Soul & Hyundai Venue)
 - Sort by: Score, Price, KM, Distance, Year
 - Favorites & Notes (saved to server)
 - Clean CARFAX verification
