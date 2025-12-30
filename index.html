@@ -3,249 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mom's Car Finder</title>
+    <title>Car Finder</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-        :root {
-            --bg: #f8f9fa;
-            --card: #ffffff;
-            --fg: #212529;
-            --muted: #6c757d;
-            --border: #dee2e6;
-            --accent: #0d6efd;
-            --green: #198754;
-            --orange: #fd7e14;
-            --red: #dc3545;
-            --yellow: #ffc107;
-        }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            font-size: 14px;
-            color: var(--fg);
-            background: var(--bg);
+            font-size: 13px;
+            color: #333;
+            background: #fff;
             line-height: 1.4;
         }
-        a { color: var(--accent); text-decoration: none; }
+        a { color: #0066cc; text-decoration: none; }
         a:hover { text-decoration: underline; }
 
-        /* Header */
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 16px 20px;
+        /* Layout */
+        .layout {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
+            height: 100vh;
         }
-        .header h1 { font-size: 20px; font-weight: 600; }
-        .header-stats {
+        .main {
+            flex: 1;
+            overflow: auto;
             display: flex;
+            flex-direction: column;
+        }
+        .sidebar {
+            width: 320px;
+            border-left: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top bar - minimal */
+        .topbar {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
             gap: 16px;
-            font-size: 13px;
+            border-bottom: 1px solid #eee;
+            flex-shrink: 0;
         }
-        .header-stats span { opacity: 0.9; }
-        .header-stats strong { font-weight: 600; }
-
-        /* Toolbar */
-        .toolbar {
-            background: var(--card);
-            padding: 12px 20px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            align-items: center;
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        .btn {
-            padding: 8px 14px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            border: 1px solid var(--border);
-            background: var(--card);
-            color: var(--fg);
-            transition: all 0.15s;
-        }
-        .btn:hover { background: #f8f9fa; }
-        .btn.active { background: #e7f1ff; border-color: var(--accent); color: var(--accent); }
-        .btn-primary { background: var(--accent); color: white; border-color: var(--accent); }
-        .btn-primary:hover { background: #0b5ed7; }
-        select {
-            padding: 8px 12px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            font-size: 13px;
-            background: white;
-        }
-
-        /* Table Container */
-        .table-container {
-            overflow-x: auto;
-            background: var(--card);
-        }
-
-        /* Car Table */
-        .car-table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 1200px;
-        }
-        .car-table th {
-            background: #f8f9fa;
-            padding: 10px 12px;
-            text-align: left;
-            font-size: 11px;
+        .topbar h1 {
+            font-size: 15px;
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--muted);
-            border-bottom: 2px solid var(--border);
-            position: sticky;
-            top: 53px;
-            z-index: 50;
         }
-        .car-table td {
-            padding: 12px;
-            border-bottom: 1px solid var(--border);
-            vertical-align: middle;
-        }
-        .car-table tr:hover { background: #f8f9fa; }
-        .car-table tr.favorite { background: #fffbeb; }
-        .car-table tr.hidden { display: none; }
-
-        /* Status Colors */
-        .car-table tr.status-great { border-left: 4px solid var(--green); }
-        .car-table tr.status-good { border-left: 4px solid #20c997; }
-        .car-table tr.status-ok { border-left: 4px solid var(--orange); }
-        .car-table tr.status-caution { border-left: 4px solid var(--red); }
-        .car-table tr.status-over { border-left: 4px solid var(--muted); }
-
-        /* Photo Cell */
-        .car-photo {
-            width: 80px;
-            height: 60px;
-            border-radius: 6px;
-            object-fit: cover;
-            background: #e9ecef;
+        .topbar-stats {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--muted);
-            font-size: 24px;
-        }
-
-        /* Car Name */
-        .car-name {
-            font-weight: 600;
-            font-size: 14px;
-            margin-bottom: 2px;
-        }
-        .car-dealer {
+            gap: 12px;
             font-size: 12px;
-            color: var(--muted);
+            color: #666;
         }
-        .car-dealer .official { color: var(--accent); }
+        .topbar-actions {
+            margin-left: auto;
+            display: flex;
+            gap: 8px;
+        }
+        select, .btn {
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 12px;
+            background: #fff;
+            cursor: pointer;
+        }
+        .btn:hover { background: #f5f5f5; }
+        .btn.active { background: #e7f3ff; border-color: #0066cc; }
+        .btn-add { background: #0066cc; color: white; border-color: #0066cc; }
 
-        /* Score Badge */
-        .score {
-            display: inline-flex;
+        /* List */
+        .list {
+            flex: 1;
+            overflow: auto;
+        }
+        .car-row {
+            display: grid;
+            grid-template-columns: 70px 1fr 60px 80px 50px 45px 90px 100px 1fr 80px;
+            gap: 12px;
+            padding: 12px 16px;
+            align-items: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .car-row:hover { background: #fafafa; }
+        .car-row.fav { background: #fffdf5; }
+
+        /* Status indicator */
+        .car-row.great { border-left: 3px solid #22c55e; }
+        .car-row.good { border-left: 3px solid #3b82f6; }
+        .car-row.ok { border-left: 3px solid #f59e0b; }
+        .car-row.caution { border-left: 3px solid #ef4444; }
+        .car-row.over { border-left: 3px solid #9ca3af; }
+        .car-row.hidden { display: none; }
+
+        /* Photo */
+        .photo {
+            width: 70px;
+            height: 52px;
+            border-radius: 4px;
+            object-fit: cover;
+            background: #f5f5f5;
+            display: flex;
             align-items: center;
             justify-content: center;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            font-weight: 700;
-            font-size: 14px;
+            color: #ccc;
+            font-size: 20px;
         }
-        .score.high { background: #d1e7dd; color: var(--green); }
-        .score.mid { background: #fff3cd; color: #997404; }
-        .score.low { background: #f8d7da; color: var(--red); }
+
+        /* Car info */
+        .car-info .name { font-weight: 600; margin-bottom: 2px; }
+        .car-info .meta { font-size: 11px; color: #888; }
+        .car-info .official { color: #0066cc; }
+
+        /* Score */
+        .score {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+        }
+        .score.high { background: #dcfce7; color: #166534; }
+        .score.mid { background: #fef3c7; color: #92400e; }
+        .score.low { background: #fee2e2; color: #991b1b; }
 
         /* Price */
-        .price-main { font-weight: 600; font-size: 15px; }
-        .price-allin { font-size: 12px; color: var(--muted); }
-        .price-allin.over { color: var(--red); }
-        .price-allin.ok { color: var(--green); }
+        .price .main { font-weight: 600; }
+        .price .allin { font-size: 11px; color: #888; }
+        .price .allin.over { color: #ef4444; }
+        .price .allin.ok { color: #22c55e; }
 
         /* KM */
-        .km { font-weight: 500; }
-        .km.low { color: var(--green); }
-        .km.high { color: var(--orange); }
+        .km.low { color: #22c55e; }
+        .km.high { color: #f59e0b; }
 
-        /* CARFAX Badge */
-        .carfax-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 500;
-        }
-        .carfax-badge.clean { background: #d1e7dd; color: var(--green); }
-        .carfax-badge.accident { background: #fff3cd; color: #997404; }
-        .carfax-badge.police { background: #f8d7da; color: var(--red); }
-        .carfax-badge.unknown { background: #e9ecef; color: var(--muted); }
+        /* CARFAX */
+        .carfax { font-size: 11px; }
+        .carfax.clean { color: #22c55e; }
+        .carfax.accident { color: #f59e0b; }
+        .carfax.police { color: #ef4444; }
+        .carfax.unknown { color: #9ca3af; }
+        .carfax-note { font-size: 10px; color: #888; margin-top: 2px; }
 
         /* Features */
-        .features-grid {
+        .features {
             display: flex;
-            gap: 4px;
-            flex-wrap: wrap;
+            gap: 2px;
         }
         .feat {
-            width: 24px;
-            height: 24px;
-            border-radius: 4px;
+            width: 18px;
+            height: 18px;
+            border-radius: 3px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
-            background: #e9ecef;
+            font-size: 10px;
+            background: #f0f0f0;
         }
-        .feat.yes { background: #d1e7dd; }
-        .feat.no { background: #f8d7da; opacity: 0.5; }
+        .feat.yes { background: #dcfce7; }
+        .feat.no { opacity: 0.3; }
 
         /* Links */
         .links {
             display: flex;
             flex-direction: column;
-            gap: 4px;
-        }
-        .link-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 4px 8px;
-            border-radius: 4px;
+            gap: 2px;
             font-size: 11px;
-            background: #e9ecef;
-            color: var(--fg);
-            text-decoration: none;
-            white-space: nowrap;
         }
-        .link-btn:hover { background: #dee2e6; text-decoration: none; }
 
         /* Notes */
-        .notes-cell {
-            max-width: 200px;
-        }
         .notes-input {
             width: 100%;
-            padding: 6px 8px;
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            font-size: 12px;
+            padding: 4px 6px;
+            border: 1px solid #eee;
+            border-radius: 3px;
+            font-size: 11px;
             resize: none;
-            min-height: 50px;
+            height: 40px;
         }
-        .notes-input:focus { outline: none; border-color: var(--accent); }
+        .notes-input:focus { outline: none; border-color: #0066cc; }
 
         /* Actions */
         .actions {
@@ -253,496 +191,305 @@
             gap: 4px;
         }
         .action-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-            background: white;
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: none;
             cursor: pointer;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .action-btn:hover { background: #f8f9fa; }
-        .action-btn.starred { background: #fffbeb; border-color: var(--yellow); }
-
-        /* Modal */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-overlay.show { display: flex; }
-        .modal {
-            background: white;
-            border-radius: 12px;
-            padding: 24px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        .modal h2 { font-size: 18px; margin-bottom: 16px; }
-        .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; color: var(--muted); }
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
+            border-radius: 4px;
             font-size: 14px;
         }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .action-btn:hover { background: #f0f0f0; }
+        .action-btn.starred { background: #fef3c7; }
 
-        /* Photo Modal */
-        .photo-modal {
-            max-width: 90vw;
-            max-height: 90vh;
+        /* Map */
+        #map {
+            flex: 1;
+            min-height: 300px;
         }
-        .photo-modal img {
-            max-width: 100%;
-            max-height: 80vh;
-            border-radius: 8px;
+        .map-info {
+            padding: 12px;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid #eee;
         }
 
         /* Version */
         .version {
             position: fixed;
-            bottom: 8px;
-            left: 8px;
+            bottom: 4px;
+            left: 4px;
             font-size: 10px;
-            color: #999;
-            background: rgba(255,255,255,0.9);
-            padding: 4px 8px;
-            border-radius: 4px;
+            color: #ccc;
         }
 
-        /* Legend */
-        .legend {
-            padding: 12px 20px;
-            background: var(--card);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            font-size: 12px;
-            color: var(--muted);
-        }
-        .legend-item {
-            display: flex;
+        /* Modal */
+        .modal-bg {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 1000;
             align-items: center;
-            gap: 6px;
+            justify-content: center;
         }
-        .legend-color {
-            width: 12px;
-            height: 12px;
-            border-radius: 2px;
+        .modal-bg.show { display: flex; }
+        .modal {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            width: 400px;
+            max-height: 90vh;
+            overflow-y: auto;
         }
+        .modal h2 { font-size: 16px; margin-bottom: 16px; }
+        .field { margin-bottom: 12px; }
+        .field label { display: block; font-size: 11px; color: #666; margin-bottom: 4px; }
+        .field input, .field select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        .field-row { display: flex; gap: 12px; }
+        .field-row .field { flex: 1; }
+        .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
 
         /* Mobile */
-        @media (max-width: 768px) {
-            .header { padding: 12px 16px; }
-            .header h1 { font-size: 16px; }
-            .toolbar { padding: 10px 16px; }
-            .legend { display: none; }
-            .car-table { min-width: 900px; }
-            .car-photo { width: 60px; height: 45px; }
+        @media (max-width: 1024px) {
+            .sidebar { display: none; }
+            .car-row {
+                grid-template-columns: 60px 1fr 50px 70px 40px 40px;
+                font-size: 12px;
+            }
+            .car-row .features, .car-row .links, .car-row .notes-input { display: none; }
         }
     </style>
 </head>
 <body>
-    <div class="version">v2.0 · Dec 30 1:30am</div>
+    <div class="version">v2.1 · Dec 30</div>
 
-    <div class="header">
-        <h1>🚗 Mom's Car Finder</h1>
-        <div class="header-stats">
-            <span><strong id="stat-total">0</strong> Cars</span>
-            <span><strong id="stat-budget">0</strong> In Budget</span>
-            <span><strong id="stat-clean">0</strong> Clean</span>
-            <span>⭐ <strong id="stat-fav">0</strong></span>
+    <div class="layout">
+        <div class="main">
+            <div class="topbar">
+                <h1>🚗 Car Finder</h1>
+                <div class="topbar-stats">
+                    <span><strong id="s-total">0</strong> cars</span>
+                    <span><strong id="s-budget">0</strong> in budget</span>
+                    <span><strong id="s-clean">0</strong> clean</span>
+                </div>
+                <div class="topbar-actions">
+                    <select id="sort" onchange="render()">
+                        <option value="score">Best</option>
+                        <option value="price">Price ↑</option>
+                        <option value="km">KM ↑</option>
+                        <option value="dist">Closest</option>
+                    </select>
+                    <button class="btn" id="f-fav" onclick="toggle('fav')">⭐</button>
+                    <button class="btn" id="f-budget" onclick="toggle('budget')">💰</button>
+                    <button class="btn" id="f-clean" onclick="toggle('clean')">✓</button>
+                    <button class="btn btn-add" onclick="showModal()">+ Add</button>
+                </div>
+            </div>
+
+            <div class="list" id="list"></div>
+        </div>
+
+        <div class="sidebar">
+            <div id="map"></div>
+            <div class="map-info">
+                <strong>Budget:</strong> $21K all-in (~$18.5K list)<br>
+                <strong>Home:</strong> L4J 3W3 (Thornhill)
+            </div>
         </div>
     </div>
 
-    <div class="toolbar">
-        <button class="btn btn-primary" onclick="showAddModal()">+ Add Car</button>
-        <select id="sort-select" onchange="renderTable()">
-            <option value="score">Best Score</option>
-            <option value="price">Lowest Price</option>
-            <option value="km">Lowest KM</option>
-            <option value="distance">Closest</option>
-            <option value="year">Newest</option>
-        </select>
-        <button class="btn" id="btn-fav" onclick="toggleFilter('fav')">⭐ Favorites</button>
-        <button class="btn" id="btn-budget" onclick="toggleFilter('budget')">💰 In Budget</button>
-        <button class="btn" id="btn-clean" onclick="toggleFilter('clean')">✅ Clean Only</button>
-    </div>
-
-    <div class="legend">
-        <div class="legend-item"><div class="legend-color" style="background:var(--green)"></div> Great (18+)</div>
-        <div class="legend-item"><div class="legend-color" style="background:#20c997"></div> Good (15-17)</div>
-        <div class="legend-item"><div class="legend-color" style="background:var(--orange)"></div> OK (12-14)</div>
-        <div class="legend-item"><div class="legend-color" style="background:var(--red)"></div> Caution (Accident)</div>
-        <div class="legend-item"><div class="legend-color" style="background:var(--muted)"></div> Over Budget</div>
-    </div>
-
-    <div class="table-container">
-        <table class="car-table">
-            <thead>
-                <tr>
-                    <th>Photo</th>
-                    <th>Car</th>
-                    <th>Score</th>
-                    <th>Price</th>
-                    <th>KM</th>
-                    <th>Dist</th>
-                    <th>CARFAX</th>
-                    <th>Features</th>
-                    <th>Links</th>
-                    <th>Notes</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="car-tbody"></tbody>
-        </table>
-    </div>
-
-    <!-- Add Car Modal -->
-    <div class="modal-overlay" id="add-modal">
+    <!-- Modal -->
+    <div class="modal-bg" id="modal">
         <div class="modal">
-            <h2>+ Add New Car</h2>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Year</label>
-                    <select id="car-year">
-                        <option value="2024">2024</option>
-                        <option value="2023">2023</option>
-                        <option value="2022" selected>2022</option>
-                        <option value="2021">2021</option>
-                        <option value="2019">2019</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Model</label>
-                    <select id="car-model">
-                        <option value="Soul EX">Soul EX</option>
-                        <option value="Soul EX+">Soul EX+</option>
-                        <option value="Venue Essential">Venue Essential</option>
-                        <option value="Venue Preferred">Venue Preferred</option>
-                    </select>
-                </div>
+            <h2>Add Car</h2>
+            <div class="field-row">
+                <div class="field"><label>Year</label><select id="m-year"><option>2024</option><option>2023</option><option selected>2022</option><option>2021</option><option>2019</option></select></div>
+                <div class="field"><label>Model</label><select id="m-model"><option>Soul EX</option><option>Soul EX+</option><option>Venue Essential</option><option>Venue Preferred</option></select></div>
             </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Kilometers</label>
-                    <input type="number" id="car-km" placeholder="45000">
-                </div>
-                <div class="form-group">
-                    <label>Price ($)</label>
-                    <input type="number" id="car-price" placeholder="17500">
-                </div>
+            <div class="field-row">
+                <div class="field"><label>KM</label><input type="number" id="m-km" placeholder="45000"></div>
+                <div class="field"><label>Price</label><input type="number" id="m-price" placeholder="17500"></div>
             </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Dealer</label>
-                    <input type="text" id="car-dealer" placeholder="Thornhill Hyundai">
-                </div>
-                <div class="form-group">
-                    <label>Distance (km)</label>
-                    <input type="number" id="car-distance" placeholder="15">
-                </div>
+            <div class="field-row">
+                <div class="field"><label>Dealer</label><input id="m-dealer" placeholder="Thornhill Hyundai"></div>
+                <div class="field"><label>Distance</label><input type="number" id="m-dist" placeholder="15"></div>
             </div>
-            <div class="form-group">
-                <label>Color</label>
-                <input type="text" id="car-color" placeholder="White">
-            </div>
-            <div class="form-group">
-                <label>CARFAX Status</label>
-                <select id="car-carfax">
-                    <option value="clean">✅ Clean</option>
-                    <option value="unknown">❓ Unknown</option>
-                    <option value="accident">⚠️ Accident</option>
-                    <option value="police">🚨 Police Reported</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>AutoTrader URL</label>
-                <input type="url" id="car-autotrader" placeholder="https://autotrader.ca/...">
-            </div>
-            <div class="form-group">
-                <label>Dealer URL</label>
-                <input type="url" id="car-dealer-url" placeholder="https://dealer.com/...">
-            </div>
-            <div class="form-group">
-                <label>CARFAX URL</label>
-                <input type="url" id="car-carfax-url" placeholder="https://vhr.carfax.ca/...">
-            </div>
-            <div class="form-group">
-                <label>Photo URL</label>
-                <input type="url" id="car-photo" placeholder="https://...jpg">
-            </div>
-            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
-                <button class="btn" onclick="closeModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="addCar()">Add Car</button>
+            <div class="field"><label>Color</label><input id="m-color" placeholder="White"></div>
+            <div class="field"><label>CARFAX</label><select id="m-carfax"><option value="clean">Clean</option><option value="unknown">Unknown</option><option value="accident">Accident</option><option value="police">Police</option></select></div>
+            <div class="field"><label>AutoTrader URL</label><input id="m-listing" placeholder="https://autotrader.ca/..."></div>
+            <div class="field"><label>Dealer URL</label><input id="m-dealer-url" placeholder="https://dealer.com/..."></div>
+            <div class="field"><label>CARFAX URL</label><input id="m-carfax-url" placeholder="https://vhr.carfax.ca/..."></div>
+            <div class="field"><label>Photo URL</label><input id="m-photo" placeholder="https://...jpg"></div>
+            <div class="modal-actions">
+                <button class="btn" onclick="hideModal()">Cancel</button>
+                <button class="btn btn-add" onclick="addCar()">Add</button>
             </div>
         </div>
     </div>
 
-    <!-- Photo Modal -->
-    <div class="modal-overlay" id="photo-modal" onclick="closePhotoModal()">
-        <div class="photo-modal">
-            <img id="photo-modal-img" src="" alt="Car photo">
-        </div>
-    </div>
-
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:3001' : window.location.origin;
+        const API = location.hostname === 'localhost' ? 'http://localhost:3001' : location.origin;
+        let cars = [], favs = new Set(), notes = {}, filters = {};
 
-        let cars = [];
-        let favorites = new Set();
-        let notes = {};
-        let filters = { fav: false, budget: false, clean: false };
+        const getName = c => {
+            const t = c.model.includes('Soul') ? 'Soul' : 'Venue';
+            const loc = c.dealer.split(' ').pop();
+            return `${c.km < 30000 ? 'Low KM ' : ''}${c.year} ${t} @ ${loc}`;
+        };
 
-        // Generate descriptive name
-        function getCarName(car) {
-            const type = car.model.includes('Soul') ? 'Soul' : 'Venue';
-            let prefix = '';
-            if (car.km < 30000) prefix = 'Low KM ';
-            else if (car.km < 50000) prefix = 'Good KM ';
-            const location = car.dealer.split(' ').pop();
-            return `${prefix}${car.year} ${type} @ ${location}`;
-        }
-
-        // Calculate score
-        function calcScore(car) {
+        const score = c => {
             let s = 0;
-            const feats = ['htd-seats', 'camera', 'blind-spot', 'lane', 'htd-wheel', 'auto-brake'];
-            s += Math.min(5, car.features?.filter(f => feats.includes(f)).length || 0);
-            if (car.km < 30000) s += 5; else if (car.km < 50000) s += 4; else if (car.km < 65000) s += 3; else if (car.km < 80000) s += 2; else s += 1;
-            if (car.carfax === 'clean') s += 5; else if (car.carfax === 'unknown') s += 3; else if (car.carfax === 'accident') s += 1;
-            const allIn = car.price * 1.13;
-            if (allIn < 18000) s += 5; else if (allIn < 20000) s += 4; else if (allIn < 21000) s += 3; else if (allIn < 22500) s += 2; else s += 1;
-            if (car.distance < 20) s += 5; else if (car.distance < 50) s += 4; else if (car.distance < 100) s += 3; else s += 2;
+            s += Math.min(5, (c.features || []).length);
+            s += c.km < 30000 ? 5 : c.km < 50000 ? 4 : c.km < 65000 ? 3 : c.km < 80000 ? 2 : 1;
+            s += c.carfax === 'clean' ? 5 : c.carfax === 'unknown' ? 3 : 1;
+            const allIn = c.price * 1.13;
+            s += allIn < 18000 ? 5 : allIn < 20000 ? 4 : allIn < 21000 ? 3 : allIn < 22500 ? 2 : 1;
+            s += c.distance < 20 ? 5 : c.distance < 50 ? 4 : c.distance < 100 ? 3 : 2;
             return s;
-        }
+        };
 
-        // Get row status class
-        function getStatusClass(car, score) {
-            const allIn = car.price * 1.13;
-            if (car.carfax === 'police' || car.carfax === 'accident') return 'status-caution';
-            if (allIn > 21000) return 'status-over';
-            if (score >= 18) return 'status-great';
-            if (score >= 15) return 'status-good';
-            return 'status-ok';
-        }
+        const status = (c, s) => {
+            if (c.carfax === 'police' || c.carfax === 'accident') return 'caution';
+            if (c.price * 1.13 > 21000) return 'over';
+            return s >= 18 ? 'great' : s >= 15 ? 'good' : 'ok';
+        };
 
-        // Load data
-        async function loadData() {
-            try {
-                const [carsRes, favRes, notesRes] = await Promise.all([
-                    fetch(`${API_URL}/cars`),
-                    fetch(`${API_URL}/favorites`),
-                    fetch(`${API_URL}/notes`)
-                ]);
-                cars = await carsRes.json();
-                favorites = new Set(await favRes.json());
-                notes = await notesRes.json();
-            } catch (e) {
-                console.error('API error:', e);
-            }
-            renderTable();
-        }
+        const render = () => {
+            const sort = document.getElementById('sort').value;
+            let list = [...cars];
+            if (sort === 'score') list.sort((a, b) => score(b) - score(a));
+            else if (sort === 'price') list.sort((a, b) => a.price - b.price);
+            else if (sort === 'km') list.sort((a, b) => a.km - b.km);
+            else if (sort === 'dist') list.sort((a, b) => a.distance - b.distance);
 
-        // Render table
-        function renderTable() {
-            const tbody = document.getElementById('car-tbody');
-            const sortBy = document.getElementById('sort-select').value;
+            const icons = { 'htd-seats': '🔥', 'htd-wheel': '⭕', 'camera': '📷', 'blind-spot': '👁', 'lane': '🛣', 'auto-brake': '🛑' };
+            const feats = ['htd-seats', 'htd-wheel', 'camera', 'blind-spot', 'lane', 'auto-brake'];
 
-            let sorted = [...cars];
-            if (sortBy === 'score') sorted.sort((a, b) => calcScore(b) - calcScore(a));
-            else if (sortBy === 'price') sorted.sort((a, b) => a.price - b.price);
-            else if (sortBy === 'km') sorted.sort((a, b) => a.km - b.km);
-            else if (sortBy === 'distance') sorted.sort((a, b) => a.distance - b.distance);
-            else if (sortBy === 'year') sorted.sort((a, b) => b.year - a.year);
+            document.getElementById('list').innerHTML = list.map(c => {
+                const s = score(c);
+                const allIn = (c.price * 1.13 / 1000).toFixed(1);
+                const over = c.price * 1.13 > 21000;
+                const fav = favs.has(c.id);
+                const hide = (filters.fav && !fav) || (filters.budget && over) || (filters.clean && c.carfax !== 'clean');
 
-            tbody.innerHTML = sorted.map(car => {
-                const score = calcScore(car);
-                const allIn = (car.price * 1.13 / 1000).toFixed(1);
-                const isFav = favorites.has(car.id);
-                const note = notes[car.id] || '';
-                const isOverBudget = car.price * 1.13 > 21000;
-
-                // Apply filters
-                let hidden = false;
-                if (filters.fav && !isFav) hidden = true;
-                if (filters.budget && isOverBudget) hidden = true;
-                if (filters.clean && car.carfax !== 'clean') hidden = true;
-
-                const featureIcons = {
-                    'htd-seats': '🔥', 'htd-wheel': '⭕', 'camera': '📷',
-                    'blind-spot': '👁', 'lane': '🛣', 'auto-brake': '🛑'
-                };
-                const allFeatures = ['htd-seats', 'htd-wheel', 'camera', 'blind-spot', 'lane', 'auto-brake'];
-
-                return `
-                    <tr class="${getStatusClass(car, score)} ${isFav ? 'favorite' : ''} ${hidden ? 'hidden' : ''}" data-id="${car.id}">
-                        <td>
-                            ${car.photoUrl
-                                ? `<img class="car-photo" src="${car.photoUrl}" onclick="showPhoto('${car.photoUrl}')" style="cursor:pointer">`
-                                : `<div class="car-photo">🚗</div>`
-                            }
-                        </td>
-                        <td>
-                            <div class="car-name">${getCarName(car)}</div>
-                            <div class="car-dealer">${car.color || ''} · ${car.dealer}${car.official ? ' <span class="official">★</span>' : ''}</div>
-                        </td>
-                        <td>
-                            <div class="score ${score >= 18 ? 'high' : score >= 14 ? 'mid' : 'low'}">${score}</div>
-                        </td>
-                        <td>
-                            <div class="price-main">$${car.price.toLocaleString()}</div>
-                            <div class="price-allin ${isOverBudget ? 'over' : 'ok'}">~$${allIn}K all-in</div>
-                        </td>
-                        <td>
-                            <div class="km ${car.km < 50000 ? 'low' : car.km > 80000 ? 'high' : ''}">${(car.km/1000).toFixed(0)}K</div>
-                        </td>
-                        <td>${car.distance}km</td>
-                        <td>
-                            <div class="carfax-badge ${car.carfax}">
-                                ${car.carfax === 'clean' ? '✅ Clean' : ''}
-                                ${car.carfax === 'unknown' ? '❓' : ''}
-                                ${car.carfax === 'accident' ? '⚠️ Accident' : ''}
-                                ${car.carfax === 'police' ? '🚨 Police' : ''}
-                            </div>
-                            ${car.carfaxNote ? `<div style="font-size:10px;color:var(--muted);margin-top:4px">${car.carfaxNote}</div>` : ''}
-                        </td>
-                        <td>
-                            <div class="features-grid">
-                                ${allFeatures.map(f => `<div class="feat ${car.features?.includes(f) ? 'yes' : 'no'}" title="${f}">${featureIcons[f]}</div>`).join('')}
-                            </div>
-                        </td>
-                        <td>
-                            <div class="links">
-                                ${car.listingUrl ? `<a class="link-btn" href="${car.listingUrl}" target="_blank">🔗 AutoTrader</a>` : ''}
-                                ${car.dealerUrl ? `<a class="link-btn" href="${car.dealerUrl}" target="_blank">🏪 Dealer</a>` : ''}
-                                ${car.carfaxUrl ? `<a class="link-btn" href="${car.carfaxUrl}" target="_blank">📄 CARFAX</a>` : ''}
-                            </div>
-                        </td>
-                        <td class="notes-cell">
-                            <textarea class="notes-input" placeholder="Notes..." onchange="saveNote(${car.id}, this.value)">${note}</textarea>
-                        </td>
-                        <td>
-                            <div class="actions">
-                                <button class="action-btn ${isFav ? 'starred' : ''}" onclick="toggleFav(${car.id})">⭐</button>
-                                <button class="action-btn" onclick="deleteCar(${car.id})">🗑</button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
+                return `<div class="car-row ${status(c, s)} ${fav ? 'fav' : ''} ${hide ? 'hidden' : ''}" data-id="${c.id}">
+                    ${c.photoUrl ? `<img class="photo" src="${c.photoUrl}">` : `<div class="photo">🚗</div>`}
+                    <div class="car-info">
+                        <div class="name">${getName(c)}</div>
+                        <div class="meta">${c.color || ''} · ${c.dealer}${c.official ? ' <span class="official">★</span>' : ''}</div>
+                    </div>
+                    <div class="score ${s >= 18 ? 'high' : s >= 14 ? 'mid' : 'low'}">${s}</div>
+                    <div class="price">
+                        <div class="main">$${c.price.toLocaleString()}</div>
+                        <div class="allin ${over ? 'over' : 'ok'}">~$${allIn}K</div>
+                    </div>
+                    <div class="km ${c.km < 50000 ? 'low' : c.km > 80000 ? 'high' : ''}">${(c.km/1000).toFixed(0)}K</div>
+                    <div>${c.distance}km</div>
+                    <div>
+                        <div class="carfax ${c.carfax}">${c.carfax === 'clean' ? '✓ Clean' : c.carfax === 'accident' ? '⚠ Accident' : c.carfax === 'police' ? '✗ Police' : '? Unknown'}</div>
+                        ${c.carfaxNote ? `<div class="carfax-note">${c.carfaxNote}</div>` : ''}
+                    </div>
+                    <div class="features">${feats.map(f => `<div class="feat ${(c.features || []).includes(f) ? 'yes' : 'no'}" title="${f}">${icons[f]}</div>`).join('')}</div>
+                    <div class="links">
+                        ${c.listingUrl ? `<a href="${c.listingUrl}" target="_blank">AutoTrader</a>` : ''}
+                        ${c.dealerUrl ? `<a href="${c.dealerUrl}" target="_blank">Dealer</a>` : ''}
+                        ${c.carfaxUrl ? `<a href="${c.carfaxUrl}" target="_blank">CARFAX</a>` : ''}
+                    </div>
+                    <textarea class="notes-input" placeholder="Notes..." onchange="saveNote(${c.id},this.value)">${notes[c.id] || ''}</textarea>
+                    <div class="actions">
+                        <button class="action-btn ${fav ? 'starred' : ''}" onclick="toggleFav(${c.id})">⭐</button>
+                        <button class="action-btn" onclick="del(${c.id})">🗑</button>
+                    </div>
+                </div>`;
             }).join('');
 
-            updateStats();
-        }
+            document.getElementById('s-total').textContent = cars.length;
+            document.getElementById('s-budget').textContent = cars.filter(c => c.price * 1.13 <= 21000).length;
+            document.getElementById('s-clean').textContent = cars.filter(c => c.carfax === 'clean').length;
+        };
 
-        // Update stats
-        function updateStats() {
-            document.getElementById('stat-total').textContent = cars.length;
-            document.getElementById('stat-budget').textContent = cars.filter(c => c.price * 1.13 <= 21000).length;
-            document.getElementById('stat-clean').textContent = cars.filter(c => c.carfax === 'clean').length;
-            document.getElementById('stat-fav').textContent = favorites.size;
-        }
+        const toggle = t => {
+            filters[t] = !filters[t];
+            document.getElementById(`f-${t}`).classList.toggle('active', filters[t]);
+            render();
+        };
 
-        // Toggle filter
-        function toggleFilter(type) {
-            filters[type] = !filters[type];
-            document.getElementById(`btn-${type}`).classList.toggle('active', filters[type]);
-            renderTable();
-        }
+        const toggleFav = async id => {
+            favs.has(id) ? favs.delete(id) : favs.add(id);
+            await fetch(`${API}/favorites`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify([...favs]) });
+            render();
+        };
 
-        // Toggle favorite
-        async function toggleFav(id) {
-            if (favorites.has(id)) favorites.delete(id);
-            else favorites.add(id);
-            await fetch(`${API_URL}/favorites`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify([...favorites])
-            });
-            renderTable();
-        }
-
-        // Save note
-        async function saveNote(id, note) {
+        const saveNote = async (id, note) => {
             notes[id] = note;
-            await fetch(`${API_URL}/notes`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(notes)
-            });
-        }
+            await fetch(`${API}/notes`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(notes) });
+        };
 
-        // Delete car
-        async function deleteCar(id) {
-            if (confirm('Remove this car?')) {
-                await fetch(`${API_URL}/cars/${id}`, { method: 'DELETE' });
+        const del = async id => {
+            if (confirm('Remove?')) {
+                await fetch(`${API}/cars/${id}`, { method: 'DELETE' });
                 cars = cars.filter(c => c.id !== id);
-                renderTable();
+                render();
             }
-        }
+        };
 
-        // Show photo modal
-        function showPhoto(url) {
-            document.getElementById('photo-modal-img').src = url;
-            document.getElementById('photo-modal').classList.add('show');
-        }
-        function closePhotoModal() {
-            document.getElementById('photo-modal').classList.remove('show');
-        }
+        const showModal = () => document.getElementById('modal').classList.add('show');
+        const hideModal = () => document.getElementById('modal').classList.remove('show');
 
-        // Add car modal
-        function showAddModal() {
-            document.getElementById('add-modal').classList.add('show');
-        }
-        function closeModal() {
-            document.getElementById('add-modal').classList.remove('show');
-        }
-
-        // Add car
-        async function addCar() {
+        const addCar = async () => {
             const car = {
-                year: parseInt(document.getElementById('car-year').value),
-                model: document.getElementById('car-model').value,
-                color: document.getElementById('car-color').value || 'Unknown',
-                km: parseInt(document.getElementById('car-km').value) || 0,
-                price: parseInt(document.getElementById('car-price').value) || 0,
-                dealer: document.getElementById('car-dealer').value || 'Unknown',
-                distance: parseInt(document.getElementById('car-distance').value) || 0,
+                year: +document.getElementById('m-year').value,
+                model: document.getElementById('m-model').value,
+                color: document.getElementById('m-color').value || 'Unknown',
+                km: +document.getElementById('m-km').value || 0,
+                price: +document.getElementById('m-price').value || 0,
+                dealer: document.getElementById('m-dealer').value || 'Unknown',
+                distance: +document.getElementById('m-dist').value || 0,
                 features: ['htd-seats', 'camera', 'auto-brake'],
-                carfax: document.getElementById('car-carfax').value,
-                carfaxUrl: document.getElementById('car-carfax-url').value,
-                listingUrl: document.getElementById('car-autotrader').value,
-                dealerUrl: document.getElementById('car-dealer-url').value,
-                photoUrl: document.getElementById('car-photo').value,
-                carfaxNote: '',
-                coords: [43.8, -79.4],
-                official: false
+                carfax: document.getElementById('m-carfax').value,
+                listingUrl: document.getElementById('m-listing').value,
+                dealerUrl: document.getElementById('m-dealer-url').value,
+                carfaxUrl: document.getElementById('m-carfax-url').value,
+                photoUrl: document.getElementById('m-photo').value,
+                carfaxNote: '', coords: [43.8, -79.4], official: false
             };
-            const res = await fetch(`${API_URL}/cars`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(car)
-            });
+            const res = await fetch(`${API}/cars`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(car) });
             cars.push(await res.json());
-            renderTable();
-            closeModal();
-        }
+            render();
+            hideModal();
+        };
 
-        // Init
-        loadData();
+        const initMap = () => {
+            const map = L.map('map', { zoomControl: false }).setView([43.8, -79.45], 10);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
+            L.circleMarker([43.8108, -79.4250], { radius: 6, color: '#0066cc', fillColor: '#0066cc', fillOpacity: 1, weight: 0 }).addTo(map).bindPopup('🏠 Home');
+            cars.forEach(c => {
+                if (c.coords) {
+                    const col = c.carfax === 'clean' ? '#22c55e' : c.carfax === 'police' ? '#ef4444' : c.carfax === 'accident' ? '#f59e0b' : '#9ca3af';
+                    L.circleMarker(c.coords, { radius: 5, color: col, fillColor: col, fillOpacity: 0.8, weight: 0 })
+                        .addTo(map).bindPopup(`<strong>${getName(c)}</strong><br>$${c.price.toLocaleString()}`);
+                }
+            });
+        };
+
+        (async () => {
+            try {
+                const [cRes, fRes, nRes] = await Promise.all([fetch(`${API}/cars`), fetch(`${API}/favorites`), fetch(`${API}/notes`)]);
+                cars = await cRes.json();
+                favs = new Set(await fRes.json());
+                notes = await nRes.json();
+            } catch (e) { console.error(e); }
+            render();
+            initMap();
+        })();
     </script>
 </body>
 </html>
