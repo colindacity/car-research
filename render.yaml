@@ -2,8 +2,10 @@ services:
   - type: web
     name: car-research
     runtime: node
+    plan: free
     buildCommand: npm install
     startCommand: npm start
+    healthCheckPath: /cars
     envVars:
       - key: NODE_ENV
         value: production
