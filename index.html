@@ -9,182 +9,299 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            font-size: 12px;
+            background: #f5f5f5;
             color: #333;
-            background: #fff;
-            line-height: 1.3;
         }
-        a { color: #0066cc; text-decoration: none; }
-        a:hover { text-decoration: underline; }
 
-        .layout { display: flex; height: 100vh; }
-        .main { flex: 1; overflow: auto; display: flex; flex-direction: column; }
-        .sidebar { width: 280px; border-left: 1px solid #eee; display: flex; flex-direction: column; }
-
-        .topbar {
-            padding: 8px 12px;
+        /* Header */
+        .header {
+            background: white;
+            padding: 12px 16px;
             display: flex;
             align-items: center;
             gap: 12px;
-            border-bottom: 1px solid #eee;
-            flex-shrink: 0;
-            font-size: 11px;
+            border-bottom: 1px solid #e0e0e0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-        .topbar h1 { font-size: 13px; font-weight: 600; white-space: nowrap; }
-        .topbar-stats { display: flex; gap: 10px; color: #666; }
-        .topbar-actions { margin-left: auto; display: flex; gap: 4px; }
-        select, .btn {
-            padding: 4px 8px;
+        .header h1 { font-size: 18px; font-weight: 600; }
+        .stats { display: flex; gap: 12px; font-size: 13px; color: #666; }
+        .stats strong { color: #333; }
+        .header-actions { margin-left: auto; display: flex; gap: 8px; }
+        .filter-btn {
+            padding: 8px 12px;
             border: 1px solid #ddd;
-            border-radius: 3px;
-            font-size: 11px;
-            background: #fff;
+            border-radius: 6px;
+            background: white;
             cursor: pointer;
+            font-size: 13px;
         }
-        .btn:hover { background: #f5f5f5; }
-        .btn.active { background: #e7f3ff; border-color: #0066cc; }
-        .btn-add { background: #0066cc; color: white; border-color: #0066cc; }
-
-        .list { flex: 1; overflow: auto; }
-        .car-row {
-            display: grid;
-            grid-template-columns: 80px 1fr 36px 70px 40px 36px 70px 140px 60px 70px;
-            gap: 8px;
-            padding: 6px 10px;
-            align-items: center;
-            border-bottom: 1px solid #f0f0f0;
-            font-size: 11px;
+        .filter-btn:hover { background: #f5f5f5; }
+        .filter-btn.active { background: #e3f2fd; border-color: #2196f3; }
+        select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 13px;
+            background: white;
         }
-        .car-row:hover { background: #fafafa; }
-        .car-row.fav { background: #fffdf5; }
-        .car-row.great { border-left: 3px solid #22c55e; }
-        .car-row.good { border-left: 3px solid #3b82f6; }
-        .car-row.ok { border-left: 3px solid #f59e0b; }
-        .car-row.caution { border-left: 3px solid #ef4444; }
-        .car-row.over { border-left: 3px solid #9ca3af; }
-        .car-row.hidden { display: none; }
 
-        .photo {
-            width: 80px;
-            height: 50px;
-            border-radius: 4px;
+        /* Main layout */
+        .layout { display: flex; min-height: calc(100vh - 57px); }
+        .main { flex: 1; padding: 16px; overflow: auto; }
+        .sidebar {
+            width: 300px;
+            background: white;
+            border-left: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+        }
+        #map { flex: 1; min-height: 300px; }
+        .map-info { padding: 12px; font-size: 13px; color: #666; border-top: 1px solid #eee; }
+
+        /* Car cards */
+        .cars { display: flex; flex-direction: column; gap: 12px; }
+        .car-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            gap: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            transition: box-shadow 0.2s;
+        }
+        .car-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+        .car-card.fav { background: #fffbeb; }
+        .car-card.hidden { display: none; }
+
+        /* Status bar on left */
+        .car-card.great { border-left: 4px solid #22c55e; }
+        .car-card.good { border-left: 4px solid #3b82f6; }
+        .car-card.ok { border-left: 4px solid #f59e0b; }
+        .car-card.caution { border-left: 4px solid #ef4444; }
+        .car-card.over { border-left: 4px solid #9ca3af; }
+
+        /* Photo */
+        .car-photo {
+            width: 140px;
+            height: 95px;
+            border-radius: 8px;
             object-fit: cover;
-            background: #f5f5f5;
+            background: #e5e5e5;
+            flex-shrink: 0;
         }
 
-        .car-info .name { font-weight: 600; font-size: 12px; margin-bottom: 1px; }
-        .car-info .meta { font-size: 10px; color: #888; }
-        .car-info .official { color: #0066cc; }
-
-        .score {
-            width: 28px; height: 28px;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 700; font-size: 11px;
+        /* Car info */
+        .car-info { flex: 1; min-width: 0; }
+        .car-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .score.high { background: #dcfce7; color: #166534; }
-        .score.mid { background: #fef3c7; color: #92400e; }
-        .score.low { background: #fee2e2; color: #991b1b; }
-
-        .price .main { font-weight: 600; font-size: 12px; }
-        .price .allin { font-size: 10px; color: #888; }
-        .price .allin.over { color: #ef4444; }
-        .price .allin.ok { color: #22c55e; }
-
-        .km { font-size: 11px; }
-        .km.low { color: #22c55e; }
-        .km.high { color: #f59e0b; }
-
-        .carfax { font-size: 10px; }
-        .carfax.clean { color: #22c55e; }
-        .carfax.accident { color: #f59e0b; }
-        .carfax.police { color: #ef4444; }
-        .carfax.unknown { color: #9ca3af; }
-        .carfax-note { font-size: 9px; color: #999; }
-
-        .features { display: flex; gap: 3px; flex-wrap: wrap; }
-        .feat {
-            display: inline-flex; align-items: center; gap: 2px;
-            padding: 2px 5px;
-            border-radius: 10px;
-            font-size: 9px;
-            background: #f0f0f0;
-            white-space: nowrap;
-        }
-        .feat.yes { background: #dcfce7; color: #166534; }
-        .feat.no { display: none; }
-
-        .links { display: flex; gap: 6px; font-size: 10px; }
-        .links a { white-space: nowrap; }
-
-        .actions { display: flex; gap: 2px; }
-        .action-btn {
-            width: 24px; height: 24px;
-            border: none; background: none;
-            cursor: pointer; border-radius: 3px;
+        .car-title .score {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 2px 8px;
+            border-radius: 12px;
             font-size: 12px;
-            display: flex; align-items: center; justify-content: center;
+            font-weight: 700;
         }
-        .action-btn:hover { background: #f0f0f0; }
-        .action-btn.starred { background: #fef3c7; }
-        .note-btn { font-size: 10px; }
+        .car-title .score.mid { background: #fff3e0; color: #e65100; }
+        .car-title .score.low { background: #ffebee; color: #c62828; }
+        .car-dealer { font-size: 13px; color: #666; margin-bottom: 8px; }
+        .car-dealer .official { color: #2196f3; }
 
-        #map { flex: 1; min-height: 200px; }
-        .map-info { padding: 8px 10px; font-size: 11px; color: #666; border-top: 1px solid #eee; }
+        /* Key stats row */
+        .car-stats {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .stat {
+            display: flex;
+            flex-direction: column;
+        }
+        .stat-value { font-size: 15px; font-weight: 600; }
+        .stat-label { font-size: 11px; color: #999; }
+        .stat-value.green { color: #22c55e; }
+        .stat-value.red { color: #ef4444; }
+        .stat-value.orange { color: #f59e0b; }
 
-        .version { position: fixed; bottom: 2px; left: 4px; font-size: 9px; color: #ccc; }
+        /* Features row */
+        .car-features {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .feat-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        .feat-icon.yes { background: #e8f5e9; }
 
+        /* CARFAX badge */
+        .carfax-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .carfax-badge.clean { background: #e8f5e9; color: #2e7d32; }
+        .carfax-badge.accident { background: #fff3e0; color: #e65100; }
+        .carfax-badge.police { background: #ffebee; color: #c62828; }
+        .carfax-badge.unknown { background: #f5f5f5; color: #757575; }
+
+        /* Actions */
+        .car-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: flex-end;
+            justify-content: space-between;
+            min-width: 100px;
+        }
+        .view-btn {
+            background: #2196f3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .view-btn:hover { background: #1976d2; }
+        .action-row {
+            display: flex;
+            gap: 4px;
+        }
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .icon-btn:hover { background: #f5f5f5; }
+        .icon-btn.active { background: #fff3e0; border-color: #ffb74d; }
+
+        /* Version */
+        .version { position: fixed; bottom: 4px; left: 4px; font-size: 10px; color: #bbb; }
+
+        /* Modal */
         .modal-bg {
-            display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,0.4); z-index: 1000;
-            align-items: center; justify-content: center;
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
         }
         .modal-bg.show { display: flex; }
-        .modal { background: white; border-radius: 6px; padding: 16px; width: 380px; max-height: 90vh; overflow-y: auto; }
-        .modal h2 { font-size: 14px; margin-bottom: 12px; }
-        .field { margin-bottom: 8px; }
-        .field label { display: block; font-size: 10px; color: #666; margin-bottom: 2px; }
-        .field input, .field select { width: 100%; padding: 6px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px; }
-        .field-row { display: flex; gap: 8px; }
-        .field-row .field { flex: 1; }
-        .modal-actions { display: flex; gap: 6px; justify-content: flex-end; margin-top: 12px; }
+        .modal {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            width: 90%;
+            max-width: 400px;
+        }
+        .modal h2 { font-size: 18px; margin-bottom: 16px; }
+        .modal textarea {
+            width: 100%;
+            height: 120px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            resize: none;
+            margin-bottom: 16px;
+        }
+        .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+        .modal-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            background: white;
+        }
+        .modal-btn.primary { background: #2196f3; color: white; border-color: #2196f3; }
 
-        .note-modal { width: 300px; }
-        .note-modal textarea { width: 100%; height: 80px; padding: 8px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px; resize: none; }
-
-        @media (max-width: 900px) {
+        /* Mobile */
+        @media (max-width: 768px) {
             .sidebar { display: none; }
-            .car-row { grid-template-columns: 70px 1fr 32px 60px 36px 32px 60px auto; font-size: 10px; }
-            .car-row .features { display: none; }
+            .header { flex-wrap: wrap; gap: 8px; }
+            .header h1 { font-size: 16px; }
+            .stats { font-size: 12px; }
+            .header-actions { width: 100%; justify-content: space-between; }
+            .main { padding: 12px; }
+            .car-card {
+                flex-direction: column;
+                padding: 12px;
+                gap: 12px;
+            }
+            .car-photo {
+                width: 100%;
+                height: 160px;
+            }
+            .car-actions {
+                flex-direction: row;
+                width: 100%;
+                min-width: auto;
+            }
+            .view-btn { flex: 1; text-align: center; }
         }
     </style>
 </head>
 <body>
-    <div class="version">v2.4 · Dec 29</div>
+    <div class="version">v3.0 · Dec 29</div>
+
+    <div class="header">
+        <h1>🚗 Car Finder</h1>
+        <div class="stats">
+            <span><strong id="s-total">0</strong> cars</span>
+            <span><strong id="s-budget">0</strong> in budget</span>
+            <span><strong id="s-clean">0</strong> clean</span>
+        </div>
+        <div class="header-actions">
+            <select id="sort" onchange="render()">
+                <option value="score">Best Match</option>
+                <option value="price">Lowest Price</option>
+                <option value="km">Lowest KM</option>
+                <option value="dist">Nearest</option>
+            </select>
+            <button class="filter-btn" id="f-fav" onclick="toggle('fav')">⭐ Favorites</button>
+            <button class="filter-btn" id="f-budget" onclick="toggle('budget')">💰 Budget</button>
+            <button class="filter-btn" id="f-clean" onclick="toggle('clean')">✓ Clean</button>
+        </div>
+    </div>
 
     <div class="layout">
         <div class="main">
-            <div class="topbar">
-                <h1>🚗 Car Finder</h1>
-                <div class="topbar-stats">
-                    <span><strong id="s-total">0</strong> cars</span>
-                    <span><strong id="s-budget">0</strong> budget</span>
-                    <span><strong id="s-clean">0</strong> clean</span>
-                </div>
-                <div class="topbar-actions">
-                    <select id="sort" onchange="render()">
-                        <option value="score">Best</option>
-                        <option value="price">Price</option>
-                        <option value="km">KM</option>
-                        <option value="dist">Near</option>
-                    </select>
-                    <button class="btn" id="f-fav" onclick="toggle('fav')">⭐</button>
-                    <button class="btn" id="f-budget" onclick="toggle('budget')">💰</button>
-                    <button class="btn" id="f-clean" onclick="toggle('clean')">✓</button>
-                    <button class="btn btn-add" onclick="showModal()">+</button>
-                </div>
-            </div>
-            <div class="list" id="list"></div>
+            <div class="cars" id="cars"></div>
         </div>
         <div class="sidebar">
             <div id="map"></div>
@@ -195,39 +312,13 @@
         </div>
     </div>
 
-    <div class="modal-bg" id="modal">
-        <div class="modal">
-            <h2>Add Car</h2>
-            <div class="field-row">
-                <div class="field"><label>Year</label><select id="m-year"><option>2024</option><option>2023</option><option selected>2022</option><option>2021</option><option>2019</option></select></div>
-                <div class="field"><label>Model</label><select id="m-model"><option>Soul EX</option><option>Soul EX+</option><option>Venue Essential</option><option>Venue Preferred</option><option>Venue Trend</option><option>Venue Ultimate</option></select></div>
-            </div>
-            <div class="field-row">
-                <div class="field"><label>KM</label><input type="number" id="m-km" placeholder="45000"></div>
-                <div class="field"><label>Price</label><input type="number" id="m-price" placeholder="17500"></div>
-            </div>
-            <div class="field-row">
-                <div class="field"><label>Dealer</label><input id="m-dealer" placeholder="Thornhill Hyundai"></div>
-                <div class="field"><label>Dist (km)</label><input type="number" id="m-dist" placeholder="15"></div>
-            </div>
-            <div class="field"><label>Color</label><input id="m-color" placeholder="White"></div>
-            <div class="field"><label>CARFAX</label><select id="m-carfax"><option value="clean">Clean</option><option value="unknown">Unknown</option><option value="accident">Accident</option><option value="police">Police</option></select></div>
-            <div class="field"><label>AutoTrader URL</label><input id="m-listing" placeholder="https://autotrader.ca/..."></div>
-            <div class="field"><label>CARFAX URL</label><input id="m-carfax-url" placeholder="https://vhr.carfax.ca/..."></div>
-            <div class="modal-actions">
-                <button class="btn" onclick="hideModal()">Cancel</button>
-                <button class="btn btn-add" onclick="addCar()">Add</button>
-            </div>
-        </div>
-    </div>
-
     <div class="modal-bg" id="note-modal">
-        <div class="modal note-modal">
-            <h2>Notes</h2>
-            <textarea id="note-text" placeholder="Add notes..."></textarea>
+        <div class="modal">
+            <h2>📝 Notes</h2>
+            <textarea id="note-text" placeholder="Add your notes about this car..."></textarea>
             <div class="modal-actions">
-                <button class="btn" onclick="hideNoteModal()">Cancel</button>
-                <button class="btn btn-add" onclick="saveNoteModal()">Save</button>
+                <button class="modal-btn" onclick="hideNoteModal()">Cancel</button>
+                <button class="modal-btn primary" onclick="saveNoteModal()">Save</button>
             </div>
         </div>
     </div>
@@ -237,42 +328,14 @@
         const API = location.hostname === 'localhost' ? 'http://localhost:3001' : location.origin;
         let cars = [], favs = new Set(), notes = {}, filters = {}, editingNoteId = null;
 
-        // Car photos by model and color
-        const carPhotos = {
-            'Soul': {
-                'Black': 'https://images.dealer.com/autodata/us/640/color/2022/USD20KIC021A0/K5.jpg',
-                'White': 'https://images.dealer.com/autodata/us/640/color/2022/USD20KIC021A0/SWP.jpg',
-                'Snow White Pearl': 'https://images.dealer.com/autodata/us/640/color/2022/USD20KIC021A0/SWP.jpg',
-                'Inferno Red': 'https://images.dealer.com/autodata/us/640/color/2022/USD20KIC021A0/INR.jpg',
-                'Red': 'https://images.dealer.com/autodata/us/640/color/2022/USD20KIC021A0/INR.jpg',
-                'Blue': 'https://images.dealer.com/autodata/us/640/color/2022/USD20KIC021A0/B3U.jpg',
-                'Dark Blue': 'https://images.dealer.com/autodata/us/640/color/2022/USD20KIC021A0/B3U.jpg',
-                'Gravity Grey': 'https://images.dealer.com/autodata/us/640/color/2022/USD20KIC021A0/G7U.jpg',
-                'Grey': 'https://images.dealer.com/autodata/us/640/color/2022/USD20KIC021A0/G7U.jpg',
-                'default': 'https://images.dealer.com/autodata/us/640/color/2022/USD20KIC021A0/SWP.jpg'
-            },
-            'Venue': {
-                'Black': 'https://images.dealer.com/autodata/us/640/color/2022/USD00HYS201A0/MZH.jpg',
-                'White': 'https://images.dealer.com/autodata/us/640/color/2022/USD00HYS201A0/W4Y.jpg',
-                'Intense Blue': 'https://images.dealer.com/autodata/us/640/color/2022/USD00HYS201A0/YP5.jpg',
-                'Blue': 'https://images.dealer.com/autodata/us/640/color/2022/USD00HYS201A0/YP5.jpg',
-                'Fiery Red': 'https://images.dealer.com/autodata/us/640/color/2022/USD00HYS201A0/PR2.jpg',
-                'Red': 'https://images.dealer.com/autodata/us/640/color/2022/USD00HYS201A0/PR2.jpg',
-                'Silver': 'https://images.dealer.com/autodata/us/640/color/2022/USD00HYS201A0/R4S.jpg',
-                '2-Tone': 'https://images.dealer.com/autodata/us/640/color/2022/USD00HYS201A0/YP5.jpg',
-                'White / Black roof': 'https://images.dealer.com/autodata/us/640/color/2022/USD00HYS201A0/W4Y.jpg',
-                'default': 'https://images.dealer.com/autodata/us/640/color/2022/USD00HYS201A0/W4Y.jpg'
-            }
-        };
+        // Car silhouette SVG placeholders (always work)
+        const soulSvg = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100"><rect fill="#e8e8e8" width="200" height="100"/><path fill="#999" d="M30 70h140v8H30z"/><ellipse fill="#666" cx="55" cy="75" rx="15" ry="15"/><ellipse fill="#666" cx="145" cy="75" rx="15" ry="15"/><path fill="#aaa" d="M35 35h130c5 0 10 5 10 10v25H25V45c0-5 5-10 10-10z"/><path fill="#7cb" d="M45 40h50v20H40V45c0-3 2-5 5-5z"/><path fill="#7cb" d="M100 40h55c3 0 5 2 5 5v15h-60z"/><text x="100" y="95" text-anchor="middle" font-size="10" fill="#888">Kia Soul</text></svg>')}`;
+        const venueSvg = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100"><rect fill="#e8e8e8" width="200" height="100"/><path fill="#999" d="M25 72h150v6H25z"/><ellipse fill="#666" cx="50" cy="74" rx="14" ry="14"/><ellipse fill="#666" cx="150" cy="74" rx="14" ry="14"/><path fill="#aaa" d="M30 38h140c6 0 10 4 10 10v24H20V48c0-6 4-10 10-10z"/><path fill="#89c" d="M40 42h45v18H35V47c0-3 2-5 5-5z"/><path fill="#89c" d="M90 42h60c3 0 5 2 5 5v13H90z"/><text x="100" y="95" text-anchor="middle" font-size="10" fill="#888">Hyundai Venue</text></svg>')}`;
 
-        const getPhoto = c => {
-            const model = c.model.includes('Soul') ? 'Soul' : 'Venue';
-            const photos = carPhotos[model];
-            return photos[c.color] || photos['default'];
-        };
+        const getPhoto = c => c.model.includes('Soul') ? soulSvg : venueSvg;
 
         const getName = c => {
-            const prefix = c.km < 30000 ? 'Low KM ' : '';
+            const prefix = c.km < 30000 ? '⭐ Low KM ' : '';
             return `${prefix}${c.year} ${c.model}`;
         };
 
@@ -294,24 +357,24 @@
         };
 
         const render = () => {
-            const sort = document.getElementById('sort').value;
+            const sortBy = document.getElementById('sort').value;
             let list = [...cars];
-            if (sort === 'score') list.sort((a, b) => score(b) - score(a));
-            else if (sort === 'price') list.sort((a, b) => a.price - b.price);
-            else if (sort === 'km') list.sort((a, b) => a.km - b.km);
-            else if (sort === 'dist') list.sort((a, b) => a.distance - b.distance);
+            if (sortBy === 'score') list.sort((a, b) => score(b) - score(a));
+            else if (sortBy === 'price') list.sort((a, b) => a.price - b.price);
+            else if (sortBy === 'km') list.sort((a, b) => a.km - b.km);
+            else if (sortBy === 'dist') list.sort((a, b) => a.distance - b.distance);
 
-            const featLabels = {
-                'htd-seats': '🔥 Seats',
-                'htd-wheel': '🔥 Wheel',
-                'camera': '📷 Cam',
-                'blind-spot': '👁 Blind',
-                'lane': '🛣 Lane',
-                'auto-brake': '🛑 Brake'
+            const featIcons = {
+                'htd-seats': '🔥',
+                'htd-wheel': '☀️',
+                'camera': '📷',
+                'blind-spot': '👁',
+                'lane': '🛣',
+                'auto-brake': '🛑'
             };
-            const feats = ['htd-seats', 'htd-wheel', 'camera', 'blind-spot', 'lane', 'auto-brake'];
+            const featOrder = ['htd-seats', 'htd-wheel', 'camera', 'blind-spot', 'lane', 'auto-brake'];
 
-            document.getElementById('list').innerHTML = list.map(c => {
+            document.getElementById('cars').innerHTML = list.map(c => {
                 const s = score(c);
                 const allIn = (c.price * 1.13 / 1000).toFixed(1);
                 const over = c.price * 1.13 > 21000;
@@ -319,32 +382,56 @@
                 const hide = (filters.fav && !fav) || (filters.budget && over) || (filters.clean && c.carfax !== 'clean');
                 const hasNote = notes[c.id];
 
-                return `<div class="car-row ${status(c, s)} ${fav ? 'fav' : ''} ${hide ? 'hidden' : ''}" data-id="${c.id}">
-                    <img class="photo" src="${c.photoUrl || getPhoto(c)}" onerror="this.src='${getPhoto(c)}'">
+                const carfaxLabel = c.carfax === 'clean' ? '✓ Clean CARFAX'
+                    : c.carfax === 'accident' ? '⚠️ Accident'
+                    : c.carfax === 'police' ? '❌ Police Report'
+                    : '? No CARFAX';
+
+                return `
+                <div class="car-card ${status(c, s)} ${fav ? 'fav' : ''} ${hide ? 'hidden' : ''}" data-id="${c.id}">
+                    <img class="car-photo" src="${c.photoUrl || getPhoto(c)}" onerror="this.style.background='linear-gradient(135deg,#e0e0e0,#f5f5f5)'">
+
                     <div class="car-info">
-                        <div class="name">${getName(c)}</div>
-                        <div class="meta">${c.dealer}${c.official ? ' <span class="official">★</span>' : ''}${c.color && c.color !== 'Unknown' ? ` · ${c.color}` : ''}</div>
+                        <div class="car-title">
+                            ${getName(c)}
+                            <span class="score ${s >= 18 ? '' : s >= 14 ? 'mid' : 'low'}">${s}/25</span>
+                        </div>
+                        <div class="car-dealer">
+                            ${c.dealer}${c.official ? ' <span class="official">★ Official</span>' : ''}
+                            ${c.color && c.color !== 'Unknown' ? ` · ${c.color}` : ''}
+                        </div>
+
+                        <div class="car-stats">
+                            <div class="stat">
+                                <span class="stat-value ${over ? 'red' : 'green'}">$${allIn}K</span>
+                                <span class="stat-label">all-in</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value">${(c.km/1000).toFixed(0)}K</span>
+                                <span class="stat-label">km</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value">${c.distance}km</span>
+                                <span class="stat-label">away</span>
+                            </div>
+                            <div class="stat">
+                                <span class="carfax-badge ${c.carfax}">${carfaxLabel}</span>
+                            </div>
+                        </div>
+
+                        <div class="car-features">
+                            ${featOrder.filter(f => (c.features || []).includes(f)).map(f => `<div class="feat-icon yes" title="${f}">${featIcons[f]}</div>`).join('') || '<span style="color:#999;font-size:11px">No extras</span>'}
+                        </div>
                     </div>
-                    <div class="score ${s >= 18 ? 'high' : s >= 14 ? 'mid' : 'low'}">${s}</div>
-                    <div class="price">
-                        <div class="main">$${c.price.toLocaleString()}</div>
-                        <div class="allin ${over ? 'over' : 'ok'}">~$${allIn}K</div>
-                    </div>
-                    <div class="km ${c.km < 50000 ? 'low' : c.km > 80000 ? 'high' : ''}">${(c.km/1000).toFixed(0)}K</div>
-                    <div>${c.distance}km</div>
-                    <div>
-                        <div class="carfax ${c.carfax}">${c.carfax === 'clean' ? '✓ Clean' : c.carfax === 'accident' ? '⚠ Accid' : c.carfax === 'police' ? '✗ Police' : '?'}</div>
-                        ${c.carfaxNote ? `<div class="carfax-note">${c.carfaxNote.split('·')[0]}</div>` : ''}
-                    </div>
-                    <div class="features">${feats.map(f => `<div class="feat ${(c.features || []).includes(f) ? 'yes' : 'no'}">${featLabels[f]}</div>`).join('')}</div>
-                    <div class="links">
-                        ${c.listingUrl ? `<a href="${c.listingUrl}" target="_blank">AT</a>` : ''}
-                        ${c.carfaxUrl ? `<a href="${c.carfaxUrl}" target="_blank">CF</a>` : ''}
-                    </div>
-                    <div class="actions">
-                        <button class="action-btn ${fav ? 'starred' : ''}" onclick="toggleFav(${c.id})" title="Favorite">⭐</button>
-                        <button class="action-btn note-btn ${hasNote ? 'starred' : ''}" onclick="showNoteModal(${c.id})" title="Notes">📝</button>
-                        <button class="action-btn" onclick="del(${c.id})" title="Delete">🗑</button>
+
+                    <div class="car-actions">
+                        ${c.listingUrl ? `<a href="${c.listingUrl}" target="_blank" class="view-btn">View Listing</a>` : '<span></span>'}
+                        <div class="action-row">
+                            <button class="icon-btn ${fav ? 'active' : ''}" onclick="toggleFav(${c.id})" title="Favorite">⭐</button>
+                            <button class="icon-btn ${hasNote ? 'active' : ''}" onclick="showNoteModal(${c.id})" title="Notes">📝</button>
+                            ${c.carfaxUrl ? `<a href="${c.carfaxUrl}" target="_blank" class="icon-btn" title="CARFAX">📋</a>` : ''}
+                            <button class="icon-btn" onclick="del(${c.id})" title="Remove">🗑️</button>
+                        </div>
                     </div>
                 </div>`;
             }).join('');
@@ -370,6 +457,7 @@
             editingNoteId = id;
             document.getElementById('note-text').value = notes[id] || '';
             document.getElementById('note-modal').classList.add('show');
+            document.getElementById('note-text').focus();
         };
         const hideNoteModal = () => document.getElementById('note-modal').classList.remove('show');
         const saveNoteModal = async () => {
@@ -380,53 +468,33 @@
         };
 
         const del = async id => {
-            if (confirm('Remove?')) {
+            if (confirm('Remove this car from your list?')) {
                 await fetch(`${API}/cars/${id}`, { method: 'DELETE' });
                 cars = cars.filter(c => c.id !== id);
                 render();
             }
         };
 
-        const showModal = () => document.getElementById('modal').classList.add('show');
-        const hideModal = () => document.getElementById('modal').classList.remove('show');
-
-        const addCar = async () => {
-            const car = {
-                year: +document.getElementById('m-year').value,
-                model: document.getElementById('m-model').value,
-                color: document.getElementById('m-color').value || 'Unknown',
-                km: +document.getElementById('m-km').value || 0,
-                price: +document.getElementById('m-price').value || 0,
-                dealer: document.getElementById('m-dealer').value || 'Unknown',
-                distance: +document.getElementById('m-dist').value || 0,
-                features: ['htd-seats', 'camera', 'auto-brake'],
-                carfax: document.getElementById('m-carfax').value,
-                listingUrl: document.getElementById('m-listing').value,
-                carfaxUrl: document.getElementById('m-carfax-url').value,
-                carfaxNote: '', coords: [43.8, -79.4], official: false
-            };
-            const res = await fetch(`${API}/cars`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(car) });
-            cars.push(await res.json());
-            render();
-            hideModal();
-        };
-
         const initMap = () => {
             const map = L.map('map', { zoomControl: false }).setView([43.8, -79.45], 10);
             L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
-            L.circleMarker([43.8108, -79.4250], { radius: 5, color: '#0066cc', fillColor: '#0066cc', fillOpacity: 1, weight: 0 }).addTo(map).bindPopup('🏠 Home');
+            L.circleMarker([43.8108, -79.4250], { radius: 8, color: '#2196f3', fillColor: '#2196f3', fillOpacity: 1, weight: 2 }).addTo(map).bindPopup('🏠 Home');
             cars.forEach(c => {
                 if (c.coords) {
                     const col = c.carfax === 'clean' ? '#22c55e' : c.carfax === 'police' ? '#ef4444' : c.carfax === 'accident' ? '#f59e0b' : '#9ca3af';
-                    L.circleMarker(c.coords, { radius: 4, color: col, fillColor: col, fillOpacity: 0.8, weight: 0 })
-                        .addTo(map).bindPopup(`<strong>${getName(c)}</strong><br>$${c.price.toLocaleString()}`);
+                    L.circleMarker(c.coords, { radius: 6, color: col, fillColor: col, fillOpacity: 0.8, weight: 0 })
+                        .addTo(map).bindPopup(`<strong>${c.year} ${c.model}</strong><br>$${c.price.toLocaleString()}`);
                 }
             });
         };
 
         (async () => {
             try {
-                const [cRes, fRes, nRes] = await Promise.all([fetch(`${API}/cars`), fetch(`${API}/favorites`), fetch(`${API}/notes`)]);
+                const [cRes, fRes, nRes] = await Promise.all([
+                    fetch(`${API}/cars`),
+                    fetch(`${API}/favorites`),
+                    fetch(`${API}/notes`)
+                ]);
                 cars = await cRes.json();
                 favs = new Set(await fRes.json());
                 notes = await nRes.json();
