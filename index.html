@@ -473,28 +473,8 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // Car data - all listings merged
-        const defaultCars = [
-            { id: 1, year: 2022, model: 'Venue Preferred', color: 'White / Black roof', km: 74000, price: 17398, dealer: 'Thornhill Hyundai', distance: 2, features: ['htd-seats', 'htd-wheel', 'camera', 'blind-spot', 'lane', 'auto-brake'], carfax: 'clean', carfaxUrl: 'https://vhr.carfax.ca/?id=Q3Ur0DZaOrDChZ/Clwo3yS5R+JnVitAT', listingUrl: 'https://www.thornhillhyundai.com/inventory/used/6187/2022/Hyundai/Venue', carfaxNote: '1 owner · 5 service records', coords: [43.8108, -79.4200] },
-            { id: 2, year: 2022, model: 'Soul EX', color: 'Black', km: 63000, price: 17990, dealer: 'Clutch', distance: 18, features: ['htd-seats', 'htd-wheel', 'camera', 'blind-spot', 'lane', 'auto-brake'], carfax: 'clean', carfaxUrl: '', listingUrl: 'https://www.carpages.ca/used-cars/ontario/toronto/2022-kia-soul-13093922/', carfaxNote: '1 owner', coords: [43.6366, -79.5050] },
-            { id: 3, year: 2023, model: 'Soul EX', color: 'Brampton', km: 24000, price: 19798, dealer: 'Brampton North Nissan', distance: 30, features: ['htd-seats', 'camera', 'blind-spot', 'auto-brake'], carfax: 'clean', carfaxUrl: 'https://vhr.carfax.ca/?id=PqhbAilweFnO4ydrtMQd9wVK5ghA315i', listingUrl: 'https://www.autotrader.ca/a/kia/soul/brampton/ontario/5_67844936_on20070924102414963/', carfaxNote: '1 owner · 2 service records · No recalls', coords: [43.7315, -79.7624], official: true },
-            { id: 4, year: 2022, model: 'Venue Preferred', color: 'Intense Blue', km: 72000, price: 17655, dealer: 'Achilles Mazda', distance: 55, features: ['htd-seats', 'htd-wheel', 'camera', 'blind-spot', 'auto-brake'], carfax: 'clean', carfaxUrl: 'https://vhr.carfax.ca/?id=qseaJfcFyvD78+K87B4mf9QpuSJMt5Pv', listingUrl: 'https://www.autotrader.ca/a/hyundai/venue/milton/ontario/5_67639128_20240710151910541/', carfaxNote: '1 owner · Personal use', coords: [43.5183, -79.8775] },
-            { id: 5, year: 2021, model: 'Venue Essential', color: '2-Tone', km: 54000, price: 17655, dealer: 'Bolton Nissan', distance: 21, features: ['htd-seats', 'camera', 'auto-brake'], carfax: 'clean', carfaxUrl: 'https://vhr.carfax.ca/?id=YzXO6p0R+MafomMPzPYpp+cRPa1weBcl', listingUrl: 'https://www.autotrader.ca/a/hyundai/venue/bolton/ontario/5_67892660_20110201142314359/', carfaxNote: '2 owners · 7 service records · Well maintained', coords: [43.8761, -79.7350], official: true },
-            { id: 6, year: 2021, model: 'Venue Essential', color: 'Black', km: 51000, price: 17413, dealer: 'Newmarket Hyundai', distance: 31, features: ['htd-seats', 'camera', 'auto-brake'], carfax: 'clean', carfaxUrl: 'https://vhr.carfax.ca/?id=Chm1oIJZ+IVuGvGZANTHKLURaiG/X485', listingUrl: 'https://www.autotrader.ca/a/hyundai/venue/newmarket/ontario/5_68245529_20150529105935682/', carfaxNote: '3 owners · 1 service record', coords: [44.0592, -79.4613], official: true },
-            { id: 7, year: 2019, model: 'Soul +', color: 'Blue', km: 46000, price: 17888, dealer: 'Woodstock Ford', distance: 130, features: ['htd-seats', 'htd-wheel', 'camera'], carfax: 'clean', carfaxUrl: 'https://vhr.carfax.ca/?id=8WXaZN9c7uB5w+0gO+Ync6Ps+54HVmmm', listingUrl: 'https://woodstockford.ca/inventory/list/used?stockID=25694A', carfaxNote: '2 owners · 16 service records · Krown rustproofed yearly · ⚠️ 2 open recalls', coords: [43.1306, -80.7467] },
-            { id: 8, year: 2022, model: 'Soul EX', color: 'Inferno Red', km: 58000, price: 15999, dealer: 'United Stars Auto', distance: 50, features: ['htd-seats', 'camera', 'blind-spot', 'lane', 'auto-brake'], carfax: 'unknown', carfaxUrl: '', listingUrl: 'https://www.autotrader.ca/a/kia/soul/burlington/ontario/5_68573077_20240621175756918/', carfaxNote: '', coords: [43.3255, -79.7990] },
-            { id: 9, year: 2022, model: 'Soul EX', color: 'Scarborough', km: 88000, price: 16990, dealer: 'Morningside Nissan', distance: 21, features: ['htd-seats', 'camera', 'blind-spot', 'auto-brake'], carfax: 'clean', carfaxUrl: 'https://vhr.carfax.ca/?id=RvM7pZoKrvnvdV20qzp2M5wolnQ8tTI3', listingUrl: 'https://www.autotrader.ca/a/kia/soul/toronto/ontario/5_68649253_on20080430102916422/', carfaxNote: '2+ owners · 4 service records · Certified', coords: [43.7764, -79.1928], official: true },
-            { id: 10, year: 2022, model: 'Soul EX', color: 'Oakville', km: 71000, price: 16999, dealer: 'Samz Auto', distance: 45, features: ['htd-seats', 'htd-wheel', 'camera', 'blind-spot', 'auto-brake'], carfax: 'unknown', carfaxUrl: '', listingUrl: 'https://www.autotrader.ca/a/kia/soul/oakville/ontario/5_68568948_20241008142541150/', carfaxNote: '', coords: [43.4675, -79.6877] },
-            { id: 11, year: 2022, model: 'Soul EX', color: 'North York', km: 71000, price: 16880, dealer: 'Low Price Auto Sales', distance: 12, features: ['htd-seats', 'htd-wheel', 'camera', 'auto-brake'], carfax: 'unknown', carfaxUrl: '', listingUrl: 'https://www.autotrader.ca/a/kia/soul/north%20york/ontario/5_68567722_20210208140459017/', carfaxNote: 'Kia warranty', coords: [43.7615, -79.4111] },
-            { id: 12, year: 2022, model: 'Soul EX', color: 'White / Black', km: 75000, price: 17499, dealer: 'Fairmont Premier Auto', distance: 15, features: ['htd-seats', 'htd-wheel', 'camera', 'auto-brake'], carfax: 'unknown', carfaxUrl: '', listingUrl: 'https://www.autotrader.ca/a/kia/soul/woodbridge/ontario/5_68139858_20250925180838466/', carfaxNote: 'Cert + warranty', coords: [43.7958, -79.5428] },
-            { id: 13, year: 2019, model: 'Soul EX', color: 'Polar White', km: 65000, price: 15695, dealer: 'London Kia', distance: 190, features: ['htd-seats', 'htd-wheel', 'camera'], carfax: 'unknown', carfaxUrl: '', listingUrl: 'https://www.autotrader.ca/a/kia/soul/london/ontario/5_68462902_20250122151036241/', carfaxNote: '', coords: [42.9849, -81.2453] },
-            { id: 14, year: 2019, model: 'Soul EX+', color: 'Cambridge', km: 54000, price: 17995, dealer: "Daniel's Auto Sales", distance: 95, features: ['htd-seats', 'htd-wheel', 'camera'], carfax: 'unknown', carfaxUrl: '', listingUrl: 'https://www.autotrader.ca/a/kia/soul/cambridge/ontario/5_61365733_20100517123929314/', carfaxNote: 'Free CARFAX at dealer', coords: [43.3601, -80.3119] },
-            { id: 15, year: 2022, model: 'Venue Essential', color: 'Fiery Red', km: 57000, price: 16400, dealer: 'Richmond Hill Hyundai', distance: 5, features: ['htd-seats', 'camera', 'auto-brake'], carfax: 'accident', carfaxUrl: 'https://vhr.carfax.ca/?id=IKWqPEOcwApJJAlao/VmNquDP2t54I3U', listingUrl: 'https://www.richmondhillhyundai.com/inventory/used/5941/2022/Hyundai/Venue', carfaxNote: '⚠️ $3,674 claim (Oct 2022) · 1 owner · 6 service records', coords: [43.8725, -79.4383] },
-            { id: 16, year: 2022, model: 'Venue Preferred', color: 'Silver', km: 9000, price: 18947, dealer: 'Thornhill Hyundai', distance: 2, features: ['htd-seats', 'htd-wheel', 'camera', 'blind-spot', 'lane', 'auto-brake'], carfax: 'police', carfaxUrl: 'https://vhr.carfax.ca/?id=WQU0u0mf6xiE/IEP/oH3qWtcVspnYhrp', listingUrl: 'https://www.thornhillhyundai.com/inventory/used/10609/2022/Hyundai/Venue', carfaxNote: '🚨 POLICE REPORTED ACCIDENT · Jun 2025 · 1 owner', coords: [43.8108, -79.4200] },
-            { id: 17, year: 2023, model: 'Soul EX', color: 'Inferno Red', km: 30000, price: 21988, dealer: 'Plaza Kia', distance: 6, features: ['htd-seats', 'camera', 'auto-brake'], carfax: 'clean', carfaxUrl: 'https://vhr.carfax.ca/?id=UtGW3w8HRx8aIvQswvM/XkEGsHeORrdY', listingUrl: 'https://www.autotrader.ca/a/kia/soul/richmond%20hill/ontario/5_68539680_20140418141806717/', carfaxNote: '1 owner · 2 service records · No recalls', coords: [43.8579, -79.4356], official: true },
-            { id: 18, year: 2022, model: 'Soul EX+', color: 'Snow White Pearl', km: 67000, price: 19888, dealer: 'Airport Kia', distance: 18, features: ['htd-seats', 'htd-wheel', 'camera', 'blind-spot', 'auto-brake'], carfax: 'clean', carfaxUrl: 'https://vhr.carfax.ca/?id=OQOG6gmVcykHxuFBZb5MCBQPc+kztd7k', listingUrl: 'https://www.autotrader.ca/a/kia/soul/mississauga/ontario/5_67827191_on20080716100324602/', carfaxNote: '1 owner · Personal use · ⚠️ 1 open recall', coords: [43.7229, -79.6324], official: true },
-            { id: 19, year: 2022, model: 'Soul EX', color: 'Gravity Grey', km: 23000, price: 23888, dealer: 'Durham Kia', distance: 47, features: ['htd-seats', 'camera', 'blind-spot', 'auto-brake'], carfax: 'clean', carfaxUrl: 'https://vhr.carfax.ca/?id=DfGo7NY3iR1bcex3dFH0dRSPpmskDW9A', listingUrl: 'https://www.autotrader.ca/a/kia/soul/oshawa/ontario/5_68020090_on20080324092133664/', carfaxNote: '1 owner · 6 service records · Well maintained · ⚠️ 1 open recall', coords: [43.9026, -78.8658], official: true },
-        ];
+        // API endpoint - change this to your server URL
+        const API_URL = 'http://localhost:3001';
 
         // State
         let cars = [];
@@ -503,26 +483,50 @@
         let showFavoritesOnly = false;
         let showBudgetOnly = false;
 
-        // Load from localStorage
-        function loadState() {
-            const saved = localStorage.getItem('carFinderState');
-            if (saved) {
-                const state = JSON.parse(saved);
-                cars = state.cars || defaultCars;
-                favorites = new Set(state.favorites || []);
-                notes = state.notes || {};
-            } else {
-                cars = [...defaultCars];
+        // Load from API
+        async function loadState() {
+            try {
+                const [carsRes, favRes, notesRes] = await Promise.all([
+                    fetch(`${API_URL}/cars`),
+                    fetch(`${API_URL}/favorites`),
+                    fetch(`${API_URL}/notes`)
+                ]);
+                cars = await carsRes.json();
+                const favData = await favRes.json();
+                favorites = new Set(favData);
+                notes = await notesRes.json();
+            } catch (err) {
+                console.error('API not available, using empty state:', err.message);
+                cars = [];
+                favorites = new Set();
+                notes = {};
             }
         }
 
-        // Save to localStorage
-        function saveState() {
-            localStorage.setItem('carFinderState', JSON.stringify({
-                cars,
-                favorites: [...favorites],
-                notes
-            }));
+        // Save favorites to API
+        async function saveFavorites() {
+            try {
+                await fetch(`${API_URL}/favorites`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify([...favorites])
+                });
+            } catch (err) {
+                console.error('Failed to save favorites:', err);
+            }
+        }
+
+        // Save notes to API
+        async function saveNotes() {
+            try {
+                await fetch(`${API_URL}/notes`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(notes)
+                });
+            } catch (err) {
+                console.error('Failed to save notes:', err);
+            }
         }
 
         // Calculate score
@@ -681,25 +685,29 @@
         }
 
         // Toggle favorite
-        function toggleFavorite(id) {
+        async function toggleFavorite(id) {
             if (favorites.has(id)) favorites.delete(id);
             else favorites.add(id);
-            saveState();
+            await saveFavorites();
             renderCars();
         }
 
         // Save note
-        function saveNote(id, note) {
+        async function saveNote(id, note) {
             notes[id] = note;
-            saveState();
+            await saveNotes();
         }
 
         // Delete car
-        function deleteCar(id) {
+        async function deleteCar(id) {
             if (confirm('Are you sure you want to remove this car?')) {
-                cars = cars.filter(c => c.id !== id);
-                saveState();
-                renderCars();
+                try {
+                    await fetch(`${API_URL}/cars/${id}`, { method: 'DELETE' });
+                    cars = cars.filter(c => c.id !== id);
+                    renderCars();
+                } catch (err) {
+                    console.error('Failed to delete car:', err);
+                }
             }
         }
 
@@ -759,9 +767,8 @@
         }
 
         // Add car
-        function addCar() {
+        async function addCar() {
             const newCar = {
-                id: Date.now(),
                 year: parseInt(document.getElementById('car-year').value),
                 model: document.getElementById('car-model').value,
                 color: document.getElementById('car-color').value || 'Unknown',
@@ -774,7 +781,8 @@
                 carfaxUrl: document.getElementById('car-carfax-url').value,
                 listingUrl: document.getElementById('car-listing-url').value,
                 carfaxNote: '',
-                coords: [43.8, -79.4] // Default to GTA center
+                coords: [43.8, -79.4], // Default to GTA center
+                official: false
             };
 
             // Collect features
@@ -785,14 +793,28 @@
             if (document.getElementById('feat-lane').checked) newCar.features.push('lane');
             if (document.getElementById('feat-auto-brake').checked) newCar.features.push('auto-brake');
 
-            // Add initial note
-            const initialNote = document.getElementById('car-notes').value;
-            if (initialNote) notes[newCar.id] = initialNote;
+            try {
+                const res = await fetch(`${API_URL}/cars`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newCar)
+                });
+                const savedCar = await res.json();
+                cars.push(savedCar);
 
-            cars.push(newCar);
-            saveState();
-            renderCars();
-            closeAddModal();
+                // Add initial note if provided
+                const initialNote = document.getElementById('car-notes').value;
+                if (initialNote) {
+                    notes[savedCar.id] = initialNote;
+                    await saveNotes();
+                }
+
+                renderCars();
+                closeAddModal();
+            } catch (err) {
+                console.error('Failed to add car:', err);
+                alert('Failed to add car. Make sure the server is running.');
+            }
         }
 
         // Initialize map
@@ -815,9 +837,12 @@
         }
 
         // Initialize
-        loadState();
-        renderCars();
-        initMap();
+        async function init() {
+            await loadState();
+            renderCars();
+            initMap();
+        }
+        init();
     </script>
 </body>
 </html>

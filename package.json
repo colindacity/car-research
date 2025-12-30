@@ -1,0 +1,12 @@
+{
+  "name": "car-research",
+  "version": "1.0.0",
+  "description": "Mom's Car Finder - Kia Soul & Hyundai Venue research tool",
+  "scripts": {
+    "start": "json-server --watch db.json --port 3001 --static .",
+    "server": "json-server --watch db.json --port 3001"
+  },
+  "dependencies": {
+    "json-server": "^0.17.4"
+  }
+}
