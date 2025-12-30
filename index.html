@@ -473,8 +473,10 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // API endpoint - change this to your server URL
-        const API_URL = 'http://localhost:3001';
+        // API endpoint - auto-detect local vs deployed
+        const API_URL = window.location.hostname === 'localhost'
+            ? 'http://localhost:3001'
+            : window.location.origin;
 
         // State
         let cars = [];
