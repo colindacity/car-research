@@ -48,7 +48,7 @@
         .list { flex: 1; overflow: auto; }
         .car-row {
             display: grid;
-            grid-template-columns: 80px 1fr 36px 70px 40px 36px 70px 80px 120px 60px;
+            grid-template-columns: 80px 1fr 36px 70px 40px 36px 70px 140px 60px 70px;
             gap: 8px;
             padding: 6px 10px;
             align-items: center;
@@ -102,16 +102,17 @@
         .carfax.unknown { color: #9ca3af; }
         .carfax-note { font-size: 9px; color: #999; }
 
-        .features { display: flex; gap: 1px; }
+        .features { display: flex; gap: 3px; flex-wrap: wrap; }
         .feat {
-            width: 16px; height: 16px;
-            border-radius: 2px;
-            display: flex; align-items: center; justify-content: center;
+            display: inline-flex; align-items: center; gap: 2px;
+            padding: 2px 5px;
+            border-radius: 10px;
             font-size: 9px;
             background: #f0f0f0;
+            white-space: nowrap;
         }
-        .feat.yes { background: #dcfce7; }
-        .feat.no { opacity: 0.25; }
+        .feat.yes { background: #dcfce7; color: #166534; }
+        .feat.no { display: none; }
 
         .links { display: flex; gap: 6px; font-size: 10px; }
         .links a { white-space: nowrap; }
@@ -159,7 +160,7 @@
     </style>
 </head>
 <body>
-    <div class="version">v2.3 · Dec 29</div>
+    <div class="version">v2.4 · Dec 29</div>
 
     <div class="layout">
         <div class="main">
@@ -271,9 +272,8 @@
         };
 
         const getName = c => {
-            const t = c.model.includes('Soul') ? 'Soul' : 'Venue';
-            const loc = c.dealer.split(' ').pop();
-            return `${c.km < 30000 ? 'Low KM ' : ''}${c.year} ${t} @ ${loc}`;
+            const prefix = c.km < 30000 ? 'Low KM ' : '';
+            return `${prefix}${c.year} ${c.model}`;
         };
 
         const score = c => {
@@ -301,7 +301,14 @@
             else if (sort === 'km') list.sort((a, b) => a.km - b.km);
             else if (sort === 'dist') list.sort((a, b) => a.distance - b.distance);
 
-            const icons = { 'htd-seats': '🔥', 'htd-wheel': '⭕', 'camera': '📷', 'blind-spot': '👁', 'lane': '🛣', 'auto-brake': '🛑' };
+            const featLabels = {
+                'htd-seats': '🔥 Seats',
+                'htd-wheel': '🔥 Wheel',
+                'camera': '📷 Cam',
+                'blind-spot': '👁 Blind',
+                'lane': '🛣 Lane',
+                'auto-brake': '🛑 Brake'
+            };
             const feats = ['htd-seats', 'htd-wheel', 'camera', 'blind-spot', 'lane', 'auto-brake'];
 
             document.getElementById('list').innerHTML = list.map(c => {
@@ -316,7 +323,7 @@
                     <img class="photo" src="${c.photoUrl || getPhoto(c)}" onerror="this.src='${getPhoto(c)}'">
                     <div class="car-info">
                         <div class="name">${getName(c)}</div>
-                        <div class="meta">${c.color || ''} · ${c.dealer}${c.official ? ' <span class="official">★</span>' : ''}</div>
+                        <div class="meta">${c.dealer}${c.official ? ' <span class="official">★</span>' : ''}${c.color && c.color !== 'Unknown' ? ` · ${c.color}` : ''}</div>
                     </div>
                     <div class="score ${s >= 18 ? 'high' : s >= 14 ? 'mid' : 'low'}">${s}</div>
                     <div class="price">
@@ -329,7 +336,7 @@
                         <div class="carfax ${c.carfax}">${c.carfax === 'clean' ? '✓ Clean' : c.carfax === 'accident' ? '⚠ Accid' : c.carfax === 'police' ? '✗ Police' : '?'}</div>
                         ${c.carfaxNote ? `<div class="carfax-note">${c.carfaxNote.split('·')[0]}</div>` : ''}
                     </div>
-                    <div class="features">${feats.map(f => `<div class="feat ${(c.features || []).includes(f) ? 'yes' : 'no'}" title="${f}">${icons[f]}</div>`).join('')}</div>
+                    <div class="features">${feats.map(f => `<div class="feat ${(c.features || []).includes(f) ? 'yes' : 'no'}">${featLabels[f]}</div>`).join('')}</div>
                     <div class="links">
                         ${c.listingUrl ? `<a href="${c.listingUrl}" target="_blank">AT</a>` : ''}
                         ${c.carfaxUrl ? `<a href="${c.carfaxUrl}" target="_blank">CF</a>` : ''}
