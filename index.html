@@ -324,12 +324,13 @@
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script>
         // Supabase config
         const SUPABASE_URL = 'https://bjswbajtxacjwubghytb.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqc3diYWp0eGFjand1YmdoeXRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcwNjIxODYsImV4cCI6MjA4MjYzODE4Nn0.tQvzTXf3xft07Wrv8dB0lG2DaIS1UQNCuz5vVB6fTT4';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const { createClient } = supabase;
+        const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let cars = [], favs = new Set(), notes = {}, filters = {}, editingNoteId = null;
 
@@ -455,10 +456,10 @@
         const toggleFav = async id => {
             if (favs.has(id)) {
                 favs.delete(id);
-                await supabase.from('favorites').delete().eq('car_id', id);
+                await db.from('favorites').delete().eq('car_id', id);
             } else {
                 favs.add(id);
-                await supabase.from('favorites').insert({ car_id: id });
+                await db.from('favorites').insert({ car_id: id });
             }
             render();
         };
@@ -473,14 +474,14 @@
         const saveNoteModal = async () => {
             const note = document.getElementById('note-text').value;
             notes[editingNoteId] = note;
-            await supabase.from('notes').upsert({ car_id: editingNoteId, note }, { onConflict: 'car_id' });
+            await db.from('notes').upsert({ car_id: editingNoteId, note }, { onConflict: 'car_id' });
             hideNoteModal();
             render();
         };
 
         const del = async id => {
             if (confirm('Remove this car from your list?')) {
-                await supabase.from('cars').delete().eq('id', id);
+                await db.from('cars').delete().eq('id', id);
                 cars = cars.filter(c => c.id !== id);
                 render();
             }
@@ -521,9 +522,9 @@
         (async () => {
             try {
                 const [carsRes, favsRes, notesRes] = await Promise.all([
-                    supabase.from('cars').select('*'),
-                    supabase.from('favorites').select('car_id'),
-                    supabase.from('notes').select('car_id, note')
+                    db.from('cars').select('*'),
+                    db.from('favorites').select('car_id'),
+                    db.from('notes').select('car_id, note')
                 ]);
                 cars = (carsRes.data || []).map(mapCar);
                 favs = new Set((favsRes.data || []).map(f => f.car_id));
