@@ -2,29 +2,20 @@
 
 Kia Soul & Hyundai Venue research tool for GTA.
 
-## Deploy to Cloud (Free)
-
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/colindacity/car-research)
-
-Click the button above, then:
-1. Create a Render account (free) if you don't have one
-2. Click "Create Web Service"
-3. Wait ~2 minutes for deployment
-4. Your app will be live at `https://car-research-XXXX.onrender.com`
-
-## Run Locally
-
-```bash
-npm install
-npm run dev
-```
-
-Opens at http://localhost:3001
+**Live:** https://car-research.vercel.app
 
 ## Features
-
-- 34 car listings (Kia Soul & Hyundai Venue)
-- Sort by: Score, Price, KM, Distance, Year
-- Favorites & Notes (saved to server)
+- 37 car listings (Kia Soul & Hyundai Venue)
+- Sort by: Score, Price, KM, Distance
+- Favorites & Notes (saved to cloud)
 - Clean CARFAX verification
 - Map view of all dealers
+- Always-on hosting (no spin-down)
+
+## Tech Stack
+- Static HTML/CSS/JS frontend
+- Supabase (PostgreSQL) backend
+- Vercel hosting (free, always-on)
+
+## Local Development
+Just open `index.html` in a browser - it connects to Supabase directly.

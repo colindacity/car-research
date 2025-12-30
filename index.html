@@ -277,7 +277,7 @@
     </style>
 </head>
 <body>
-    <div class="version">v3.0 · Dec 29</div>
+    <div class="version">v3.1 · Dec 29</div>
 
     <div class="header">
         <h1>🚗 Car Finder</h1>
@@ -324,8 +324,13 @@
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        const API = location.hostname === 'localhost' ? 'http://localhost:3001' : location.origin;
+        // Supabase config
+        const SUPABASE_URL = 'https://bjswbajtxacjwubghytb.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqc3diYWp0eGFjand1YmdoeXRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcwNjIxODYsImV4cCI6MjA4MjYzODE4Nn0.tQvzTXf3xft07Wrv8dB0lG2DaIS1UQNCuz5vVB6fTT4';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
         let cars = [], favs = new Set(), notes = {}, filters = {}, editingNoteId = null;
 
         // Car silhouette SVG placeholders (always work)
@@ -448,8 +453,13 @@
         };
 
         const toggleFav = async id => {
-            favs.has(id) ? favs.delete(id) : favs.add(id);
-            await fetch(`${API}/favorites`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify([...favs]) });
+            if (favs.has(id)) {
+                favs.delete(id);
+                await supabase.from('favorites').delete().eq('car_id', id);
+            } else {
+                favs.add(id);
+                await supabase.from('favorites').insert({ car_id: id });
+            }
             render();
         };
 
@@ -461,15 +471,16 @@
         };
         const hideNoteModal = () => document.getElementById('note-modal').classList.remove('show');
         const saveNoteModal = async () => {
-            notes[editingNoteId] = document.getElementById('note-text').value;
-            await fetch(`${API}/notes`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(notes) });
+            const note = document.getElementById('note-text').value;
+            notes[editingNoteId] = note;
+            await supabase.from('notes').upsert({ car_id: editingNoteId, note }, { onConflict: 'car_id' });
             hideNoteModal();
             render();
         };
 
         const del = async id => {
             if (confirm('Remove this car from your list?')) {
-                await fetch(`${API}/cars/${id}`, { method: 'DELETE' });
+                await supabase.from('cars').delete().eq('id', id);
                 cars = cars.filter(c => c.id !== id);
                 render();
             }
@@ -488,16 +499,35 @@
             });
         };
 
+        // Map Supabase snake_case to camelCase
+        const mapCar = c => ({
+            id: c.id,
+            year: c.year,
+            model: c.model,
+            color: c.color,
+            km: c.km,
+            price: c.price,
+            dealer: c.dealer,
+            distance: c.distance,
+            features: c.features || [],
+            carfax: c.carfax,
+            carfaxUrl: c.carfax_url,
+            listingUrl: c.listing_url,
+            carfaxNote: c.carfax_note,
+            coords: c.coords,
+            official: c.official
+        });
+
         (async () => {
             try {
-                const [cRes, fRes, nRes] = await Promise.all([
-                    fetch(`${API}/cars`),
-                    fetch(`${API}/favorites`),
-                    fetch(`${API}/notes`)
+                const [carsRes, favsRes, notesRes] = await Promise.all([
+                    supabase.from('cars').select('*'),
+                    supabase.from('favorites').select('car_id'),
+                    supabase.from('notes').select('car_id, note')
                 ]);
-                cars = await cRes.json();
-                favs = new Set(await fRes.json());
-                notes = await nRes.json();
+                cars = (carsRes.data || []).map(mapCar);
+                favs = new Set((favsRes.data || []).map(f => f.car_id));
+                notes = (notesRes.data || []).reduce((acc, n) => { acc[n.car_id] = n.note; return acc; }, {});
             } catch (e) { console.error(e); }
             render();
             initMap();
