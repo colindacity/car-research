@@ -400,9 +400,55 @@
             border-radius: 4px;
         }
 
+        /* Mobile map toggle */
+        .map-toggle {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 14px 20px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(37,99,235,0.4);
+            z-index: 1000;
+        }
+        .map-toggle:hover { background: #1d4ed8; }
+
         /* Mobile */
         @media (max-width: 900px) {
-            .sidebar { display: none; }
+            .map-toggle { display: flex; align-items: center; gap: 8px; }
+            .sidebar {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                width: 100%;
+                z-index: 999;
+            }
+            .sidebar.show { display: flex; flex-direction: column; }
+            .sidebar .map-close {
+                position: absolute;
+                top: 16px;
+                right: 16px;
+                background: white;
+                border: none;
+                border-radius: 50%;
+                width: 44px;
+                height: 44px;
+                font-size: 24px;
+                cursor: pointer;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+                z-index: 1001;
+            }
+            #map { height: 60vh; }
+            .map-info { background: white; }
         }
         @media (max-width: 768px) {
             .header { padding: 14px 16px; }
@@ -430,7 +476,7 @@
     </style>
 </head>
 <body>
-    <div class="version">v4.1</div>
+    <div class="version">v4.2</div>
 
     <div class="header">
         <div class="header-top">
@@ -479,7 +525,12 @@
             </div>
             <div class="cars" id="cars"></div>
         </div>
+        <button class="map-toggle" onclick="toggleMap()">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="10" r="8"/><path d="M10 6v4l2 2"/></svg>
+            View Map
+        </button>
         <div class="sidebar">
+            <button class="map-close" onclick="toggleMap()">&times;</button>
             <div id="map"></div>
             <div id="selected-car-info" class="selected-car" style="display:none;">
                 <div class="car-title" id="selected-title"></div>
@@ -519,6 +570,15 @@
         let cars = [], favs = new Set(), notes = {}, filters = {}, editingNoteId = null;
         let map, routeLayer, selectedCarId = null;
 
+        // Mobile map toggle
+        const toggleMap = () => {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('show');
+            if (sidebar.classList.contains('show')) {
+                setTimeout(() => map.invalidateSize(), 100);
+            }
+        };
+
         // SVG Icons
         const icons = {
             check: `<svg class="carfax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>`,
@@ -527,11 +587,21 @@
             question: `<svg class="carfax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22a10 10 0 100-20 10 10 0 000 20zm0-6v-4m0 8h.01"/></svg>`
         };
 
-        // Car silhouettes
-        const soulSvg = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100"><rect fill="#e8e8e8" width="200" height="100"/><path fill="#999" d="M30 70h140v8H30z"/><ellipse fill="#666" cx="55" cy="75" rx="15" ry="15"/><ellipse fill="#666" cx="145" cy="75" rx="15" ry="15"/><path fill="#aaa" d="M35 35h130c5 0 10 5 10 10v25H25V45c0-5 5-10 10-10z"/><path fill="#7cb" d="M45 40h50v20H40V45c0-3 2-5 5-5z"/><path fill="#7cb" d="M100 40h55c3 0 5 2 5 5v15h-60z"/><text x="100" y="95" text-anchor="middle" font-size="10" fill="#888">Kia Soul</text></svg>')}`;
-        const venueSvg = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100"><rect fill="#e8e8e8" width="200" height="100"/><path fill="#999" d="M25 72h150v6H25z"/><ellipse fill="#666" cx="50" cy="74" rx="14" ry="14"/><ellipse fill="#666" cx="150" cy="74" rx="14" ry="14"/><path fill="#aaa" d="M30 38h140c6 0 10 4 10 10v24H20V48c0-6 4-10 10-10z"/><path fill="#89c" d="M40 42h45v18H35V47c0-3 2-5 5-5z"/><path fill="#89c" d="M90 42h60c3 0 5 2 5 5v13H90z"/><text x="100" y="95" text-anchor="middle" font-size="10" fill="#888">Hyundai Venue</text></svg>')}`;
-
-        const getPhoto = c => c.model.includes('Soul') ? soulSvg : venueSvg;
+        // Generate car placeholder with actual info
+        const getPhoto = c => {
+            const isSoul = c.model.includes('Soul');
+            const brand = isSoul ? 'Kia' : 'Hyundai';
+            const model = isSoul ? 'Soul' : 'Venue';
+            const bgColor = isSoul ? '#2c5282' : '#1e3a5f';
+            const color = c.color || '';
+            return `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120">
+                <rect fill="${bgColor}" width="200" height="120" rx="8"/>
+                <text x="100" y="35" text-anchor="middle" font-family="system-ui,sans-serif" font-size="14" font-weight="600" fill="white">${c.year}</text>
+                <text x="100" y="58" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="white">${brand} ${model}</text>
+                <text x="100" y="82" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="rgba(255,255,255,0.8)">${color}</text>
+                <text x="100" y="105" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="rgba(255,255,255,0.6)">Photo at dealer site</text>
+            </svg>`)}`;
+        };
 
         // Feature labels
         const featureLabels = {
