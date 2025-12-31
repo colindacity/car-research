@@ -5,7 +5,7 @@ Kia Soul & Hyundai Venue research tool for GTA.
 **Live:** https://car-research.vercel.app
 
 ## Features
-- 37 car listings (Kia Soul & Hyundai Venue)
+- 46 car listings (Kia Soul & Hyundai Venue)
 - Sort by: Score, Price, KM, Distance
 - Favorites & Notes (saved to cloud)
 - Clean CARFAX verification
