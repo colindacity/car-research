@@ -451,32 +451,46 @@
             .map-info { background: white; }
         }
         @media (max-width: 768px) {
-            .header { padding: 14px 16px; }
-            .header-top { flex-direction: column; align-items: flex-start; gap: 8px; }
-            .header h1 { font-size: 20px; }
-            .stats { font-size: 14px; gap: 16px; }
-            .filters { gap: 8px; }
-            .filter-btn { padding: 8px 12px; font-size: 14px; }
-            .main { padding: 16px; }
+            .header { padding: 10px 12px; }
+            .header-top { flex-direction: column; align-items: flex-start; gap: 4px; }
+            .header h1 { font-size: 18px; }
+            .stats { font-size: 13px; gap: 12px; }
+            .filters { gap: 6px; }
+            .filter-btn { padding: 6px 10px; font-size: 13px; }
+            .sort-select { padding: 6px 10px; font-size: 13px; }
+            .main { padding: 8px; }
+            .cars { gap: 8px; }
             .car-card {
-                flex-direction: column;
-                padding: 16px;
-                gap: 16px;
+                flex-direction: row;
+                padding: 10px;
+                gap: 10px;
             }
             .car-photo {
-                width: 100%;
-                height: 180px;
+                width: 70px;
+                height: 70px;
+                border-radius: 6px;
             }
-            .car-actions {
-                min-width: auto;
-            }
-            .btn { padding: 14px 20px; }
+            .car-info { min-width: 0; }
+            .car-header { margin-bottom: 4px; }
+            .car-name { font-size: 14px; }
+            .car-subtitle { font-size: 11px; }
+            .deal-badge { padding: 3px 6px; font-size: 10px; }
+            .car-dealer { font-size: 12px; margin-bottom: 6px; }
+            .official-badge { font-size: 9px; padding: 2px 5px; }
+            .car-stats { gap: 8px; margin-bottom: 6px; }
+            .stat-value { font-size: 13px; }
+            .stat-label { font-size: 9px; }
+            .carfax-status { padding: 4px 8px; font-size: 11px; margin-bottom: 6px; }
+            .car-features { display: none; }
+            .car-actions { flex-direction: row; gap: 6px; min-width: auto; }
+            .btn { padding: 8px 10px; font-size: 12px; }
+            .btn-icon { width: 28px; height: 28px; padding: 0; }
             .legend { display: none; }
         }
     </style>
 </head>
 <body>
-    <div class="version">v4.2</div>
+    <div class="version">v4.3</div>
 
     <div class="header">
         <div class="header-top">
