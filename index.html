@@ -81,7 +81,7 @@
         .layout { display: flex; min-height: calc(100vh - 120px); }
         .main { flex: 1; padding: 20px; overflow: auto; }
         .sidebar {
-            width: 320px;
+            width: 350px;
             background: white;
             border-left: 1px solid #e5e5e5;
             display: flex;
@@ -96,6 +96,24 @@
             line-height: 1.6;
         }
         .map-info strong { color: #1a1a1a; }
+        .selected-car {
+            padding: 12px 16px;
+            background: #f0f9ff;
+            border-top: 1px solid #e5e5e5;
+            font-size: 14px;
+        }
+        .selected-car .car-title { font-weight: 600; margin-bottom: 8px; }
+        .selected-car .directions-btn {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .selected-car .directions-btn:hover { background: #1d4ed8; }
 
         /* Car cards */
         .cars { display: flex; flex-direction: column; gap: 16px; }
@@ -107,10 +125,12 @@
             gap: 20px;
             border: 2px solid #e5e5e5;
             transition: all 0.2s;
+            cursor: pointer;
         }
         .car-card:hover { border-color: #ccc; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
         .car-card.saved { background: #fffef5; border-color: #f0e68c; }
         .car-card.hidden { display: none; }
+        .car-card.selected { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.2); }
 
         /* Deal status indicator */
         .car-card.great-deal { border-left: 5px solid #22c55e; }
@@ -139,10 +159,15 @@
             margin-bottom: 8px;
         }
         .car-name {
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 600;
             color: #1a1a1a;
             line-height: 1.3;
+        }
+        .car-subtitle {
+            font-size: 13px;
+            color: #666;
+            margin-top: 2px;
         }
         .deal-badge {
             padding: 6px 12px;
@@ -236,31 +261,13 @@
         .feature-pill.has { background: #ecfdf5; color: #065f46; }
         .no-features { color: #9ca3af; font-size: 14px; }
 
-        /* Availability status */
-        .availability {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 13px;
-            margin-top: 10px;
-        }
-        .availability.available { color: #16a34a; }
-        .availability.sold { color: #dc2626; }
-        .availability.unknown { color: #9ca3af; }
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: currentColor;
-        }
-
         /* Actions */
         .car-actions {
             display: flex;
             flex-direction: column;
             gap: 10px;
             align-items: stretch;
-            min-width: 140px;
+            min-width: 150px;
         }
         .btn {
             padding: 12px 20px;
@@ -279,6 +286,11 @@
             color: white;
         }
         .btn-primary:hover { background: #1d4ed8; }
+        .btn-aggregator {
+            background: #6b7280;
+            color: white;
+        }
+        .btn-aggregator:hover { background: #4b5563; }
         .btn-secondary {
             background: white;
             border-color: #e5e5e5;
@@ -290,6 +302,13 @@
             border-color: #fbbf24;
             color: #92400e;
         }
+        .btn-directions {
+            background: #059669;
+            color: white;
+            font-size: 13px;
+            padding: 10px 16px;
+        }
+        .btn-directions:hover { background: #047857; }
         .btn-danger {
             background: white;
             border-color: #fecaca;
@@ -304,6 +323,7 @@
             gap: 8px;
         }
         .action-row .btn { flex: 1; padding: 10px 12px; font-size: 14px; }
+        .btn-small { font-size: 13px; padding: 8px 12px; }
 
         /* Version */
         .version { position: fixed; bottom: 8px; left: 8px; font-size: 12px; color: #aaa; }
@@ -410,7 +430,7 @@
     </style>
 </head>
 <body>
-    <div class="version">v4.0</div>
+    <div class="version">v4.1</div>
 
     <div class="header">
         <div class="header-top">
@@ -461,9 +481,13 @@
         </div>
         <div class="sidebar">
             <div id="map"></div>
+            <div id="selected-car-info" class="selected-car" style="display:none;">
+                <div class="car-title" id="selected-title"></div>
+                <a id="directions-link" href="#" target="_blank" class="directions-btn">Get Directions</a>
+            </div>
             <div class="map-info">
                 <strong>Your Budget:</strong> $21,000 total (including tax)<br>
-                <strong>Home Location:</strong> Thornhill (L4J 3W3)
+                <strong>Home:</strong> 299 Mullen Dr, Thornhill
             </div>
         </div>
     </div>
@@ -488,7 +512,12 @@
         const { createClient } = supabase;
         const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+        // Home location - 299 Mullen Drive, Thornhill
+        const HOME_COORDS = [43.8108, -79.4250];
+        const HOME_ADDRESS = '299 Mullen Dr, Thornhill, ON';
+
         let cars = [], favs = new Set(), notes = {}, filters = {}, editingNoteId = null;
+        let map, routeLayer, selectedCarId = null;
 
         // SVG Icons
         const icons = {
@@ -504,7 +533,7 @@
 
         const getPhoto = c => c.model.includes('Soul') ? soulSvg : venueSvg;
 
-        // Feature labels (no emojis)
+        // Feature labels
         const featureLabels = {
             'htd-seats': 'Heated Seats',
             'htd-wheel': 'Heated Steering',
@@ -514,12 +543,72 @@
             'auto-brake': 'Auto-brake'
         };
 
-        // Generate readable car name
+        // Generate descriptive car name
         const getCarName = c => {
-            const trim = c.model.includes('EX') ? 'EX' : c.model.includes('LX') ? 'LX' : '';
-            const modelName = c.model.includes('Soul') ? 'Kia Soul' : 'Hyundai Venue';
-            const colorPart = c.color && c.color !== 'Unknown' ? ` - ${c.color}` : '';
-            return `${c.year} ${modelName}${trim ? ' ' + trim : ''}${colorPart}`;
+            const isSoul = c.model.includes('Soul');
+            const modelName = isSoul ? 'Soul' : 'Venue';
+
+            // Extract trim level
+            let trim = '';
+            if (c.model.includes('EX+') || c.model.includes('Plus')) trim = 'EX+';
+            else if (c.model.includes('EX')) trim = 'EX';
+            else if (c.model.includes('Ultimate')) trim = 'Ultimate';
+            else if (c.model.includes('Preferred')) trim = 'Preferred';
+            else if (c.model.includes('Trend')) trim = 'Trend';
+            else if (c.model.includes('Essential')) trim = 'Essential';
+            else if (c.model.includes('LX')) trim = 'LX';
+            else if (c.model.includes('GT')) trim = 'GT-Line';
+
+            // Color - make it concise
+            let color = '';
+            if (c.color && c.color !== 'Unknown') {
+                color = c.color.split('/')[0].trim(); // Take first color if two-tone
+                if (color.length > 12) color = color.split(' ')[0]; // Shorten long names
+            }
+
+            // Build name: "2022 Soul EX+ (White) - 71K km"
+            const kmStr = `${Math.round(c.km/1000)}K`;
+            const colorPart = color ? ` (${color})` : '';
+
+            return `${c.year} ${modelName} ${trim}${colorPart}`;
+        };
+
+        // Get short name for map popup
+        const getShortName = c => {
+            const isSoul = c.model.includes('Soul');
+            const trim = c.model.includes('EX+') ? 'EX+' : c.model.includes('EX') ? 'EX' :
+                         c.model.includes('Ultimate') ? 'Ult' : c.model.includes('Preferred') ? 'Pref' : '';
+            return `${c.year} ${isSoul ? 'Soul' : 'Venue'} ${trim}`;
+        };
+
+        // Check if URL is a direct dealer link
+        const isDealerLink = url => {
+            if (!url) return false;
+            const aggregators = ['autotrader.ca', 'carpages.ca', 'kijiji.', 'cargurus.', 'clutch.ca'];
+            return !aggregators.some(agg => url.includes(agg));
+        };
+
+        // Get site name from URL
+        const getSiteName = url => {
+            if (!url) return 'Unknown';
+            if (url.includes('autotrader.ca')) return 'AutoTrader';
+            if (url.includes('carpages.ca')) return 'CarPages';
+            if (url.includes('clutch.ca')) return 'Clutch';
+            if (url.includes('kijiji.')) return 'Kijiji';
+            if (url.includes('cargurus.')) return 'CarGurus';
+            // Extract dealer name from URL
+            try {
+                const host = new URL(url).hostname.replace('www.', '');
+                return host.split('.')[0].replace(/kia|hyundai|honda|nissan|mazda|chrysler/gi, '').trim() || 'Dealer';
+            } catch {
+                return 'Dealer';
+            }
+        };
+
+        // Generate Google Maps directions URL
+        const getDirectionsUrl = (dealer, address) => {
+            const destination = address || dealer;
+            return `https://www.google.com/maps/dir/${encodeURIComponent(HOME_ADDRESS)}/${encodeURIComponent(destination + ', Ontario, Canada')}`;
         };
 
         // Score calculation
@@ -554,6 +643,41 @@
             }
         };
 
+        // Select a car and show on map
+        const selectCar = (id) => {
+            selectedCarId = id;
+            const c = cars.find(car => car.id === id);
+            if (!c) return;
+
+            // Update selected state
+            document.querySelectorAll('.car-card').forEach(el => el.classList.remove('selected'));
+            document.querySelector(`.car-card[data-id="${id}"]`)?.classList.add('selected');
+
+            // Update sidebar info
+            const infoEl = document.getElementById('selected-car-info');
+            const titleEl = document.getElementById('selected-title');
+            const linkEl = document.getElementById('directions-link');
+
+            titleEl.textContent = `${getCarName(c)} at ${c.dealer}`;
+            linkEl.href = getDirectionsUrl(c.dealer, c.address);
+            infoEl.style.display = 'block';
+
+            // Draw route on map if coords exist
+            if (c.coords && map) {
+                if (routeLayer) map.removeLayer(routeLayer);
+                routeLayer = L.polyline([HOME_COORDS, c.coords], {
+                    color: '#2563eb',
+                    weight: 3,
+                    opacity: 0.7,
+                    dashArray: '10, 10'
+                }).addTo(map);
+
+                // Fit bounds to show route
+                const bounds = L.latLngBounds([HOME_COORDS, c.coords]);
+                map.fitBounds(bounds, { padding: [30, 30] });
+            }
+        };
+
         const render = () => {
             const sortBy = document.getElementById('sort').value;
             let list = [...cars];
@@ -575,13 +699,23 @@
                 const features = (c.features || []).filter(f => featureLabels[f]);
                 const lowKm = c.km < 30000;
 
+                // Determine primary and secondary URLs
+                const primaryUrl = c.dealerUrl || c.listingUrl;
+                const isDealer = c.dealerUrl || isDealerLink(c.listingUrl);
+                const siteName = isDealer ? c.dealer.split(' ')[0] : getSiteName(c.listingUrl);
+                const btnClass = isDealer ? 'btn-primary' : 'btn-aggregator';
+                const btnText = isDealer ? `View at ${siteName}` : `View on ${siteName}`;
+
                 return `
-                <div class="car-card ${deal.class} ${fav ? 'saved' : ''} ${hide ? 'hidden' : ''}" data-id="${c.id}">
+                <div class="car-card ${deal.class} ${fav ? 'saved' : ''} ${hide ? 'hidden' : ''} ${selectedCarId === c.id ? 'selected' : ''}" data-id="${c.id}" onclick="selectCar(${c.id})">
                     <img class="car-photo" src="${c.photoUrl || getPhoto(c)}" alt="${getCarName(c)}" onerror="this.style.background='linear-gradient(135deg,#e0e0e0,#f5f5f5)'">
 
                     <div class="car-info">
                         <div class="car-header">
-                            <div class="car-name">${getCarName(c)}</div>
+                            <div>
+                                <div class="car-name">${getCarName(c)}</div>
+                                <div class="car-subtitle">${Math.round(c.km/1000)}K km - ${c.distance}km away</div>
+                            </div>
                             <div class="deal-badge ${deal.badge}">${deal.label}</div>
                         </div>
 
@@ -616,20 +750,14 @@
                                 : '<span class="no-features">No premium features listed</span>'
                             }
                         </div>
-
-                        ${c.availability === 'sold'
-                            ? '<div class="availability sold"><span class="status-dot"></span>May be sold - check with dealer</div>'
-                            : c.lastChecked
-                                ? `<div class="availability available"><span class="status-dot"></span>Checked ${c.lastChecked}</div>`
-                                : ''
-                        }
                     </div>
 
-                    <div class="car-actions">
-                        ${c.listingUrl
-                            ? `<a href="${c.listingUrl}" target="_blank" class="btn btn-primary">View at Dealer</a>`
+                    <div class="car-actions" onclick="event.stopPropagation()">
+                        ${primaryUrl
+                            ? `<a href="${primaryUrl}" target="_blank" class="btn ${btnClass}">${btnText}</a>`
                             : '<span class="btn btn-secondary" style="opacity:0.5">No Link</span>'
                         }
+                        <a href="${getDirectionsUrl(c.dealer, c.address)}" target="_blank" class="btn btn-directions">Get Directions</a>
                         <div class="action-row">
                             <button class="btn btn-secondary ${fav ? 'active' : ''}" onclick="toggleFav(${c.id})">
                                 ${fav ? 'Saved' : 'Save'}
@@ -638,7 +766,7 @@
                                 Notes
                             </button>
                         </div>
-                        ${c.carfaxUrl ? `<a href="${c.carfaxUrl}" target="_blank" class="btn btn-secondary">View CARFAX</a>` : ''}
+                        ${c.carfaxUrl ? `<a href="${c.carfaxUrl}" target="_blank" class="btn btn-secondary btn-small">View CARFAX</a>` : ''}
                         <button class="btn btn-danger" onclick="del(${c.id})">Remove</button>
                     </div>
                 </div>`;
@@ -690,21 +818,27 @@
         };
 
         const initMap = () => {
-            const map = L.map('map', { zoomControl: false }).setView([43.8, -79.45], 10);
+            map = L.map('map', { zoomControl: false }).setView([43.8, -79.45], 10);
             L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
-            L.circleMarker([43.8108, -79.4250], {
-                radius: 10,
+
+            // Home marker
+            L.circleMarker(HOME_COORDS, {
+                radius: 12,
                 color: '#2563eb',
                 fillColor: '#2563eb',
                 fillOpacity: 1,
                 weight: 3
-            }).addTo(map).bindPopup('<strong>Home</strong><br>Thornhill');
+            }).addTo(map).bindPopup('<strong>Home</strong><br>299 Mullen Dr, Thornhill');
 
+            // Car markers
             cars.forEach(c => {
                 if (c.coords) {
                     const col = c.carfax === 'clean' ? '#22c55e' : c.carfax === 'police' ? '#ef4444' : c.carfax === 'accident' ? '#f59e0b' : '#9ca3af';
-                    L.circleMarker(c.coords, { radius: 7, color: col, fillColor: col, fillOpacity: 0.9, weight: 0 })
-                        .addTo(map).bindPopup(`<strong>${getCarName(c)}</strong><br>$${c.price.toLocaleString()} + tax`);
+                    const marker = L.circleMarker(c.coords, { radius: 8, color: col, fillColor: col, fillOpacity: 0.9, weight: 0 })
+                        .addTo(map)
+                        .bindPopup(`<strong>${getShortName(c)}</strong><br>$${c.price.toLocaleString()} + tax<br><em>${c.dealer}</em>`);
+
+                    marker.on('click', () => selectCar(c.id));
                 }
             });
         };
@@ -723,6 +857,8 @@
             carfax: c.carfax,
             carfaxUrl: c.carfax_url,
             listingUrl: c.listing_url,
+            dealerUrl: c.dealer_url,
+            address: c.address,
             carfaxNote: c.carfax_note,
             coords: c.coords,
             official: c.official,
