@@ -64,12 +64,16 @@
         }
         #map { flex: 1; min-height: 200px; }
         .map-info { padding: 10px; font-size: 12px; color: #555; border-top: 1px solid #e5e5e5; }
-        .selected-car { padding: 8px 10px; background: #f0f9ff; border-top: 1px solid #e5e5e5; font-size: 12px; }
-        .selected-car .car-title { font-weight: 600; margin-bottom: 4px; }
+        .selected-car { padding: 12px; background: #f0f9ff; border-top: 1px solid #e5e5e5; font-size: 13px; }
+        .selected-car .car-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+        .selected-car .dealer-name { font-weight: 500; color: #333; margin-bottom: 2px; }
+        .selected-car .dealer-addr { color: #666; font-size: 12px; margin-bottom: 6px; }
+        .selected-car .dealer-dist { color: #059669; font-size: 12px; font-weight: 500; margin-bottom: 8px; }
         .selected-car .directions-btn {
-            display: inline-block; background: #2563eb; color: white;
-            padding: 4px 10px; border-radius: 4px; text-decoration: none; font-size: 11px;
+            display: inline-block; background: #059669; color: white;
+            padding: 8px 14px; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: 500;
         }
+        .selected-car .directions-btn:hover { background: #047857; }
 
         /* Compact car cards */
         .cars { display: flex; flex-direction: column; gap: 6px; }
@@ -260,7 +264,7 @@
     </style>
 </head>
 <body>
-    <div class="version">v5.0</div>
+    <div class="version">v5.1</div>
 
     <div class="header">
         <h1>Mom's Car Finder</h1>
@@ -292,7 +296,10 @@
             <div id="map"></div>
             <div id="selected-car-info" class="selected-car" style="display:none;">
                 <div class="car-title" id="selected-title"></div>
-                <a id="directions-link" href="#" target="_blank" class="directions-btn">Get Directions</a>
+                <div class="dealer-name" id="selected-dealer"></div>
+                <div class="dealer-addr" id="selected-addr"></div>
+                <div class="dealer-dist" id="selected-dist"></div>
+                <a id="directions-link" href="#" target="_blank" class="directions-btn">Get Directions from Home</a>
             </div>
             <div class="map-info">
                 <strong>Budget:</strong> $21K total | <strong>Home:</strong> 299 Mullen Dr, Thornhill
@@ -378,6 +385,19 @@
             if (url.includes('clutch')) return 'Clutch';
             try { return new URL(url).hostname.replace('www.','').split('.')[0]; } catch { return 'Dealer'; }
         };
+        // Shorten dealer name for button but keep it clear
+        const getDealerBtnText = (dealer) => {
+            // Common shortenings
+            const short = dealer
+                .replace('Richmond Hill', 'RH')
+                .replace('Brampton North', 'Brampton N.')
+                .replace('Golden Mile', 'Golden Mi.')
+                .replace('Frontier Fine Cars', 'Frontier Cars')
+                .replace('Autorama Toronto', 'Autorama')
+                .replace('Limitless Auto Sales', 'Limitless Auto')
+                .replace('Boyer Hyundai Pickering', 'Boyer Pickering');
+            return short.length > 18 ? short.substring(0, 16) + '...' : short;
+        };
         const getDirectionsUrl = (d, a) => `https://www.google.com/maps/dir/${encodeURIComponent(HOME_ADDRESS)}/${encodeURIComponent((a||d) + ', Ontario, Canada')}`;
 
         const score = c => {
@@ -412,17 +432,27 @@
             if (!c) return;
             document.querySelectorAll('.car-card').forEach(el => el.classList.remove('selected'));
             document.querySelector(`.car-card[data-id="${id}"]`)?.classList.add('selected');
-            document.getElementById('selected-title').textContent = `${getCarName(c)} - ${c.dealer}`;
+
+            // Update info panel
+            document.getElementById('selected-title').textContent = getCarName(c);
+            document.getElementById('selected-dealer').textContent = c.dealer;
+            document.getElementById('selected-addr').textContent = c.address || 'Address not available';
+            document.getElementById('selected-dist').textContent = `${c.distance} km from home`;
             document.getElementById('directions-link').href = getDirectionsUrl(c.dealer, c.address);
             document.getElementById('selected-car-info').style.display = 'block';
+
             if (c.coords && map) {
                 const sidebar = document.querySelector('.sidebar');
-                if (window.innerWidth <= 900 && !sidebar.classList.contains('show')) sidebar.classList.add('show');
+                const toggleBtn = document.querySelector('.map-toggle');
+                if (window.innerWidth <= 900 && !sidebar.classList.contains('show')) {
+                    sidebar.classList.add('show');
+                    if (toggleBtn) toggleBtn.style.display = 'none';
+                }
                 setTimeout(() => {
                     map.invalidateSize();
                     if (routeLayer) map.removeLayer(routeLayer);
-                    routeLayer = L.polyline([HOME_COORDS, c.coords], { color: '#2563eb', weight: 3, dashArray: '8,8' }).addTo(map);
-                    map.fitBounds(L.latLngBounds([HOME_COORDS, c.coords]), { padding: [40, 40] });
+                    routeLayer = L.polyline([HOME_COORDS, c.coords], { color: '#2563eb', weight: 4, opacity: 0.8 }).addTo(map);
+                    map.fitBounds(L.latLngBounds([HOME_COORDS, c.coords]), { padding: [50, 50] });
                 }, 100);
             }
         };
@@ -447,7 +477,7 @@
                 const feats = (c.features || []).filter(f => feat[f]).slice(0, 4);
                 const url = c.dealerUrl || c.listingUrl;
                 const isD = c.dealerUrl || isDealerLink(c.listingUrl);
-                const site = isD ? c.dealer.split(' ')[0] : getSiteName(c.listingUrl);
+                const site = isD ? getDealerBtnText(c.dealer) : getSiteName(c.listingUrl);
 
                 return `
                 <div class="car-card ${deal.cls} ${fav ? 'saved' : ''} ${hide ? 'hidden' : ''} ${selectedCarId === c.id ? 'selected' : ''}" data-id="${c.id}" onclick="selectCar(${c.id})">
