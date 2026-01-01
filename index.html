@@ -490,7 +490,7 @@
     </style>
 </head>
 <body>
-    <div class="version">v4.4</div>
+    <div class="version">v4.5</div>
 
     <div class="header">
         <div class="header-top">
@@ -540,7 +540,7 @@
             <div class="cars" id="cars"></div>
         </div>
         <button class="map-toggle" onclick="toggleMap()">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="10" r="8"/><path d="M10 6v4l2 2"/></svg>
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3V6z"/><path d="M9 3v15m6-12v15"/></svg>
             View Map
         </button>
         <div class="sidebar">
@@ -587,8 +587,10 @@
         // Mobile map toggle
         const toggleMap = () => {
             const sidebar = document.querySelector('.sidebar');
-            sidebar.classList.toggle('show');
-            if (sidebar.classList.contains('show')) {
+            const toggleBtn = document.querySelector('.map-toggle');
+            const isShowing = sidebar.classList.toggle('show');
+            if (toggleBtn) toggleBtn.style.display = isShowing ? 'none' : '';
+            if (isShowing && map) {
                 setTimeout(() => map.invalidateSize(), 100);
             }
         };
@@ -604,9 +606,10 @@
         // Generate car placeholder with actual info
         const getPhoto = c => {
             const isSoul = c.model.includes('Soul');
-            const brand = isSoul ? 'Kia' : 'Hyundai';
-            const model = isSoul ? 'Soul' : 'Venue';
-            const bgColor = isSoul ? '#2c5282' : '#1e3a5f';
+            const isKicks = c.model.includes('Kicks');
+            const brand = isSoul ? 'Kia' : isKicks ? 'Nissan' : 'Hyundai';
+            const model = isSoul ? 'Soul' : isKicks ? 'Kicks' : 'Venue';
+            const bgColor = isSoul ? '#2c5282' : isKicks ? '#c41230' : '#1e3a5f';
             const color = c.color || '';
             return `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120">
                 <rect fill="${bgColor}" width="200" height="120" rx="8"/>
@@ -630,7 +633,8 @@
         // Generate descriptive car name
         const getCarName = c => {
             const isSoul = c.model.includes('Soul');
-            const modelName = isSoul ? 'Soul' : 'Venue';
+            const isKicks = c.model.includes('Kicks');
+            const modelName = isSoul ? 'Soul' : isKicks ? 'Kicks' : 'Venue';
 
             // Extract trim level
             let trim = '';
@@ -642,6 +646,10 @@
             else if (c.model.includes('Essential')) trim = 'Essential';
             else if (c.model.includes('LX')) trim = 'LX';
             else if (c.model.includes('GT')) trim = 'GT-Line';
+            // Kicks trims
+            else if (c.model.includes('SR')) trim = 'SR';
+            else if (c.model.includes('SV')) trim = 'SV';
+            else if (c.model.includes('S ')) trim = 'S';
 
             // Color - make it concise
             let color = '';
@@ -660,9 +668,12 @@
         // Get short name for map popup
         const getShortName = c => {
             const isSoul = c.model.includes('Soul');
-            const trim = c.model.includes('EX+') ? 'EX+' : c.model.includes('EX') ? 'EX' :
-                         c.model.includes('Ultimate') ? 'Ult' : c.model.includes('Preferred') ? 'Pref' : '';
-            return `${c.year} ${isSoul ? 'Soul' : 'Venue'} ${trim}`;
+            const isKicks = c.model.includes('Kicks');
+            const modelName = isSoul ? 'Soul' : isKicks ? 'Kicks' : 'Venue';
+            let trim = c.model.includes('EX+') ? 'EX+' : c.model.includes('EX') ? 'EX' :
+                       c.model.includes('Ultimate') ? 'Ult' : c.model.includes('Preferred') ? 'Pref' :
+                       c.model.includes('SR') ? 'SR' : c.model.includes('SV') ? 'SV' : '';
+            return `${c.year} ${modelName} ${trim}`;
         };
 
         // Check if URL is a direct dealer link

@@ -1,11 +1,11 @@
 # Mom's Car Finder
 
-Kia Soul & Hyundai Venue research tool for GTA.
+Kia Soul, Hyundai Venue & Nissan Kicks research tool for GTA.
 
 **Live:** https://car-research.vercel.app
 
 ## Features
-- 49 verified car listings (Kia Soul & Hyundai Venue)
+- 52 verified car listings (Kia Soul, Hyundai Venue & Nissan Kicks)
 - Direct dealer website links (not aggregator sites)
 - Google Maps directions from home
 - Route display on map when car selected
