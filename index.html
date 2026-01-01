@@ -11,538 +11,282 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
             background: #f8f9fa;
             color: #1a1a1a;
-            font-size: 16px;
-            line-height: 1.5;
+            font-size: 14px;
+            line-height: 1.4;
         }
 
-        /* Header */
+        /* Header - compact */
         .header {
             background: white;
-            padding: 16px 20px;
+            padding: 8px 16px;
             border-bottom: 1px solid #e5e5e5;
             position: sticky;
             top: 0;
             z-index: 100;
-        }
-        .header-top {
             display: flex;
             align-items: center;
             gap: 16px;
-            margin-bottom: 12px;
-        }
-        .header h1 {
-            font-size: 22px;
-            font-weight: 700;
-            color: #1a1a1a;
-        }
-        .stats {
-            display: flex;
-            gap: 20px;
-            font-size: 15px;
-            color: #555;
-        }
-        .stats strong { color: #1a1a1a; font-weight: 600; }
-
-        /* Filters */
-        .filters {
-            display: flex;
-            gap: 10px;
             flex-wrap: wrap;
-            align-items: center;
         }
+        .header h1 { font-size: 18px; font-weight: 700; }
+        .stats { display: flex; gap: 12px; font-size: 13px; color: #555; }
+        .stats strong { color: #1a1a1a; }
+        .filters { display: flex; gap: 6px; margin-left: auto; }
         .filter-btn {
-            padding: 10px 16px;
-            border: 2px solid #e5e5e5;
-            border-radius: 8px;
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
             background: white;
             cursor: pointer;
-            font-size: 15px;
+            font-size: 12px;
             font-weight: 500;
             color: #555;
-            transition: all 0.15s;
         }
-        .filter-btn:hover { border-color: #ccc; background: #fafafa; }
-        .filter-btn.active {
-            background: #e8f4fd;
-            border-color: #2196f3;
-            color: #1976d2;
-        }
+        .filter-btn:hover { background: #f5f5f5; }
+        .filter-btn.active { background: #e8f4fd; border-color: #2196f3; color: #1976d2; }
         .sort-select {
-            padding: 10px 14px;
-            border: 2px solid #e5e5e5;
-            border-radius: 8px;
-            font-size: 15px;
+            padding: 6px 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 12px;
             background: white;
-            color: #333;
-            cursor: pointer;
         }
 
         /* Layout */
-        .layout { display: flex; min-height: calc(100vh - 120px); }
-        .main { flex: 1; padding: 20px; overflow: auto; }
+        .layout { display: flex; height: calc(100vh - 50px); }
+        .main { flex: 1; padding: 8px; overflow: auto; }
         .sidebar {
-            width: 350px;
+            width: 320px;
             background: white;
             border-left: 1px solid #e5e5e5;
             display: flex;
             flex-direction: column;
         }
-        #map { flex: 1; min-height: 300px; }
-        .map-info {
-            padding: 16px;
-            font-size: 14px;
-            color: #555;
-            border-top: 1px solid #e5e5e5;
-            line-height: 1.6;
-        }
-        .map-info strong { color: #1a1a1a; }
-        .selected-car {
-            padding: 12px 16px;
-            background: #f0f9ff;
-            border-top: 1px solid #e5e5e5;
-            font-size: 14px;
-        }
-        .selected-car .car-title { font-weight: 600; margin-bottom: 8px; }
+        #map { flex: 1; min-height: 200px; }
+        .map-info { padding: 10px; font-size: 12px; color: #555; border-top: 1px solid #e5e5e5; }
+        .selected-car { padding: 8px 10px; background: #f0f9ff; border-top: 1px solid #e5e5e5; font-size: 12px; }
+        .selected-car .car-title { font-weight: 600; margin-bottom: 4px; }
         .selected-car .directions-btn {
-            display: inline-block;
-            background: #2563eb;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 500;
+            display: inline-block; background: #2563eb; color: white;
+            padding: 4px 10px; border-radius: 4px; text-decoration: none; font-size: 11px;
         }
-        .selected-car .directions-btn:hover { background: #1d4ed8; }
 
-        /* Car cards */
-        .cars { display: flex; flex-direction: column; gap: 16px; }
+        /* Compact car cards */
+        .cars { display: flex; flex-direction: column; gap: 6px; }
         .car-card {
             background: white;
-            border-radius: 12px;
-            padding: 20px;
-            display: flex;
-            gap: 20px;
-            border: 2px solid #e5e5e5;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-        .car-card:hover { border-color: #ccc; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-        .car-card.saved { background: #fffef5; border-color: #f0e68c; }
-        .car-card.hidden { display: none; }
-        .car-card.selected { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.2); }
-
-        /* Deal status indicator */
-        .car-card.great-deal { border-left: 5px solid #22c55e; }
-        .car-card.good-deal { border-left: 5px solid #3b82f6; }
-        .car-card.fair-deal { border-left: 5px solid #f59e0b; }
-        .car-card.over-budget { border-left: 5px solid #ef4444; }
-        .car-card.needs-review { border-left: 5px solid #9ca3af; }
-
-        /* Photo */
-        .car-photo {
-            width: 160px;
-            height: 110px;
             border-radius: 8px;
+            padding: 10px 12px;
+            display: grid;
+            grid-template-columns: 80px 1fr auto auto;
+            gap: 12px;
+            align-items: center;
+            border: 1px solid #e5e5e5;
+            border-left: 4px solid #e5e5e5;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .car-card:hover { background: #fafafa; border-color: #ccc; }
+        .car-card.saved { background: #fffef5; }
+        .car-card.hidden { display: none; }
+        .car-card.selected { border-color: #2563eb; background: #f0f7ff; }
+        .car-card.great-deal { border-left-color: #22c55e; }
+        .car-card.good-deal { border-left-color: #3b82f6; }
+        .car-card.fair-deal { border-left-color: #f59e0b; }
+        .car-card.over-budget { border-left-color: #ef4444; }
+        .car-card.needs-review { border-left-color: #9ca3af; }
+
+        /* Photo placeholder */
+        .car-photo {
+            width: 80px;
+            height: 55px;
+            border-radius: 6px;
             object-fit: cover;
             background: #f0f0f0;
-            flex-shrink: 0;
         }
 
-        /* Car info */
-        .car-info { flex: 1; min-width: 0; }
-        .car-header {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 12px;
-            margin-bottom: 8px;
-        }
-        .car-name {
-            font-size: 17px;
-            font-weight: 600;
-            color: #1a1a1a;
-            line-height: 1.3;
-        }
-        .car-subtitle {
-            font-size: 13px;
-            color: #666;
-            margin-top: 2px;
-        }
-        .deal-badge {
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 600;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
+        /* Car info - compact */
+        .car-info { min-width: 0; }
+        .car-row1 { display: flex; align-items: baseline; gap: 8px; margin-bottom: 2px; }
+        .car-name { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .car-dealer { font-size: 12px; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .official-badge { background: #e0f2fe; color: #0369a1; padding: 1px 5px; border-radius: 3px; font-size: 10px; font-weight: 600; margin-left: 4px; }
+        .car-row2 { display: flex; gap: 12px; font-size: 12px; color: #555; }
+        .car-row2 strong { color: #1a1a1a; }
+        .price-in { color: #16a34a; font-weight: 600; }
+        .price-over { color: #dc2626; font-weight: 600; }
+        .km-low { color: #2563eb; }
+        .car-row3 { display: flex; gap: 4px; margin-top: 3px; flex-wrap: wrap; }
+        .feat { background: #ecfdf5; color: #065f46; padding: 1px 5px; border-radius: 3px; font-size: 10px; }
+        .carfax-badge { padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; display: inline-flex; align-items: center; gap: 3px; }
+        .carfax-badge.clean { background: #dcfce7; color: #166534; }
+        .carfax-badge.accident { background: #fef3c7; color: #92400e; }
+        .carfax-badge.police { background: #fee2e2; color: #991b1b; }
+        .carfax-badge.unknown { background: #f3f4f6; color: #6b7280; }
+        .carfax-badge svg { width: 10px; height: 10px; }
+
+        /* Deal badge */
+        .deal-col { text-align: center; min-width: 70px; }
+        .deal-badge { padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; display: inline-block; }
         .deal-badge.great { background: #dcfce7; color: #166534; }
         .deal-badge.good { background: #dbeafe; color: #1e40af; }
         .deal-badge.fair { background: #fef3c7; color: #92400e; }
         .deal-badge.over { background: #fee2e2; color: #991b1b; }
         .deal-badge.review { background: #f3f4f6; color: #4b5563; }
 
-        .car-dealer {
-            font-size: 15px;
-            color: #555;
-            margin-bottom: 12px;
-        }
-        .official-badge {
-            display: inline-block;
-            background: #e0f2fe;
-            color: #0369a1;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-left: 8px;
-        }
-
-        /* Key stats */
-        .car-stats {
-            display: flex;
-            gap: 24px;
-            margin-bottom: 14px;
-            flex-wrap: wrap;
-        }
-        .stat {
-            display: flex;
-            flex-direction: column;
-        }
-        .stat-value {
-            font-size: 18px;
-            font-weight: 700;
-            color: #1a1a1a;
-        }
-        .stat-label {
-            font-size: 13px;
-            color: #777;
-            font-weight: 500;
-        }
-        .stat-value.in-budget { color: #16a34a; }
-        .stat-value.over-budget { color: #dc2626; }
-        .stat-value.low-km { color: #2563eb; }
-
-        /* CARFAX status */
-        .carfax-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 14px;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 14px;
-        }
-        .carfax-status.clean { background: #dcfce7; color: #166534; }
-        .carfax-status.accident { background: #fef3c7; color: #92400e; }
-        .carfax-status.police { background: #fee2e2; color: #991b1b; }
-        .carfax-status.unknown { background: #f3f4f6; color: #4b5563; }
-        .carfax-icon {
-            width: 18px;
-            height: 18px;
-        }
-
-        /* Features */
-        .car-features {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .feature-pill {
-            background: #f3f4f6;
-            color: #374151;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 500;
-        }
-        .feature-pill.has { background: #ecfdf5; color: #065f46; }
-        .no-features { color: #9ca3af; font-size: 14px; }
-
-        /* Actions */
-        .car-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            align-items: stretch;
-            min-width: 150px;
-        }
+        /* Actions - compact */
+        .car-actions { display: flex; gap: 4px; }
         .btn {
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 600;
+            padding: 6px 10px;
+            border-radius: 5px;
+            font-size: 11px;
+            font-weight: 500;
             cursor: pointer;
-            border: 2px solid transparent;
-            text-align: center;
+            border: 1px solid transparent;
             text-decoration: none;
-            display: block;
-            transition: all 0.15s;
+            white-space: nowrap;
         }
-        .btn-primary {
-            background: #2563eb;
-            color: white;
-        }
+        .btn-primary { background: #2563eb; color: white; }
         .btn-primary:hover { background: #1d4ed8; }
-        .btn-aggregator {
-            background: #6b7280;
-            color: white;
-        }
-        .btn-aggregator:hover { background: #4b5563; }
-        .btn-secondary {
-            background: white;
-            border-color: #e5e5e5;
-            color: #374151;
-        }
-        .btn-secondary:hover { background: #f9fafb; border-color: #d1d5db; }
-        .btn-secondary.active {
-            background: #fef3c7;
-            border-color: #fbbf24;
-            color: #92400e;
-        }
-        .btn-directions {
-            background: #059669;
-            color: white;
-            font-size: 13px;
-            padding: 10px 16px;
-        }
-        .btn-directions:hover { background: #047857; }
-        .btn-danger {
-            background: white;
-            border-color: #fecaca;
-            color: #dc2626;
-            font-size: 13px;
-            padding: 8px 12px;
-        }
-        .btn-danger:hover { background: #fef2f2; }
+        .btn-aggregator { background: #6b7280; color: white; }
+        .btn-secondary { background: white; border-color: #ddd; color: #555; }
+        .btn-secondary:hover { background: #f5f5f5; }
+        .btn-secondary.active { background: #fef3c7; border-color: #fbbf24; color: #92400e; }
+        .btn-icon { padding: 5px 7px; font-size: 14px; }
+        .btn-directions { background: #059669; color: white; }
 
-        .action-row {
-            display: flex;
-            gap: 8px;
+        /* More actions dropdown */
+        .more-menu { position: relative; }
+        .more-btn { background: white; border: 1px solid #ddd; border-radius: 5px; padding: 5px 8px; cursor: pointer; font-size: 14px; }
+        .more-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 50;
+            min-width: 120px;
         }
-        .action-row .btn { flex: 1; padding: 10px 12px; font-size: 14px; }
-        .btn-small { font-size: 13px; padding: 8px 12px; }
+        .more-menu:hover .more-dropdown { display: block; }
+        .more-dropdown a, .more-dropdown button {
+            display: block;
+            width: 100%;
+            padding: 8px 12px;
+            text-align: left;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 12px;
+            color: #333;
+            text-decoration: none;
+        }
+        .more-dropdown a:hover, .more-dropdown button:hover { background: #f5f5f5; }
+        .more-dropdown .danger { color: #dc2626; }
 
         /* Version */
-        .version { position: fixed; bottom: 8px; left: 8px; font-size: 12px; color: #aaa; }
+        .version { position: fixed; bottom: 4px; left: 4px; font-size: 10px; color: #aaa; }
 
         /* Modal */
-        .modal-bg {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
+        .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
         .modal-bg.show { display: flex; }
-        .modal {
-            background: white;
-            border-radius: 12px;
-            padding: 24px;
-            width: 90%;
-            max-width: 440px;
-        }
-        .modal h2 {
-            font-size: 20px;
-            margin-bottom: 16px;
-            color: #1a1a1a;
-        }
-        .modal textarea {
-            width: 100%;
-            height: 140px;
-            padding: 14px;
-            border: 2px solid #e5e5e5;
-            border-radius: 8px;
-            font-size: 15px;
-            resize: none;
-            margin-bottom: 16px;
-            font-family: inherit;
-        }
-        .modal textarea:focus {
-            outline: none;
-            border-color: #2563eb;
-        }
-        .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
-
-        /* Legend */
-        .legend {
-            background: white;
-            border: 1px solid #e5e5e5;
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 20px;
-        }
-        .legend-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: #555;
-            margin-bottom: 10px;
-        }
-        .legend-items {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            color: #555;
-        }
-        .legend-color {
-            width: 16px;
-            height: 16px;
-            border-radius: 4px;
-        }
+        .modal { background: white; border-radius: 10px; padding: 20px; width: 90%; max-width: 400px; }
+        .modal h2 { font-size: 18px; margin-bottom: 12px; }
+        .modal textarea { width: 100%; height: 100px; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; resize: none; margin-bottom: 12px; }
+        .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
 
         /* Mobile map toggle */
         .map-toggle {
             display: none;
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 16px;
+            right: 16px;
             background: #2563eb;
             color: white;
             border: none;
             border-radius: 50px;
-            padding: 14px 20px;
-            font-size: 15px;
+            padding: 10px 16px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(37,99,235,0.4);
             z-index: 1000;
         }
-        .map-toggle:hover { background: #1d4ed8; }
 
         /* Mobile */
         @media (max-width: 900px) {
-            .map-toggle { display: flex; align-items: center; gap: 8px; }
+            .map-toggle { display: flex; align-items: center; gap: 6px; }
             .sidebar {
                 display: none;
                 position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
+                inset: 0;
                 width: 100%;
                 z-index: 999;
             }
             .sidebar.show { display: flex; flex-direction: column; }
             .sidebar .map-close {
                 position: absolute;
-                top: 16px;
-                right: 16px;
+                top: 12px;
+                right: 12px;
                 background: white;
                 border: none;
                 border-radius: 50%;
-                width: 44px;
-                height: 44px;
-                font-size: 24px;
+                width: 36px;
+                height: 36px;
+                font-size: 20px;
                 cursor: pointer;
                 box-shadow: 0 2px 8px rgba(0,0,0,0.2);
                 z-index: 1001;
             }
-            #map { height: 60vh; }
-            .map-info { background: white; }
         }
         @media (max-width: 768px) {
-            .header { padding: 10px 12px; }
-            .header-top { flex-direction: column; align-items: flex-start; gap: 4px; }
-            .header h1 { font-size: 18px; }
-            .stats { font-size: 13px; gap: 12px; }
-            .filters { gap: 6px; }
-            .filter-btn { padding: 6px 10px; font-size: 13px; }
-            .sort-select { padding: 6px 10px; font-size: 13px; }
-            .main { padding: 8px; }
-            .cars { gap: 8px; }
-            .car-card {
-                flex-direction: row;
-                padding: 10px;
-                gap: 10px;
-            }
-            .car-photo {
-                width: 70px;
-                height: 70px;
-                border-radius: 6px;
-            }
-            .car-info { min-width: 0; }
-            .car-header { margin-bottom: 4px; }
-            .car-name { font-size: 14px; }
-            .car-subtitle { font-size: 11px; }
-            .deal-badge { padding: 3px 6px; font-size: 10px; }
-            .car-dealer { font-size: 12px; margin-bottom: 6px; }
-            .official-badge { font-size: 9px; padding: 2px 5px; }
-            .car-stats { gap: 8px; margin-bottom: 6px; }
-            .stat-value { font-size: 13px; }
-            .stat-label { font-size: 9px; }
-            .carfax-status { padding: 4px 8px; font-size: 11px; margin-bottom: 6px; }
-            .car-features { display: none; }
-            .car-actions { flex-direction: row; gap: 6px; min-width: auto; }
-            .btn { padding: 8px 10px; font-size: 12px; }
-            .btn-icon { width: 28px; height: 28px; padding: 0; }
-            .legend { display: none; }
+            .header { padding: 6px 10px; gap: 8px; }
+            .header h1 { font-size: 16px; }
+            .stats { font-size: 11px; gap: 8px; }
+            .filter-btn, .sort-select { padding: 4px 8px; font-size: 11px; }
+            .main { padding: 6px; }
+            .car-card { grid-template-columns: 60px 1fr auto; gap: 8px; padding: 8px; }
+            .car-photo { width: 60px; height: 45px; }
+            .car-name { font-size: 13px; }
+            .car-dealer { font-size: 11px; }
+            .car-row2 { font-size: 11px; gap: 8px; }
+            .car-row3 { display: none; }
+            .deal-col { display: none; }
+            .car-actions { gap: 3px; }
+            .btn { padding: 5px 8px; font-size: 10px; }
         }
     </style>
 </head>
 <body>
-    <div class="version">v4.5</div>
+    <div class="version">v5.0</div>
 
     <div class="header">
-        <div class="header-top">
-            <h1>Mom's Car Finder</h1>
-            <div class="stats">
-                <span><strong id="s-total">0</strong> cars total</span>
-                <span><strong id="s-budget">0</strong> in budget</span>
-                <span><strong id="s-clean">0</strong> clean history</span>
-            </div>
+        <h1>Mom's Car Finder</h1>
+        <div class="stats">
+            <span><strong id="s-total">0</strong> cars</span>
+            <span><strong id="s-budget">0</strong> in budget</span>
+            <span><strong id="s-clean">0</strong> clean</span>
         </div>
         <div class="filters">
             <select class="sort-select" id="sort" onchange="render()">
-                <option value="score">Sort: Best Match</option>
-                <option value="price">Sort: Lowest Price</option>
-                <option value="km">Sort: Lowest Mileage</option>
-                <option value="dist">Sort: Nearest</option>
+                <option value="score">Best Match</option>
+                <option value="price">Price</option>
+                <option value="km">Mileage</option>
+                <option value="dist">Distance</option>
             </select>
-            <button class="filter-btn" id="f-fav" onclick="toggle('fav')">Saved Only</button>
-            <button class="filter-btn" id="f-budget" onclick="toggle('budget')">In Budget Only</button>
-            <button class="filter-btn" id="f-clean" onclick="toggle('clean')">Clean History Only</button>
+            <button class="filter-btn" id="f-fav" onclick="toggle('fav')">Saved</button>
+            <button class="filter-btn" id="f-budget" onclick="toggle('budget')">In Budget</button>
+            <button class="filter-btn" id="f-clean" onclick="toggle('clean')">Clean</button>
         </div>
     </div>
 
     <div class="layout">
         <div class="main">
-            <div class="legend">
-                <div class="legend-title">What the colors mean:</div>
-                <div class="legend-items">
-                    <div class="legend-item">
-                        <div class="legend-color" style="background: #22c55e;"></div>
-                        Great Deal
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background: #3b82f6;"></div>
-                        Good Option
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background: #f59e0b;"></div>
-                        Fair / Caution
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background: #ef4444;"></div>
-                        Over Budget
-                    </div>
-                </div>
-            </div>
             <div class="cars" id="cars"></div>
         </div>
-        <button class="map-toggle" onclick="toggleMap()">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3V6z"/><path d="M9 3v15m6-12v15"/></svg>
-            View Map
-        </button>
+        <button class="map-toggle" onclick="toggleMap()">Map</button>
         <div class="sidebar">
             <button class="map-close" onclick="toggleMap()">&times;</button>
             <div id="map"></div>
@@ -551,8 +295,7 @@
                 <a id="directions-link" href="#" target="_blank" class="directions-btn">Get Directions</a>
             </div>
             <div class="map-info">
-                <strong>Your Budget:</strong> $21,000 total (including tax)<br>
-                <strong>Home:</strong> 299 Mullen Dr, Thornhill
+                <strong>Budget:</strong> $21K total | <strong>Home:</strong> 299 Mullen Dr, Thornhill
             </div>
         </div>
     </div>
@@ -560,10 +303,10 @@
     <div class="modal-bg" id="note-modal">
         <div class="modal">
             <h2>Your Notes</h2>
-            <textarea id="note-text" placeholder="Write your notes about this car here..."></textarea>
+            <textarea id="note-text" placeholder="Write your notes about this car..."></textarea>
             <div class="modal-actions">
                 <button class="btn btn-secondary" onclick="hideNoteModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="saveNoteModal()">Save Notes</button>
+                <button class="btn btn-primary" onclick="saveNoteModal()">Save</button>
             </div>
         </div>
     </div>
@@ -571,145 +314,74 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // Supabase config
         const SUPABASE_URL = 'https://bjswbajtxacjwubghytb.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqc3diYWp0eGFjand1YmdoeXRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcwNjIxODYsImV4cCI6MjA4MjYzODE4Nn0.tQvzTXf3xft07Wrv8dB0lG2DaIS1UQNCuz5vVB6fTT4';
-        const { createClient } = supabase;
-        const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+        const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // Home location - 299 Mullen Drive, Thornhill
         const HOME_COORDS = [43.8108, -79.4250];
         const HOME_ADDRESS = '299 Mullen Dr, Thornhill, ON';
 
         let cars = [], favs = new Set(), notes = {}, filters = {}, editingNoteId = null;
         let map, routeLayer, selectedCarId = null;
 
-        // Mobile map toggle
         const toggleMap = () => {
             const sidebar = document.querySelector('.sidebar');
             const toggleBtn = document.querySelector('.map-toggle');
             const isShowing = sidebar.classList.toggle('show');
             if (toggleBtn) toggleBtn.style.display = isShowing ? 'none' : '';
-            if (isShowing && map) {
-                setTimeout(() => map.invalidateSize(), 100);
-            }
+            if (isShowing && map) setTimeout(() => map.invalidateSize(), 100);
         };
 
-        // SVG Icons
         const icons = {
-            check: `<svg class="carfax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>`,
-            warning: `<svg class="carfax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`,
-            x: `<svg class="carfax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6L6 18M6 6l12 12"/></svg>`,
-            question: `<svg class="carfax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22a10 10 0 100-20 10 10 0 000 20zm0-6v-4m0 8h.01"/></svg>`
+            check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>`,
+            warn: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01"/></svg>`,
+            x: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6L6 18M6 6l12 12"/></svg>`,
+            q: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 16h.01M12 12a2 2 0 10-2-2"/></svg>`
         };
 
-        // Generate car placeholder with actual info
         const getPhoto = c => {
             const isSoul = c.model.includes('Soul');
             const isKicks = c.model.includes('Kicks');
             const brand = isSoul ? 'Kia' : isKicks ? 'Nissan' : 'Hyundai';
             const model = isSoul ? 'Soul' : isKicks ? 'Kicks' : 'Venue';
-            const bgColor = isSoul ? '#2c5282' : isKicks ? '#c41230' : '#1e3a5f';
-            const color = c.color || '';
-            return `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120">
-                <rect fill="${bgColor}" width="200" height="120" rx="8"/>
-                <text x="100" y="35" text-anchor="middle" font-family="system-ui,sans-serif" font-size="14" font-weight="600" fill="white">${c.year}</text>
-                <text x="100" y="58" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="white">${brand} ${model}</text>
-                <text x="100" y="82" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="rgba(255,255,255,0.8)">${color}</text>
-                <text x="100" y="105" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="rgba(255,255,255,0.6)">Photo at dealer site</text>
-            </svg>`)}`;
+            const bg = isSoul ? '#2c5282' : isKicks ? '#c41230' : '#1e3a5f';
+            return `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 110"><rect fill="${bg}" width="160" height="110" rx="6"/><text x="80" y="40" text-anchor="middle" font-family="system-ui" font-size="12" font-weight="600" fill="white">${c.year} ${brand}</text><text x="80" y="60" text-anchor="middle" font-family="system-ui" font-size="14" font-weight="700" fill="white">${model}</text><text x="80" y="80" text-anchor="middle" font-family="system-ui" font-size="10" fill="rgba(255,255,255,0.7)">${c.color || ''}</text></svg>`)}`;
         };
 
-        // Feature labels
-        const featureLabels = {
-            'htd-seats': 'Heated Seats',
-            'htd-wheel': 'Heated Steering',
-            'camera': 'Backup Camera',
-            'blind-spot': 'Blind Spot Monitor',
-            'lane': 'Lane Assist',
-            'auto-brake': 'Auto-brake'
-        };
+        const feat = { 'htd-seats': 'Heated', 'htd-wheel': 'Htd Wheel', 'camera': 'Camera', 'blind-spot': 'BSM', 'lane': 'Lane', 'auto-brake': 'AEB' };
 
-        // Generate descriptive car name
         const getCarName = c => {
-            const isSoul = c.model.includes('Soul');
-            const isKicks = c.model.includes('Kicks');
-            const modelName = isSoul ? 'Soul' : isKicks ? 'Kicks' : 'Venue';
-
-            // Extract trim level
-            let trim = '';
-            if (c.model.includes('EX+') || c.model.includes('Plus')) trim = 'EX+';
-            else if (c.model.includes('EX')) trim = 'EX';
-            else if (c.model.includes('Ultimate')) trim = 'Ultimate';
-            else if (c.model.includes('Preferred')) trim = 'Preferred';
-            else if (c.model.includes('Trend')) trim = 'Trend';
-            else if (c.model.includes('Essential')) trim = 'Essential';
-            else if (c.model.includes('LX')) trim = 'LX';
-            else if (c.model.includes('GT')) trim = 'GT-Line';
-            // Kicks trims
-            else if (c.model.includes('SR')) trim = 'SR';
-            else if (c.model.includes('SV')) trim = 'SV';
-            else if (c.model.includes('S ')) trim = 'S';
-
-            // Color - make it concise
-            let color = '';
-            if (c.color && c.color !== 'Unknown') {
-                color = c.color.split('/')[0].trim(); // Take first color if two-tone
-                if (color.length > 12) color = color.split(' ')[0]; // Shorten long names
-            }
-
-            // Build name: "2022 Soul EX+ (White) - 71K km"
-            const kmStr = `${Math.round(c.km/1000)}K`;
-            const colorPart = color ? ` (${color})` : '';
-
-            return `${c.year} ${modelName} ${trim}${colorPart}`;
+            const isSoul = c.model.includes('Soul'), isKicks = c.model.includes('Kicks');
+            const m = isSoul ? 'Soul' : isKicks ? 'Kicks' : 'Venue';
+            let t = '';
+            if (c.model.includes('EX+')) t = 'EX+';
+            else if (c.model.includes('EX')) t = 'EX';
+            else if (c.model.includes('Ultimate')) t = 'Ult';
+            else if (c.model.includes('Preferred')) t = 'Pref';
+            else if (c.model.includes('Trend')) t = 'Trend';
+            else if (c.model.includes('Essential')) t = 'Ess';
+            else if (c.model.includes('SR')) t = 'SR';
+            else if (c.model.includes('SV')) t = 'SV';
+            let col = c.color && c.color !== 'Unknown' ? c.color.split('/')[0].split(' ')[0] : '';
+            return `${c.year} ${m} ${t}${col ? ' ' + col : ''}`;
         };
 
-        // Get short name for map popup
         const getShortName = c => {
-            const isSoul = c.model.includes('Soul');
-            const isKicks = c.model.includes('Kicks');
-            const modelName = isSoul ? 'Soul' : isKicks ? 'Kicks' : 'Venue';
-            let trim = c.model.includes('EX+') ? 'EX+' : c.model.includes('EX') ? 'EX' :
-                       c.model.includes('Ultimate') ? 'Ult' : c.model.includes('Preferred') ? 'Pref' :
-                       c.model.includes('SR') ? 'SR' : c.model.includes('SV') ? 'SV' : '';
-            return `${c.year} ${modelName} ${trim}`;
+            const isSoul = c.model.includes('Soul'), isKicks = c.model.includes('Kicks');
+            return `${c.year} ${isSoul ? 'Soul' : isKicks ? 'Kicks' : 'Venue'}`;
         };
 
-        // Check if URL is a direct dealer link
-        const isDealerLink = url => {
-            if (!url) return false;
-            const aggregators = ['autotrader.ca', 'carpages.ca', 'kijiji.', 'cargurus.', 'clutch.ca'];
-            return !aggregators.some(agg => url.includes(agg));
-        };
-
-        // Get site name from URL
+        const isDealerLink = url => url && !['autotrader.ca', 'carpages.ca', 'kijiji.', 'cargurus.', 'clutch.ca'].some(a => url.includes(a));
         const getSiteName = url => {
-            if (!url) return 'Unknown';
-            if (url.includes('autotrader.ca')) return 'AutoTrader';
-            if (url.includes('carpages.ca')) return 'CarPages';
-            if (url.includes('clutch.ca')) return 'Clutch';
-            if (url.includes('kijiji.')) return 'Kijiji';
-            if (url.includes('cargurus.')) return 'CarGurus';
-            // Extract dealer name from URL
-            try {
-                const host = new URL(url).hostname.replace('www.', '');
-                return host.split('.')[0].replace(/kia|hyundai|honda|nissan|mazda|chrysler/gi, '').trim() || 'Dealer';
-            } catch {
-                return 'Dealer';
-            }
+            if (!url) return '';
+            if (url.includes('autotrader')) return 'AutoTrader';
+            if (url.includes('clutch')) return 'Clutch';
+            try { return new URL(url).hostname.replace('www.','').split('.')[0]; } catch { return 'Dealer'; }
         };
+        const getDirectionsUrl = (d, a) => `https://www.google.com/maps/dir/${encodeURIComponent(HOME_ADDRESS)}/${encodeURIComponent((a||d) + ', Ontario, Canada')}`;
 
-        // Generate Google Maps directions URL
-        const getDirectionsUrl = (dealer, address) => {
-            const destination = address || dealer;
-            return `https://www.google.com/maps/dir/${encodeURIComponent(HOME_ADDRESS)}/${encodeURIComponent(destination + ', Ontario, Canada')}`;
-        };
-
-        // Score calculation
         const score = c => {
-            let s = 0;
-            s += Math.min(5, (c.features || []).length);
+            let s = Math.min(5, (c.features||[]).length);
             s += c.km < 30000 ? 5 : c.km < 50000 ? 4 : c.km < 65000 ? 3 : c.km < 80000 ? 2 : 1;
             s += c.carfax === 'clean' ? 5 : c.carfax === 'unknown' ? 3 : 1;
             const allIn = c.price * 1.13;
@@ -718,70 +390,40 @@
             return s;
         };
 
-        // Deal status
-        const getDealStatus = (c, s) => {
-            if (c.carfax === 'police') return { class: 'needs-review', badge: 'review', label: 'Needs Review' };
-            if (c.carfax === 'accident') return { class: 'fair-deal', badge: 'fair', label: 'Has Accident' };
-            if (c.price * 1.13 > 21000) return { class: 'over-budget', badge: 'over', label: 'Over Budget' };
-            if (s >= 18) return { class: 'great-deal', badge: 'great', label: 'Great Deal' };
-            if (s >= 15) return { class: 'good-deal', badge: 'good', label: 'Good Option' };
-            return { class: 'fair-deal', badge: 'fair', label: 'Fair' };
+        const getDeal = (c, s) => {
+            if (c.carfax === 'police') return { cls: 'needs-review', badge: 'review', label: 'Review' };
+            if (c.carfax === 'accident') return { cls: 'fair-deal', badge: 'fair', label: 'Accident' };
+            if (c.price * 1.13 > 21000) return { cls: 'over-budget', badge: 'over', label: 'Over Budget' };
+            if (s >= 18) return { cls: 'great-deal', badge: 'great', label: 'Great Deal' };
+            if (s >= 15) return { cls: 'good-deal', badge: 'good', label: 'Good' };
+            return { cls: 'fair-deal', badge: 'fair', label: 'Fair' };
         };
 
-        // CARFAX status
-        const getCarfaxStatus = carfax => {
-            switch(carfax) {
-                case 'clean': return { class: 'clean', icon: icons.check, label: 'Clean History - No Accidents' };
-                case 'accident': return { class: 'accident', icon: icons.warning, label: 'Has Accident on Record' };
-                case 'police': return { class: 'police', icon: icons.x, label: 'Police Record Found' };
-                default: return { class: 'unknown', icon: icons.question, label: 'History Not Verified' };
-            }
+        const getCarfax = cf => {
+            if (cf === 'clean') return { cls: 'clean', icon: icons.check, label: 'Clean' };
+            if (cf === 'accident') return { cls: 'accident', icon: icons.warn, label: 'Accident' };
+            if (cf === 'police') return { cls: 'police', icon: icons.x, label: 'Police' };
+            return { cls: 'unknown', icon: icons.q, label: 'Unknown' };
         };
 
-        // Select a car and show on map
-        const selectCar = (id) => {
+        const selectCar = id => {
             selectedCarId = id;
             const c = cars.find(car => car.id === id);
             if (!c) return;
-
-            // Update selected state
             document.querySelectorAll('.car-card').forEach(el => el.classList.remove('selected'));
             document.querySelector(`.car-card[data-id="${id}"]`)?.classList.add('selected');
-
-            // Update sidebar info
-            const infoEl = document.getElementById('selected-car-info');
-            const titleEl = document.getElementById('selected-title');
-            const linkEl = document.getElementById('directions-link');
-
-            titleEl.textContent = `${getCarName(c)} at ${c.dealer}`;
-            linkEl.href = getDirectionsUrl(c.dealer, c.address);
-            infoEl.style.display = 'block';
-
-            // Draw route on map if coords exist
+            document.getElementById('selected-title').textContent = `${getCarName(c)} - ${c.dealer}`;
+            document.getElementById('directions-link').href = getDirectionsUrl(c.dealer, c.address);
+            document.getElementById('selected-car-info').style.display = 'block';
             if (c.coords && map) {
-                // On mobile, show the map first
                 const sidebar = document.querySelector('.sidebar');
-                const isMobile = window.innerWidth <= 900;
-                if (isMobile && !sidebar.classList.contains('show')) {
-                    sidebar.classList.add('show');
-                }
-
-                // Small delay to let map become visible, then zoom
+                if (window.innerWidth <= 900 && !sidebar.classList.contains('show')) sidebar.classList.add('show');
                 setTimeout(() => {
                     map.invalidateSize();
-
                     if (routeLayer) map.removeLayer(routeLayer);
-                    routeLayer = L.polyline([HOME_COORDS, c.coords], {
-                        color: '#2563eb',
-                        weight: 4,
-                        opacity: 0.8,
-                        dashArray: '10, 10'
-                    }).addTo(map);
-
-                    // Fit bounds to show route
-                    const bounds = L.latLngBounds([HOME_COORDS, c.coords]);
-                    map.fitBounds(bounds, { padding: [50, 50] });
-                }, 150);
+                    routeLayer = L.polyline([HOME_COORDS, c.coords], { color: '#2563eb', weight: 3, dashArray: '8,8' }).addTo(map);
+                    map.fitBounds(L.latLngBounds([HOME_COORDS, c.coords]), { padding: [40, 40] });
+                }, 100);
             }
         };
 
@@ -800,81 +442,44 @@
                 const over = allIn > 21000;
                 const fav = favs.has(c.id);
                 const hide = (filters.fav && !fav) || (filters.budget && over) || (filters.clean && c.carfax !== 'clean');
-                const hasNote = notes[c.id];
-                const deal = getDealStatus(c, s);
-                const carfax = getCarfaxStatus(c.carfax);
-                const features = (c.features || []).filter(f => featureLabels[f]);
-                const lowKm = c.km < 30000;
-
-                // Determine primary and secondary URLs
-                const primaryUrl = c.dealerUrl || c.listingUrl;
-                const isDealer = c.dealerUrl || isDealerLink(c.listingUrl);
-                const siteName = isDealer ? c.dealer.split(' ')[0] : getSiteName(c.listingUrl);
-                const btnClass = isDealer ? 'btn-primary' : 'btn-aggregator';
-                const btnText = isDealer ? `View at ${siteName}` : `View on ${siteName}`;
+                const deal = getDeal(c, s);
+                const cfx = getCarfax(c.carfax);
+                const feats = (c.features || []).filter(f => feat[f]).slice(0, 4);
+                const url = c.dealerUrl || c.listingUrl;
+                const isD = c.dealerUrl || isDealerLink(c.listingUrl);
+                const site = isD ? c.dealer.split(' ')[0] : getSiteName(c.listingUrl);
 
                 return `
-                <div class="car-card ${deal.class} ${fav ? 'saved' : ''} ${hide ? 'hidden' : ''} ${selectedCarId === c.id ? 'selected' : ''}" data-id="${c.id}" onclick="selectCar(${c.id})">
-                    <img class="car-photo" src="${c.photoUrl || getPhoto(c)}" alt="${getCarName(c)}" onerror="this.style.background='linear-gradient(135deg,#e0e0e0,#f5f5f5)'">
-
+                <div class="car-card ${deal.cls} ${fav ? 'saved' : ''} ${hide ? 'hidden' : ''} ${selectedCarId === c.id ? 'selected' : ''}" data-id="${c.id}" onclick="selectCar(${c.id})">
+                    <img class="car-photo" src="${getPhoto(c)}" alt="">
                     <div class="car-info">
-                        <div class="car-header">
-                            <div>
-                                <div class="car-name">${getCarName(c)}</div>
-                                <div class="car-subtitle">${Math.round(c.km/1000)}K km - ${c.distance}km away</div>
-                            </div>
-                            <div class="deal-badge ${deal.badge}">${deal.label}</div>
+                        <div class="car-row1">
+                            <span class="car-name">${getCarName(c)}</span>
+                            <span class="car-dealer">${c.dealer}${c.official ? '<span class="official-badge">Official</span>' : ''}</span>
                         </div>
-
-                        <div class="car-dealer">
-                            ${c.dealer}
-                            ${c.official ? '<span class="official-badge">Official Dealer</span>' : ''}
+                        <div class="car-row2">
+                            <span class="${over ? 'price-over' : 'price-in'}">$${allInK}K</span>
+                            <span class="${c.km < 30000 ? 'km-low' : ''}">${Math.round(c.km/1000)}K km</span>
+                            <span>${c.distance}km away</span>
+                            <span class="carfax-badge ${cfx.cls}">${cfx.icon}${cfx.label}</span>
                         </div>
-
-                        <div class="car-stats">
-                            <div class="stat">
-                                <span class="stat-value ${over ? 'over-budget' : 'in-budget'}">$${allInK}K</span>
-                                <span class="stat-label">Total with Tax</span>
-                            </div>
-                            <div class="stat">
-                                <span class="stat-value ${lowKm ? 'low-km' : ''}">${(c.km/1000).toFixed(0)}K km</span>
-                                <span class="stat-label">${lowKm ? 'Low Mileage' : 'Mileage'}</span>
-                            </div>
-                            <div class="stat">
-                                <span class="stat-value">${c.distance} km</span>
-                                <span class="stat-label">From Home</span>
-                            </div>
-                        </div>
-
-                        <div class="carfax-status ${carfax.class}">
-                            ${carfax.icon}
-                            ${carfax.label}
-                        </div>
-
-                        <div class="car-features">
-                            ${features.length > 0
-                                ? features.map(f => `<span class="feature-pill has">${featureLabels[f]}</span>`).join('')
-                                : '<span class="no-features">No premium features listed</span>'
-                            }
+                        <div class="car-row3">
+                            ${feats.map(f => `<span class="feat">${feat[f]}</span>`).join('')}
                         </div>
                     </div>
-
+                    <div class="deal-col"><span class="deal-badge ${deal.badge}">${deal.label}</span></div>
                     <div class="car-actions" onclick="event.stopPropagation()">
-                        ${primaryUrl
-                            ? `<a href="${primaryUrl}" target="_blank" class="btn ${btnClass}">${btnText}</a>`
-                            : '<span class="btn btn-secondary" style="opacity:0.5">No Link</span>'
-                        }
-                        <a href="${getDirectionsUrl(c.dealer, c.address)}" target="_blank" class="btn btn-directions">Get Directions</a>
-                        <div class="action-row">
-                            <button class="btn btn-secondary ${fav ? 'active' : ''}" onclick="toggleFav(${c.id})">
-                                ${fav ? 'Saved' : 'Save'}
-                            </button>
-                            <button class="btn btn-secondary ${hasNote ? 'active' : ''}" onclick="showNoteModal(${c.id})">
-                                Notes
-                            </button>
+                        ${url ? `<a href="${url}" target="_blank" class="btn ${isD ? 'btn-primary' : 'btn-aggregator'}">${site}</a>` : ''}
+                        <a href="${getDirectionsUrl(c.dealer, c.address)}" target="_blank" class="btn btn-directions">Go</a>
+                        <div class="more-menu">
+                            <button class="more-btn">...</button>
+                            <div class="more-dropdown">
+                                <button onclick="toggleFav(${c.id})">${fav ? 'Unsave' : 'Save'}</button>
+                                <button onclick="showNoteModal(${c.id})">Notes</button>
+                                ${c.carfaxUrl ? `<a href="${c.carfaxUrl}" target="_blank">CARFAX</a>` : ''}
+                                <button class="danger" onclick="del(${c.id})">Remove</button>
+                            </div>
                         </div>
-                        ${c.carfaxUrl ? `<a href="${c.carfaxUrl}" target="_blank" class="btn btn-secondary btn-small">View CARFAX</a>` : ''}
-                        <button class="btn btn-danger" onclick="del(${c.id})">Remove</button>
                     </div>
                 </div>`;
             }).join('');
@@ -884,94 +489,35 @@
             document.getElementById('s-clean').textContent = cars.filter(c => c.carfax === 'clean').length;
         };
 
-        const toggle = t => {
-            filters[t] = !filters[t];
-            document.getElementById(`f-${t}`).classList.toggle('active', filters[t]);
-            render();
-        };
-
+        const toggle = t => { filters[t] = !filters[t]; document.getElementById(`f-${t}`).classList.toggle('active', filters[t]); render(); };
         const toggleFav = async id => {
-            if (favs.has(id)) {
-                favs.delete(id);
-                await db.from('favorites').delete().eq('car_id', id);
-            } else {
-                favs.add(id);
-                await db.from('favorites').insert({ car_id: id });
-            }
+            if (favs.has(id)) { favs.delete(id); await db.from('favorites').delete().eq('car_id', id); }
+            else { favs.add(id); await db.from('favorites').insert({ car_id: id }); }
             render();
         };
-
-        const showNoteModal = id => {
-            editingNoteId = id;
-            document.getElementById('note-text').value = notes[id] || '';
-            document.getElementById('note-modal').classList.add('show');
-            document.getElementById('note-text').focus();
-        };
+        const showNoteModal = id => { editingNoteId = id; document.getElementById('note-text').value = notes[id] || ''; document.getElementById('note-modal').classList.add('show'); };
         const hideNoteModal = () => document.getElementById('note-modal').classList.remove('show');
         const saveNoteModal = async () => {
-            const note = document.getElementById('note-text').value;
-            notes[editingNoteId] = note;
-            await db.from('notes').upsert({ car_id: editingNoteId, note }, { onConflict: 'car_id' });
-            hideNoteModal();
-            render();
+            notes[editingNoteId] = document.getElementById('note-text').value;
+            await db.from('notes').upsert({ car_id: editingNoteId, note: notes[editingNoteId] }, { onConflict: 'car_id' });
+            hideNoteModal(); render();
         };
-
-        const del = async id => {
-            if (confirm('Remove this car from your list?')) {
-                await db.from('cars').delete().eq('id', id);
-                cars = cars.filter(c => c.id !== id);
-                render();
-            }
-        };
+        const del = async id => { if (confirm('Remove?')) { await db.from('cars').delete().eq('id', id); cars = cars.filter(c => c.id !== id); render(); } };
 
         const initMap = () => {
-            map = L.map('map', { zoomControl: false }).setView(HOME_COORDS, 11);
+            map = L.map('map', { zoomControl: false }).setView(HOME_COORDS, 10);
             L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
-
-            // Home marker
-            L.circleMarker(HOME_COORDS, {
-                radius: 12,
-                color: '#2563eb',
-                fillColor: '#2563eb',
-                fillOpacity: 1,
-                weight: 3
-            }).addTo(map).bindPopup('<strong>Home</strong><br>299 Mullen Dr, Thornhill');
-
-            // Car markers
+            L.circleMarker(HOME_COORDS, { radius: 10, color: '#2563eb', fillColor: '#2563eb', fillOpacity: 1, weight: 2 }).addTo(map).bindPopup('<b>Home</b>');
             cars.forEach(c => {
                 if (c.coords) {
                     const col = c.carfax === 'clean' ? '#22c55e' : c.carfax === 'police' ? '#ef4444' : c.carfax === 'accident' ? '#f59e0b' : '#9ca3af';
-                    const marker = L.circleMarker(c.coords, { radius: 8, color: col, fillColor: col, fillOpacity: 0.9, weight: 0 })
-                        .addTo(map)
-                        .bindPopup(`<strong>${getShortName(c)}</strong><br>$${c.price.toLocaleString()} + tax<br><em>${c.dealer}</em>`);
-
-                    marker.on('click', () => selectCar(c.id));
+                    L.circleMarker(c.coords, { radius: 6, color: col, fillColor: col, fillOpacity: 0.9, weight: 0 })
+                        .addTo(map).bindPopup(`<b>${getShortName(c)}</b><br>$${c.price.toLocaleString()}`).on('click', () => selectCar(c.id));
                 }
             });
         };
 
-        // Map Supabase snake_case to camelCase
-        const mapCar = c => ({
-            id: c.id,
-            year: c.year,
-            model: c.model,
-            color: c.color,
-            km: c.km,
-            price: c.price,
-            dealer: c.dealer,
-            distance: c.distance,
-            features: c.features || [],
-            carfax: c.carfax,
-            carfaxUrl: c.carfax_url,
-            listingUrl: c.listing_url,
-            dealerUrl: c.dealer_url,
-            address: c.address,
-            carfaxNote: c.carfax_note,
-            coords: c.coords,
-            official: c.official,
-            availability: c.availability,
-            lastChecked: c.last_checked
-        });
+        const mapCar = c => ({ id: c.id, year: c.year, model: c.model, color: c.color, km: c.km, price: c.price, dealer: c.dealer, distance: c.distance, features: c.features || [], carfax: c.carfax, carfaxUrl: c.carfax_url, listingUrl: c.listing_url, dealerUrl: c.dealer_url, address: c.address, coords: c.coords, official: c.official });
 
         (async () => {
             try {
@@ -982,7 +528,7 @@
                 ]);
                 cars = (carsRes.data || []).map(mapCar);
                 favs = new Set((favsRes.data || []).map(f => f.car_id));
-                notes = (notesRes.data || []).reduce((acc, n) => { acc[n.car_id] = n.note; return acc; }, {});
+                notes = (notesRes.data || []).reduce((a, n) => { a[n.car_id] = n.note; return a; }, {});
             } catch (e) { console.error(e); }
             render();
             initMap();
