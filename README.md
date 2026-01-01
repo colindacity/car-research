@@ -5,7 +5,7 @@ Kia Soul, Hyundai Venue & Nissan Kicks research tool for GTA.
 **Live:** https://car-research.vercel.app
 
 ## Features
-- 52 verified car listings (Kia Soul, Hyundai Venue & Nissan Kicks)
+- 18 quality car listings (clean CARFAX, within 75km, no base trims)
 - Direct dealer website links (not aggregator sites)
 - Google Maps directions from home
 - Route display on map when car selected
