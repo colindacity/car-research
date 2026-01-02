@@ -5,7 +5,8 @@ Kia Soul, Hyundai Venue & Nissan Kicks research tool for GTA.
 **Live:** https://car-research.vercel.app
 
 ## Features
-- 18 quality car listings (clean CARFAX, within 75km, no base trims)
+- 16 quality car listings (clean CARFAX, within 75km, no base trims)
+- Daily automated search for new listings (AutoTrader.ca)
 - Direct dealer website links (not aggregator sites)
 - Google Maps directions from home
 - Route display on map when car selected
