@@ -1,0 +1,16 @@
+{
+  "name": "car-research",
+  "version": "1.0.0",
+  "description": "Mom's Car Finder - Kia Soul, Hyundai Venue & Nissan Kicks research tool",
+  "scripts": {
+    "search": "node scripts/find-cars.js",
+    "search:verbose": "DEBUG=1 node scripts/find-cars.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/colindacity/car-research.git"
+  },
+  "keywords": ["car", "search", "kia", "soul", "hyundai", "venue", "nissan", "kicks"],
+  "author": "",
+  "license": "MIT"
+}

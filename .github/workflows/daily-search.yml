@@ -1,0 +1,28 @@
+name: Daily Car Search
+
+on:
+  schedule:
+    # Run daily at 8 AM EST (1 PM UTC)
+    - cron: '0 13 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  search:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run car search
+        env:
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: node scripts/find-cars.js
+
+      - name: Summary
+        run: echo "Daily car search completed at $(date)"
