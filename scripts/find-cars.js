@@ -70,7 +70,13 @@ const SEARCHES = [
 ];
 
 // Trims to exclude (base trims)
-const EXCLUDED_TRIMS = ['essential', 's fwd', 'kicks s', 'venue s'];
+const EXCLUDED_TRIMS = ['essential', 's fwd', 'kicks s', 'venue s', 'soul lx'];
+
+// Soul years: only 2019 or 2022+ (skip 2020, 2021)
+const SOUL_VALID_YEARS = [2019, 2022, 2023, 2024, 2025];
+
+// Venue years: 2020+ (not Essential trim)
+const VENUE_MIN_YEAR = 2020;
 
 // Known dealer coordinates (for when we can identify the dealer)
 const DEALER_COORDS = {
@@ -245,6 +251,10 @@ function parseAutoTrader(html, brand, model) {
       if (!year || year < 2019) continue;
       if (!price || price > MAX_PRICE_PRETAX) continue;
 
+      // Year validation based on model
+      if (model === 'Soul' && !SOUL_VALID_YEARS.includes(year)) continue;
+      if (model === 'Venue' && year < VENUE_MIN_YEAR) continue;
+
       // Extract dealer name - try multiple patterns
       let dealer = '';
 
@@ -346,6 +356,10 @@ function parseCarGurus(html, brand, model) {
 
       if (!year || year < 2019) continue;
       if (!price || price > MAX_PRICE_PRETAX) continue;
+
+      // Year validation based on model
+      if (model === 'Soul' && !SOUL_VALID_YEARS.includes(year)) continue;
+      if (model === 'Venue' && year < VENUE_MIN_YEAR) continue;
 
       // Extract dealer name - try multiple patterns
       let dealer = '';
