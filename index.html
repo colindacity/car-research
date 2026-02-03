@@ -600,7 +600,7 @@
                                 <span class="deal-badge ${deal.badge}">${deal.label}</span>
                             </div>
                             <div class="car-row2">
-                                <span class="${over ? 'price-over' : 'price-in'}">$${allInK}K total</span>
+                                <span class="${over ? 'price-over' : 'price-in'}">$${c.price.toLocaleString()} + tax = $${allInK}K</span>
                                 <span class="${c.km < 50000 ? 'km-low' : ''}">${Math.round(c.km/1000).toLocaleString()}K km</span>
                                 <span>${c.distance}km away</span>
                             </div>
