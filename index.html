@@ -304,6 +304,7 @@
         <div class="filters">
             <button class="filter-btn" style="background:#22c55e;color:white;border-color:#22c55e;" onclick="openAddModal()">+ Add Car</button>
             <select class="sort-select" id="sort" onchange="render()">
+                <option value="pricedist">Price + Distance</option>
                 <option value="score">Best Match</option>
                 <option value="price">Price</option>
                 <option value="km">Mileage</option>
@@ -562,7 +563,14 @@
         const render = () => {
             const sortBy = document.getElementById('sort').value;
             let list = [...cars];
-            if (sortBy === 'score') list.sort((a, b) => score(b) - score(a));
+            const priceBucket = p => {
+                const allIn = p * 1.13;
+                if (allIn <= 19000) return 0;
+                if (allIn <= 21000) return 1;
+                return 2;
+            };
+            if (sortBy === 'pricedist') list.sort((a, b) => priceBucket(a.price) - priceBucket(b.price) || a.distance - b.distance);
+            else if (sortBy === 'score') list.sort((a, b) => score(b) - score(a));
             else if (sortBy === 'price') list.sort((a, b) => a.price - b.price);
             else if (sortBy === 'km') list.sort((a, b) => a.km - b.km);
             else if (sortBy === 'dist') list.sort((a, b) => a.distance - b.distance);
