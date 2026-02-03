@@ -292,7 +292,7 @@
     </style>
 </head>
 <body>
-    <div class="version">v6.0</div>
+    <div class="version">v7.1</div>
 
     <div class="header">
         <h1>Mom's Car Finder</h1>
@@ -302,6 +302,7 @@
             <span><strong id="s-clean">0</strong> clean</span>
         </div>
         <div class="filters">
+            <button class="filter-btn" style="background:#22c55e;color:white;border-color:#22c55e;" onclick="openAddModal()">+ Add Car</button>
             <select class="sort-select" id="sort" onchange="render()">
                 <option value="score">Best Match</option>
                 <option value="price">Price</option>
@@ -311,6 +312,89 @@
             <button class="filter-btn" id="f-fav" onclick="toggle('fav')">Saved</button>
             <button class="filter-btn" id="f-budget" onclick="toggle('budget')">In Budget</button>
             <button class="filter-btn" id="f-clean" onclick="toggle('clean')">Clean</button>
+        </div>
+    </div>
+
+    <!-- Add/Edit Car Modal -->
+    <div class="modal-bg" id="car-modal">
+        <div class="modal" style="max-width:500px;">
+            <h2 id="modal-title">Add New Car</h2>
+            <div style="display:grid;gap:12px;">
+                <div>
+                    <label style="font-size:12px;color:#666;display:block;margin-bottom:4px;">Listing URL (optional)</label>
+                    <input type="url" id="car-url" placeholder="https://dealer.com/listing..." style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-size:14px;">
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 2fr;gap:8px;">
+                    <div>
+                        <label style="font-size:12px;color:#666;display:block;margin-bottom:4px;">Year*</label>
+                        <input type="number" id="car-year" placeholder="2022" min="2010" max="2025" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-size:14px;">
+                    </div>
+                    <div>
+                        <label style="font-size:12px;color:#666;display:block;margin-bottom:4px;">Model*</label>
+                        <select id="car-model" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-size:14px;">
+                            <option value="">Select model...</option>
+                            <option value="Soul EX">Soul EX</option>
+                            <option value="Soul EX+">Soul EX+</option>
+                            <option value="Soul EV">Soul EV</option>
+                            <option value="Soul LX">Soul LX</option>
+                            <option value="Soul GT-Line">Soul GT-Line</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                    <div>
+                        <label style="font-size:12px;color:#666;display:block;margin-bottom:4px;">Price (before tax)*</label>
+                        <input type="number" id="car-price" placeholder="16999" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-size:14px;">
+                    </div>
+                    <div>
+                        <label style="font-size:12px;color:#666;display:block;margin-bottom:4px;">Kilometers*</label>
+                        <input type="number" id="car-km" placeholder="50000" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-size:14px;">
+                    </div>
+                </div>
+                <div>
+                    <label style="font-size:12px;color:#666;display:block;margin-bottom:4px;">Dealer Name*</label>
+                    <input type="text" id="car-dealer" placeholder="Dealer Name" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-size:14px;">
+                </div>
+                <div>
+                    <label style="font-size:12px;color:#666;display:block;margin-bottom:4px;">Dealer Address</label>
+                    <input type="text" id="car-address" placeholder="123 Main St, Toronto, ON" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-size:14px;">
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                    <div>
+                        <label style="font-size:12px;color:#666;display:block;margin-bottom:4px;">Distance (km)</label>
+                        <input type="number" id="car-distance" placeholder="25" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-size:14px;">
+                    </div>
+                    <div>
+                        <label style="font-size:12px;color:#666;display:block;margin-bottom:4px;">Color</label>
+                        <input type="text" id="car-color" placeholder="Black" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-size:14px;">
+                    </div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                    <div>
+                        <label style="font-size:12px;color:#666;display:block;margin-bottom:4px;">CARFAX Status</label>
+                        <select id="car-carfax" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-size:14px;">
+                            <option value="unknown">Unknown</option>
+                            <option value="clean">Clean - No Accidents</option>
+                            <option value="accident">Has Accident</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size:12px;color:#666;display:block;margin-bottom:4px;">Official Dealer?</label>
+                        <select id="car-official" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-size:14px;">
+                            <option value="true">Yes - Official Dealer</option>
+                            <option value="false">No - Used Car Lot</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label style="font-size:12px;color:#666;display:block;margin-bottom:4px;">Notes (VIN, Stock #, Features, etc.)</label>
+                    <textarea id="car-notes" placeholder="VIN: ABC123..., Stock #1234, Certified, Blind Spot, etc." style="width:100%;height:60px;padding:10px;border:1px solid #ddd;border-radius:6px;font-size:14px;resize:none;"></textarea>
+                </div>
+            </div>
+            <div class="modal-actions" style="margin-top:16px;">
+                <button class="btn btn-small" style="background:#f3f4f6;color:#374151;" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-small btn-listing" onclick="saveCar()">Save Car</button>
+            </div>
         </div>
     </div>
 
@@ -520,12 +604,14 @@
                                 <span class="carfax-badge ${cfx.cls}">${cfx.icon} CARFAX: ${cfx.label}</span>
                             </div>
                             ${c.carfaxNote ? `<div style="margin-top:6px;font-size:13px;color:#555;"><strong>Details:</strong> ${c.carfaxNote}</div>` : ''}
+                            ${c.lastChecked ? `<div style="margin-top:4px;font-size:11px;color:#9ca3af;">Last verified: ${c.lastChecked}</div>` : ''}
                             <div class="car-row3">
                                 ${feats.map(f => `<span class="feat">${feat[f]}</span>`).join('')}
                             </div>
                         </div>
                         <div class="car-actions" onclick="event.stopPropagation()">
                             ${listingUrl ? `<a href="${listingUrl}" target="_blank" class="btn btn-listing">View Listing</a>` : ''}
+                            ${dealerUrl ? `<a href="${dealerUrl}" target="_blank" class="btn btn-small" style="background:#f0fdf4;color:#166534;border-color:#bbf7d0;">Dealer Site</a>` : ''}
                             ${c.carfaxUrl ? `<a href="${c.carfaxUrl}" target="_blank" class="btn btn-carfax">CARFAX</a>` : ''}
                             <a href="${getDirectionsUrl(c.dealer, c.address)}" target="_blank" class="btn btn-directions">Directions</a>
                             <button onclick="toggleFav(${c.id})" class="btn btn-save ${fav ? 'active' : ''}">${fav ? 'Saved' : 'Save'}</button>
@@ -536,7 +622,8 @@
                         <textarea class="note-input" placeholder="Write notes about this car..." data-id="${c.id}" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e5e5e5'">${note}</textarea>
                         <div class="note-actions">
                             <button class="btn btn-small btn-listing" onclick="saveNote(${c.id})">Save Note</button>
-                            <button class="btn btn-small btn-danger" onclick="del(${c.id})">Remove Car</button>
+                            <button class="btn btn-small" style="background:#f3f4f6;color:#374151;" onclick="openEditModal(${c.id})">Edit</button>
+                            <button class="btn btn-small btn-danger" onclick="del(${c.id})">Remove</button>
                         </div>
                     </div>
                 </div>`;
@@ -564,6 +651,104 @@
         };
         const del = async id => { if (confirm('Remove this car from your list?')) { await db.from('cars').delete().eq('id', id); cars = cars.filter(c => c.id !== id); render(); } };
 
+        // Modal functions
+        let editingCarId = null;
+
+        const openAddModal = () => {
+            editingCarId = null;
+            document.getElementById('modal-title').textContent = 'Add New Car';
+            document.getElementById('car-url').value = '';
+            document.getElementById('car-year').value = '';
+            document.getElementById('car-model').value = '';
+            document.getElementById('car-price').value = '';
+            document.getElementById('car-km').value = '';
+            document.getElementById('car-dealer').value = '';
+            document.getElementById('car-address').value = '';
+            document.getElementById('car-distance').value = '';
+            document.getElementById('car-color').value = '';
+            document.getElementById('car-carfax').value = 'unknown';
+            document.getElementById('car-official').value = 'true';
+            document.getElementById('car-notes').value = '';
+            document.getElementById('car-modal').classList.add('show');
+        };
+
+        const openEditModal = (id) => {
+            const c = cars.find(car => car.id === id);
+            if (!c) return;
+            editingCarId = id;
+            document.getElementById('modal-title').textContent = 'Edit Car';
+            document.getElementById('car-url').value = c.listingUrl || '';
+            document.getElementById('car-year').value = c.year || '';
+            document.getElementById('car-model').value = c.model || '';
+            document.getElementById('car-price').value = c.price || '';
+            document.getElementById('car-km').value = c.km || '';
+            document.getElementById('car-dealer').value = c.dealer || '';
+            document.getElementById('car-address').value = c.address || '';
+            document.getElementById('car-distance').value = c.distance || '';
+            document.getElementById('car-color').value = c.color || '';
+            document.getElementById('car-carfax').value = c.carfax || 'unknown';
+            document.getElementById('car-official').value = c.official ? 'true' : 'false';
+            document.getElementById('car-notes').value = c.carfaxNote || '';
+            document.getElementById('car-modal').classList.add('show');
+        };
+
+        const closeModal = () => {
+            document.getElementById('car-modal').classList.remove('show');
+            editingCarId = null;
+        };
+
+        const saveCar = async () => {
+            const year = parseInt(document.getElementById('car-year').value);
+            const model = document.getElementById('car-model').value;
+            const price = parseInt(document.getElementById('car-price').value);
+            const km = parseInt(document.getElementById('car-km').value);
+            const dealer = document.getElementById('car-dealer').value.trim();
+
+            if (!year || !model || !price || !km || !dealer) {
+                alert('Please fill in Year, Model, Price, Kilometers, and Dealer Name');
+                return;
+            }
+
+            const carData = {
+                year,
+                model,
+                price,
+                km,
+                dealer,
+                color: document.getElementById('car-color').value || 'Unknown',
+                address: document.getElementById('car-address').value || null,
+                distance: parseInt(document.getElementById('car-distance').value) || 50,
+                listing_url: document.getElementById('car-url').value || null,
+                carfax: document.getElementById('car-carfax').value,
+                carfax_note: document.getElementById('car-notes').value || null,
+                official: document.getElementById('car-official').value === 'true',
+                availability: 'available'
+            };
+
+            try {
+                if (editingCarId) {
+                    // Update existing car
+                    const { data, error } = await db.from('cars').update(carData).eq('id', editingCarId).select();
+                    if (error) throw error;
+                    const idx = cars.findIndex(c => c.id === editingCarId);
+                    if (idx >= 0 && data && data[0]) cars[idx] = mapCar(data[0]);
+                    alert('Car updated!');
+                } else {
+                    // Insert new car
+                    const { data, error } = await db.from('cars').insert(carData).select();
+                    if (error) throw error;
+                    if (data && data[0]) cars.push(mapCar(data[0]));
+                    alert('Car added!');
+                }
+                closeModal();
+                render();
+                initMap();
+            } catch (e) {
+                console.error(e);
+                alert('Error saving car: ' + e.message);
+            }
+        };
+
         const initMap = () => {
             map = L.map('map', { zoomControl: false }).setView(HOME_COORDS, 10);
             L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
@@ -577,7 +762,7 @@
             });
         };
 
-        const mapCar = c => ({ id: c.id, year: c.year, model: c.model, color: c.color, km: c.km, price: c.price, dealer: c.dealer, distance: c.distance, features: c.features || [], carfax: c.carfax, carfaxUrl: c.carfax_url, carfaxNote: c.carfax_note, listingUrl: c.listing_url, dealerUrl: c.dealer_url, address: c.address, coords: c.coords, official: c.official });
+        const mapCar = c => ({ id: c.id, year: c.year, model: c.model, color: c.color, km: c.km, price: c.price, dealer: c.dealer, distance: c.distance, features: c.features || [], carfax: c.carfax, carfaxUrl: c.carfax_url, carfaxNote: c.carfax_note, listingUrl: c.listing_url, dealerUrl: c.dealer_url, address: c.address, coords: c.coords, official: c.official, lastChecked: c.last_checked });
 
         (async () => {
             try {
